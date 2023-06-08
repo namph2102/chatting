@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux";
 import VideoSidebar from "../../features/videocall";
 import CallbackSoptify from "../callbackSpotify";
-import { ModelProvider } from "../../components/Ui";
+
 import SpotifyModal from "../../components/chatContainer/component/spotify";
 import { updateStatusModalSpotify } from "../../redux/Slice/SpotifySlice";
+import ModalProviderOverlay from "../../components/Ui/ModalProviderOverlay";
 const Home = () => {
   const { userStore, spotifyStore } = useSelector((state: RootState) => state);
   const dispacth: AppDispatch = useDispatch();
@@ -22,13 +23,13 @@ const Home = () => {
           {userStore.isOpencallVideo && <VideoSidebar />}
           <ChattingContainer />
           {spotifyStore.isOpenSoptify && (
-            <ModelProvider
+            <ModalProviderOverlay
               setIsCloseModal={() => {
                 dispacth(updateStatusModalSpotify(false));
               }}
             >
               <SpotifyModal />
-            </ModelProvider>
+            </ModalProviderOverlay>
           )}
         </main>
       </div>

@@ -14,11 +14,7 @@ const LayoutSidebar = () => {
         {listMenu.map((menu) => {
           const Element = menu.component;
           return (
-            <Route
-              key={menu.title}
-              path={menu.path}
-              element={<Element search={""} />}
-            />
+            <Route key={menu.title} path={menu.path} element={<Element />} />
           );
         })}
       </Routes>

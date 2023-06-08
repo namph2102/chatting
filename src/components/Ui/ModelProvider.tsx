@@ -1,16 +1,16 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 interface ModelProviderProps {
   children: React.ReactNode;
-  setIsCloseModal: () => void;
 }
-const ModelProvider: FC<ModelProviderProps> = ({
-  children,
-  setIsCloseModal,
-}) => {
+const ModelProvider: FC<ModelProviderProps> = ({ children }) => {
+  const [isOpenModel, setIsOpenModel] = useState<boolean>(true);
+
   return (
     <div
-      onClick={() => setIsCloseModal()}
-      className={`fixed modal_container text-[#fff] inset-0 bg-black/70 flex justify-center z-50 items-center`}
+      onClick={() => setIsOpenModel(!isOpenModel)}
+      className={`fixed modal_container text-[#fff] inset-0 bg-black/70 flex justify-center z-50 items-center ${
+        isOpenModel ? "block" : "hidden"
+      }`}
     >
       <div>{children}</div>
     </div>
