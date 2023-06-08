@@ -1,0 +1,30 @@
+.create_room {
+  .form-group {
+    background: linear-gradient(#1f2124, #27292c);
+    border: 1px solid #222;
+    border-radius: 0.3em;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 13px;
+    margin-bottom: 20px;
+    padding: 8px 5px;
+    width: 100%;
+    outline: none;
+  }
+}
+.video_container {
+  &:hover {
+    .effect_close-btn {
+      display: block;
+      transition: 0.5s ease-in;
+    }
+  }
+  .effect_close-btn {
+    display: none;
+  }
+}
+#react-jitsi-container {
+  div {
+    display: none;
+  }
+}

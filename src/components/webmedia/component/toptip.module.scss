@@ -1,0 +1,26 @@
+.toptip:hover {
+  &::after {
+    content: attr(data-title);
+    position: absolute;
+    background-color: rgb(46, 45, 45);
+    color: #fff;
+    top: calc(-100% + -5px);
+    left: 50%;
+    padding: 0 8px;
+    transform: translateX(-50%);
+    width: max-content;
+    font-size: 0.675rem;
+    border: 1px solid rgb(63, 61, 61);
+    border-radius: 12px;
+  }
+  &::before {
+    position: absolute;
+    content: "";
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-color: rgb(46, 45, 45) transparent transparent transparent;
+    border-style: solid;
+  }
+}

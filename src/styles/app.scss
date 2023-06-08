@@ -1,0 +1,100 @@
+:root {
+  --bg-menu: #2e2e2e;
+  --primary-color: 78, 172, 109;
+  --text-color: #f1f1f1;
+}
+
+.text-primary {
+  color: rgb(var(--primary-color));
+}
+.text-primary-hover:hover {
+  color: rgb(var(--primary-color)) !important;
+}
+.background-primary {
+  background-color: rgb(var(--primary-color)) !important;
+}
+.background-primary_chatting-isuser {
+  background-color: rgb(var(--primary-color), 0.6) !important;
+}
+
+#dark-mode {
+  color: #bec2c5;
+  background-color: #262626;
+
+  .bg-follow-darkmode {
+    color: #bec2c5;
+    background-color: #2e2e2e;
+  }
+
+  .drop_menu-hover:hover {
+    background-color: #383838;
+    color: #8f9198;
+  }
+}
+
+.badge-soft-dark {
+  background-color: rgba(52, 58, 64, 0.18);
+  color: #a6afb8;
+}
+.form-control {
+  background-color: #333;
+  color: #d3d4d6;
+  font-size: 1rem;
+  border: 1px solid #333;
+}
+.form-control::placeholder {
+  font-size: 12px;
+}
+#light-mode {
+  background-color: #ffffff;
+  color: #1a1919;
+  .bg-follow-darkmode {
+    border-top: 1px solid rgb(204, 201, 201);
+    background-color: #f3f2f2;
+  }
+  .badge-soft-dark {
+    background-color: hsla(227, 4%, 58%, 0.18);
+    color: #8f9198;
+  }
+  .form-control {
+    appearance: none;
+    background-clip: padding-box;
+    background-color: #e6e3e3;
+    border: 1px solid #b6b3b3;
+    color: #0a0909;
+  }
+  .drop_menu-hover:hover {
+    background-color: #e5e6e7;
+    color: #484849;
+  }
+}
+.container_avatar-title {
+  background-color: rgba(var(--primary-color), 0.5) !important;
+  cursor: grab !important;
+}
+.avatar-title {
+  background-color: rgba(78, 172, 109, 0.2) !important;
+}
+#register {
+  background-color: rgb(var(--primary-color));
+  color: var(--text-color);
+}
+#nav__menu {
+  .active {
+    color: rgb(var(--primary-color)) !important;
+  }
+}
+.body {
+  overflow: hidden;
+  scroll-behavior: smooth;
+  background-color: rgb(87 83 78 /0.6);
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+  z-index: 0;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent; /* For Safari and Chrome */
+  -webkit-touch-callout: none; /* Disable the callout menu */
+  cursor: pointer;
+}

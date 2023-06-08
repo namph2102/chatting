@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  scroll-behavior: smooth;
+  overflow: hidden;
+}
+::-webkit-scrollbar {
+  width: 3px;
+  background-color: #2e2e2e;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #111;
+}
+::-webkit-scrollbar-track {
+  background-color: #262626;
+}
+
+.skeleton--effect {
+  background-color: rgb(87 83 78 /0.6);
+}
+.typing-demo {
+  animation: typing 2s steps(22), blink 0.5s step-end infinite;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid;
+  font-family: monospace;
+  font-size: 1em;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
