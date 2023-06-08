@@ -1,9 +1,9 @@
 import axios from "axios";
-
+const domain = window.location.origin || "https://zecky.online/";
 const Client_ID =
   import.meta.env.VITE_SPOTIFY_CLIENT_ID || "d9dc7e067bc94adc812b074ee31f9eb0";
 const authorEndPoint = "https://accounts.spotify.com/authorize?";
-const redirectUrl = "http://localhost:5173/callback/spotify";
+const redirectUrl = domain + "/callback/spotify";
 const scopes = ["user-top-read", "playlist-read-private"];
 export const loginEndPoint = `${authorEndPoint}client_id=${Client_ID}&redirect_uri=${redirectUrl}&scope=${scopes.join(
   "%20"
