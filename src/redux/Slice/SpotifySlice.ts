@@ -3,8 +3,8 @@ const SpotifySlice = createSlice({
   name: "spotify",
   initialState: {
     isOpenSoptify: false,
-    isLink: "",
-    type: "album",
+    key: "",
+    type: "song",
   },
   reducers: {
     updateStatusModalSpotify(state, action) {
@@ -15,7 +15,8 @@ const SpotifySlice = createSlice({
       }
     },
     updateLinkSpotify(state, action) {
-      state.isLink = action.payload;
+      state.key = action.payload.key;
+      state.type = action.payload.type;
     },
   },
 });

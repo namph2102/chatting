@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { ToastNotify } from "../../../servies/utils";
 import { LoadingDot } from "../../loading";
 
@@ -7,34 +7,34 @@ interface IWheather {
   app_temp: string;
   wind_spd: string;
   rh: string;
-  city_name: string;
+
   pres: string;
 }
-const WeatherForecast = () => {
-  const [weather, setWeather] = useState<IWheather>({
-    app_temp: "",
-    wind_spd: "",
-    rh: "",
-    city_name: "",
-    pres: "",
-  });
+interface WeatherForecastProps {
+  latude: number;
+  longtude: number;
+}
+const initWeather = {
+  app_temp: "",
+  wind_spd: "",
+  rh: "",
+
+  pres: "",
+};
+const WeatherForecast: FC<WeatherForecastProps> = ({ latude, longtude }) => {
+  const [weather, setWeather] = useState<IWheather>(initWeather);
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (latude && longtude) {
+      handleGetWeather(latude, longtude, setWeather);
+      return;
+    } else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          fetch(
-            `https://api.weatherbit.io/v2.0/current?lat=${position.coords.latitude}&lon=${position.coords.longitude}&key=${VITE_WEATHER_KEY}&include=minutely`
-          )
-            .then((res) => res.json())
-            .then((fullweather) => {
-              const dataDetail = fullweather.data[0];
-              weather.city_name = dataDetail.city_name;
-              weather.app_temp = dataDetail.app_temp;
-              weather.rh = dataDetail.rh;
-              weather.pres = dataDetail.pres;
-              weather.wind_spd = dataDetail.wind_spd;
-              setWeather({ ...weather });
-            });
+          handleGetWeather(
+            position.coords.latitude,
+            position.coords.longitude,
+            setWeather
+          );
         },
         () => {
           ToastNotify("Trình duyệt bạn không hỗ trợ").info();
@@ -49,8 +49,7 @@ const WeatherForecast = () => {
         <>
           <ul className="text-sm">
             <li>
-              Nhiệt độ {weather.city_name || "đang ở"} hôm nay{" "}
-              {weather.app_temp} <sup>0</sup> C
+              Nhiệt độ: {weather.app_temp} <sup>0</sup> C
             </li>
             <li> Tốc độ gió : {weather.wind_spd}(m/s)</li>
             <li> Độ ẩm : {weather.rh}%</li>
@@ -63,5 +62,23 @@ const WeatherForecast = () => {
     </div>
   );
 };
-
+const handleGetWeather = async (
+  latitude: number,
+  longitude: number,
+  callback: (info: IWheather) => void
+) => {
+  fetch(
+    `https://api.weatherbit.io/v2.0/current?lat=${latitude}&lon=${longitude}&key=${VITE_WEATHER_KEY}&include=minutely`
+  )
+    .then((res) => res.json())
+    .then((fullweather) => {
+      const weather: IWheather = initWeather;
+      const dataDetail = fullweather.data[0];
+      weather.app_temp = dataDetail.app_temp;
+      weather.rh = dataDetail.rh;
+      weather.pres = dataDetail.pres;
+      weather.wind_spd = dataDetail.wind_spd;
+      callback({ ...weather });
+    });
+};
 export default WeatherForecast;

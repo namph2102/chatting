@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import openaiStream from "../../servies/streamchatbox/openai-stream";
 import { setIsOpenDisplayTable } from "../../redux/Slice/AccountSlice";
 import { Spotify } from "./component/spotify/spotify.contant";
+import { getLocation } from "./component/loadmap/index.util";
 
 const initState: ChatContentProps[] = [
   {
@@ -174,28 +175,44 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
           );
         }
       } else if (message.text.includes("**weather**")) {
+        const search = message.text.replace("**weather**", "").trim();
+        if (search) {
+          const responsive = await getLocation(search);
+          const data: { lat: string; lon: string; display_name: string } =
+            await responsive.data[0];
+
+          reply = `Thời tiết tại ${data.display_name}*${data.lat}*${data.lon}`;
+        } else {
+          reply = "Thời tiết hôm nay của bạn*0*0";
+        }
+        console.log(reply);
         // show thời tiết
         typeChatting = "weather";
-        setValueDefaultSearch("");
-        reply = "Thời tiết hôm nay của bạn:";
+
+        setValueDefaultSearch("**weather**");
+
         boxChatContentRef.current &&
           ScroolToBottom(boxChatContentRef.current, 4000);
-      } else if (message.text.includes("**spotify**")) {
+      } else if (message.text.includes("**mp3**")) {
         // tìm kiếm theo keyword
-        const seacrh: string = message.text.replace("**spotify**", "") || "";
+        const seacrh: string = message.text.replace("**mp3**", "") || "";
         if (!seacrh) {
           ToastNotify("Bạn vui lòng nhập từ khóa").info();
         }
-        typeChatting = "spotify";
+        typeChatting = "mp3";
+
         try {
-          const listSpotify: Spotify[] | any =
-            await openaiStream.getListSearchSpotify(seacrh);
-          if (listSpotify && listSpotify.length > 0) {
+          const listSpotify: Spotify = await openaiStream.getListSearchSpotify(
+            seacrh
+          );
+
+          if (listSpotify && listSpotify.song?.length > 0) {
             reply = listSpotify;
           }
         } catch (err: { message: string } | any) {
           reply = err.message;
         }
+        setValueDefaultSearch("**mp3**");
       } else {
         setValueDefaultSearch("");
         await openaiStream.createMessage(message, handleGetValueTyping);

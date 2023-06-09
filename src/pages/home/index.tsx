@@ -4,7 +4,6 @@ import ChattingContainer from "../../components/chatContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux";
 import VideoSidebar from "../../features/videocall";
-import CallbackSoptify from "../callbackSpotify";
 
 import SpotifyModal from "../../components/chatContainer/component/spotify";
 import { updateStatusModalSpotify } from "../../redux/Slice/SpotifySlice";
@@ -15,8 +14,6 @@ const Home = () => {
   return (
     <>
       <div className="container mx-auto">
-        <CallbackSoptify />
-
         <main className="flex w-full min-h-screen">
           <Header />
           <LayoutSidebar />

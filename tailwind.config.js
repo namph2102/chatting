@@ -51,7 +51,11 @@ export default {
       mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas"],
     },
 
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "image-music": "url('/images/bgmusic.gif')",
+      },
+    },
     colors: {
       ...colors,
       transparent: "transparent",

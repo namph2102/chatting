@@ -1,11 +1,18 @@
 import axios from "axios";
+
 import { messageType } from "../../components/chatContainer/chat.type";
 import { handleRequestMessage } from "./handleFeatchData";
-import {
-  Spotify,
-  appClient,
-} from "../../components/chatContainer/component/spotify/spotify.contant";
 
+import { Spotify } from "../../components/chatContainer/component/spotify/spotify.contant";
+
+const VITE_MUSIC_CLIENT_DOMAIN =
+  import.meta.env.VITE_MUSIC_CLIENT_DOMAIN ||
+  "https://full-music-app-server.vercel.app/api/";
+
+export const zingAxios = axios.create({
+  baseURL: VITE_MUSIC_CLIENT_DOMAIN,
+  headers: { "Content-Type": "application/json" },
+});
 const VITE_OPEN_AI_KEY = import.meta.env.VITE_OPEN_AI_KEY;
 const VITE_GOOGLE_AI_KEY = import.meta.env.VITE_GOOGLE_AI_KEY;
 
@@ -56,7 +63,6 @@ class OpenAIStream {
   ) {
     try {
       const payload = handleRequestMessage([message]);
-      console.log(payload);
       const res = await fetch(this.#url_create_message, {
         method: "POST",
         headers: {
@@ -148,39 +154,70 @@ class OpenAIStream {
       );
     }
   }
-  async getListSearchSpotify(
-    search: string,
-    typeSerach: TypeSearchSpotify = TypeSearchSpotify.album
-  ) {
+  async getListSearchSpotify(search: string) {
+    const responsive = await zingAxios.get("search", {
+      params: {
+        keyword: search,
+      },
+    });
+    const responsiveZingmp3: {
+      msg: string;
+      data: {
+        counter: { song: number };
+        artists: any;
+        songs: any;
+        top: any;
+        videos: any[];
+      };
+    } = await responsive.data;
+
+    if (
+      responsiveZingmp3.msg.toLowerCase() !== "success" ||
+      responsiveZingmp3.data.counter.song <= 0
+    ) {
+      throw new Error(
+        "Xin lỗi bạn! Mình không tìm thấy theo keyword: " + search
+      );
+    }
+
     try {
-      return appClient
-        .get("/me")
-        .then(async () => {
-          const res = await appClient.get("search", {
-            params: {
-              q: search,
-              type: typeSerach,
+      const listPlaylist: Spotify = {
+        top: { cover: "", id: "", name: "", playlistId: "", thumbnail: "" },
+        song: [
+          {
+            music: {
+              duration: 0,
+              encodeId: "",
+              title: "",
+              thumbnail: "",
+              thumbnailM: "",
+              type: "",
             },
-          });
-          const data = await res.data;
-          const listCover: Spotify[] = data[`${typeSerach}s`].items.map(
-            (item: any) => {
-              const type = item.type;
-              const uri = item.uri;
-              const artists = item.artists;
-              const id = item.id;
-              const images = item.images;
-              const name = item.name;
-              return {
-                music: { images, name, type, id, uri },
-                artists: artists,
-              };
-            }
-          );
-          if (listCover.length <= 0) throw new Error("Không tìm thấy bài nào?");
-          return listCover;
-        })
-        .catch(() => new Error("Bạn chưa đăng nhập spotify"));
+            artists: [],
+          },
+        ],
+      };
+      const song = responsiveZingmp3.data?.songs?.map((item: any) => {
+        return {
+          music: {
+            encodeId: item.encodeId,
+            title: item.title,
+            thumbnail: item.thumbnail,
+            thumbnailM: item.thumbnailM,
+            duration: item.duration,
+            type: "song",
+          },
+          artists: item.artists,
+        };
+      });
+
+      listPlaylist.top = responsiveZingmp3.data.top;
+      listPlaylist.song = song;
+
+      if (listPlaylist && listPlaylist?.song?.length > 0) {
+        return listPlaylist;
+      }
+      throw new Error("Không tìm thấy theo yêu cầu của bạn!");
     } catch (err: { message: string } | any) {
       throw new Error(err.message);
     }

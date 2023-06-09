@@ -9,9 +9,6 @@ import {
 } from "react-icons/bi";
 
 import { SiderBar } from "../sidebar";
-import Bookmark from "../boorkmark";
-import Video from "../../components/webmedia/Video";
-import SpotifySearch from "../../components/chatContainer/component/spotify";
 
 export const listMenu = [
   {
@@ -43,19 +40,19 @@ export const listMenu = [
   {
     title: "Call",
     Icon: BiPhoneCall,
-    component: Video,
+    component: SiderBar,
     path: "call",
   },
   {
     title: "Bookmarks",
     Icon: BiBookmarks,
-    component: SpotifySearch,
+    component: SiderBar,
     path: "bookmark",
   },
   {
     title: "Settings",
     Icon: BiCog,
-    component: Bookmark,
+    component: SiderBar,
     path: "setting",
   },
 ];

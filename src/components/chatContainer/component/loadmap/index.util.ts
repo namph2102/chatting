@@ -100,6 +100,13 @@ function toRadians(degrees: number) {
   return degrees * (Math.PI / 180);
 }
 
+export const getLocation = async (search: string) => {
+  return await axios.get(
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+      search
+    )}`
+  );
+};
 // tìm kiếm thông wa chatting;
 export const getCoordinatesFromAddress = async (
   search: string,
@@ -107,11 +114,7 @@ export const getCoordinatesFromAddress = async (
   longitude: number
 ) => {
   try {
-    const response = await axios.get(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        search
-      )}`
-    );
+    const response = await getLocation(search);
 
     if (response.data.length > 0) {
       return response.data.map(

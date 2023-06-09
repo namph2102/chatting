@@ -64,16 +64,23 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           )}
           {props.type == "weather" && (
             <>
-              <p className="text-base mb-2">{props.comment}</p>
-              <WeatherForecast />
+              <p className="text-base mb-2">
+                {(props.comment.includes("*") && props.comment.split("*")[0]) ||
+                  "Thời tiết hôm nay của bạn"}
+              </p>
+              <WeatherForecast
+                latude={props.comment.split("*")[1]}
+                longtude={props.comment.split("*")[2]}
+              />
             </>
           )}
-          {props.type == "spotify" && (
+          {props.type == "mp3" && (
             <>
-              {props.comment.length > 0 ? (
+              {typeof props.comment != "string" &&
+              props.comment.song.length > 0 ? (
                 <SpotifyContainer listSportify={props.comment} />
               ) : (
-                "Sai cú pháp: **spotify**  <keyword> "
+                props.comment
               )}
             </>
           )}

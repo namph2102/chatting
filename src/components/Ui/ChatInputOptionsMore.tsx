@@ -20,7 +20,6 @@ export type TlistSwipper = {
   title: string;
   Icon: IconType;
   type: string;
-  link?: string;
 };
 export const listSwipper: TlistSwipper[] = [
   {
@@ -37,10 +36,9 @@ export const listSwipper: TlistSwipper[] = [
   },
   {
     id: 3,
-    title: "Spotify",
+    title: "mp3",
     Icon: BiHeadphone,
-    type: "spotify",
-    link: loginEndPoint,
+    type: "mp3",
   },
 
   {
@@ -69,16 +67,14 @@ import { componentsProps } from "../../styles/componentsProps";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { BsYoutube } from "react-icons/bs";
-import { loginEndPoint } from "../chatContainer/component/spotify/spotify.contant";
+
 interface ChatInputOptionsMoreProps {
   handleChoseSeeting: (item: TlistSwipper) => void;
 }
 const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
   handleChoseSeeting,
 }) => {
-  const { theme, accessTokenSpotify } = useSelector(
-    (state: RootState) => state.userStore
-  );
+  const { theme } = useSelector((state: RootState) => state.userStore);
   const [iseOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const [isPageInSwiper, setPageinTWipper] = useState<number>(6);
   const handleResize = useCallback(() => {
@@ -150,23 +146,10 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
               >
                 <div className="flex cursor-grab flex-col  justify-center items-center gap-y-2">
                   <button className="avatar-title rounded-full w-10 h-10 flex justify-center items-center">
-                    {!icon.link || accessTokenSpotify ? (
-                      <IconJSX
-                        className="text-primary "
-                        fontSize={deFaultIconSize}
-                      />
-                    ) : (
-                      <a
-                        href={icon.link}
-                        rel="noopener noreferrer"
-                        className=" w-full h-full flex justify-center items-center"
-                      >
-                        <IconJSX
-                          className="text-primary "
-                          fontSize={deFaultIconSize}
-                        />
-                      </a>
-                    )}
+                    <IconJSX
+                      className="text-primary "
+                      fontSize={deFaultIconSize}
+                    />
                   </button>
                   <p className="text-sm">{icon.title}</p>
                 </div>

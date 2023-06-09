@@ -29,18 +29,32 @@ export const SerachInput = async (value: string) => {
   });
   return res.data;
 };
+export interface IMusic {
+  encodeId: string;
+  title: string;
+  thumbnail: string;
+  thumbnailM: string;
+  type: string;
+  duration: number;
+}
+export interface IArtists {
+  id: string;
+  name: string;
+  playlistId: string;
+  thumbnail: string;
+  thumbnailM: string;
+  type: string;
+}
 export interface Spotify {
-  music: {
+  top: {
     id: string;
+    playlistId: string;
+    thumbnail: string;
+    cover: string;
     name: string;
-    images: { url: string }[];
-    uri: string;
-    type: string;
   };
-  artists: {
-    id: string;
-    type: string;
-    name: string;
-    uri: string;
+  song: {
+    music: IMusic;
+    artists: IArtists[];
   }[];
 }
