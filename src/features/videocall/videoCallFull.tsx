@@ -92,10 +92,10 @@ export default function VideoCallFull() {
         value={displayName}
         onChange={(e) => setDisplayName(e.target.value)}
       />
-      <div className="flex justify-end  flex-1">
+      <div className="flex justify-end  h-10">
         <button
           onClick={handleCreateRandom}
-          className="py-1 px-3 hover:bg-gray-500 text-xs rounded-full  bg-gray-400 text-black"
+          className="py-1 px-3 h-10 hover:bg-gray-500 text-xs rounded-full  bg-gray-400 text-black"
         >
           Tạo phòng ngẫu nhiên
         </button>
