@@ -13,7 +13,6 @@ import {
   BiCurrentLocation,
   BiDotsHorizontalRounded,
   BiImages,
-  BiLinkAlt,
 } from "react-icons/bi";
 export type TlistSwipper = {
   id: number;
@@ -55,24 +54,26 @@ export const listSwipper: TlistSwipper[] = [
   },
   {
     id: 6,
-    title: "File",
-    Icon: BiLinkAlt,
-    type: "file",
+    title: "Translate",
+    Icon: BsFiletypeMp3,
+    type: "translate",
   },
 ];
 
 import { IconType } from "react-icons/lib";
-import { cn, deFaultIconSize } from "../../servies/utils";
+import { ToastNotify, cn, deFaultIconSize } from "../../servies/utils";
 import { componentsProps } from "../../styles/componentsProps";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux";
-import { BsYoutube } from "react-icons/bs";
+import { BsFiletypeMp3, BsYoutube } from "react-icons/bs";
 
 interface ChatInputOptionsMoreProps {
   handleChoseSeeting: (item: TlistSwipper) => void;
+  fileCallback?: (file: File) => void;
 }
 const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
   handleChoseSeeting,
+  fileCallback,
 }) => {
   const { theme } = useSelector((state: RootState) => state.userStore);
   const [iseOpenMenu, setIsOpenMenu] = useState<boolean>(false);
@@ -107,6 +108,35 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const handleChangefile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      const pathLastfile: string = file.name.split(".").pop() || "nohave";
+      console.log(pathLastfile);
+      if (file.size > 1024 * 1000 * 100) {
+        ToastNotify("Dung lượng file đã > 100Mb!").success();
+
+        e.target.value = "";
+        return;
+      } else if (
+        !"mp3, mp4, mpeg, mpga, m4a, wav, or webm".includes(pathLastfile)
+      ) {
+        ToastNotify("Không phải file thuộc loại audio!").warning();
+
+        e.target.value = "";
+        return;
+      }
+      console.log("run here");
+      if (fileCallback) {
+        ToastNotify("Upload File audio thành công").success();
+        console.log(file);
+        fileCallback(file);
+        e.target.value = "";
+      }
+    }
+  };
 
   return (
     <>
@@ -145,18 +175,30 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
                 key={icon.id}
               >
                 <div className="flex cursor-grab flex-col  justify-center items-center gap-y-2">
-                  <button className="avatar-title rounded-full w-10 h-10 flex justify-center items-center">
-                    <IconJSX
-                      className="text-primary "
-                      fontSize={deFaultIconSize}
-                    />
+                  <button>
+                    <label
+                      className="avatar-title rounded-full w-10 h-10 flex justify-center items-center"
+                      htmlFor={icon.type}
+                    >
+                      <IconJSX
+                        className="text-primary "
+                        fontSize={deFaultIconSize}
+                      />
+                    </label>
                   </button>
+
                   <p className="text-sm">{icon.title}</p>
                 </div>
               </SwiperSlide>
             );
           })}
         </Swiper>
+        <input
+          type="file"
+          onInput={handleChangefile}
+          id="translate"
+          className="hidden"
+        />
       </section>
     </>
   );

@@ -23,7 +23,7 @@ const SpotifyItem: FC<SpotifyItemProps> = ({ items, artists }) => {
         <figure className="flex gap-3 items-center  cursor-pointer">
           <img
             onClick={() => handlePlayMusic(items.encodeId, "song")}
-            src={items.thumbnail || "/images/musicavata.png"}
+            src={items?.thumbnail || "/images/musicavata.png"}
             alt="Lỗi Avata "
             width={64}
             height={64}
@@ -38,11 +38,11 @@ const SpotifyItem: FC<SpotifyItemProps> = ({ items, artists }) => {
                 {items.title}
               </span>
             </h2>
-            <p className="opacity-80 text-xs capitalize flex gap-2 text-primary-hover hover:opacity-60">
+            <p className="opacity-80 text-xs capitalize flex gap-2 ">
               {artists.map((item, index) => (
                 <span
-                  onClick={() => handlePlayMusic(item.id, "artist")}
-                  className="line-clamp-1"
+                  onClick={() => handlePlayMusic(item.playlistId, "artist")}
+                  className="line-clamp-1 text-primary-hover hover:opacity-60"
                   key={item.id}
                   data-type={"artist"}
                   data-uri={item.id}

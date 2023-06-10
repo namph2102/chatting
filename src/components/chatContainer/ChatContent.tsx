@@ -54,6 +54,10 @@ const ChatContent: FC<ChatContentProps> = (props) => {
               ></code>
             </p>
           )}
+          {props.type == "translate" && (
+            <p dangerouslySetInnerHTML={{ __html: props.comment }} />
+          )}
+
           {props.type == "image" && (
             <ImageChatComment listImage={props.comment} />
           )}

@@ -98,3 +98,27 @@ button {
   -webkit-touch-callout: none; /* Disable the callout menu */
   cursor: pointer;
 }
+
+.css-19ygod6-MuiNativeSelect-select-MuiInputBase-input-MuiInput-input {
+  color: var(--text-color) !important;
+}
+.css-19ygod6-MuiNativeSelect-select-MuiInputBase-input-MuiInput-input:not(
+    [multiple]
+  )
+  option {
+  background-color: var(--bg-menu) !important;
+  padding: 4px !important;
+  font-size: 14px !important;
+}
+.css-1c2i806-MuiFormLabel-root-MuiInputLabel-root {
+  display: flex !important;
+  justify-content: center !important;
+  padding: 8px !important;
+}
+.css-q8hpuo-MuiFormControl-root {
+  // box-shadow: 1px 0px 1px 2px #0a0909 !important;
+  border: 2px solid rgba(78, 172, 109, 0.2) !important;
+  background-color: #262626;
+
+  padding: 8px !important;
+}

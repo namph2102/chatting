@@ -45,7 +45,7 @@ const ChattingContainer = () => {
 
   const boxChatContentRef = useRef<HTMLElement>(null);
   const contentSlideAnimation = useRef<HTMLDivElement>(null);
-
+  const [fileUpload, setFileUpload] = useState<File>();
   const { theme } = useSelector((state: RootState) => state.userStore) || {};
 
   useEffect(() => {
@@ -109,7 +109,7 @@ const ChattingContainer = () => {
       const handleGetValueTyping = async (content: string) => {
         reply += content;
         if (contentSlideAnimation.current) {
-          contentSlideAnimation.current.textContent = reply;
+          contentSlideAnimation.current.innerHTML = `<span class="block mb-4">${reply}</span>`;
 
           if (boxChatContentRef.current) {
             reply.length % 10 == 0 &&
@@ -141,6 +141,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         setValueDefaultSearch("**img**");
 
         typeChatting = "image";
+        console.log(des, size);
         const test = await openaiStream.createImage(des, `${size}x${size}`);
         const data: { url: string }[] = await test.data;
 
@@ -213,6 +214,22 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
           reply = err.message;
         }
         setValueDefaultSearch("**mp3**");
+      } else if (message.text.includes("**translate**")) {
+        const proms: string = message.text.replace("**translate**", "") || "";
+        let language = "en";
+        if (proms.includes("**")) {
+          language = proms.split("**")[0].trim() || "en";
+        }
+        if (!fileUpload) throw new Error("Bạn chưa upload file âm thanh");
+        ToastNotify("Vui lòng chờ đợi trong ít giây bạn nhé!").success({
+          autoClose: 5000,
+        });
+        reply = ` Hệ thống đã dịch thành công:<br/>
+         ${await openaiStream.getTextInAudio(fileUpload, language)} `;
+        typeChatting = "translate";
+        if (!reply) {
+          throw new Error("Xin lỗi hệ thống đang quá tải!");
+        }
       } else {
         setValueDefaultSearch("");
         await openaiStream.createMessage(message, handleGetValueTyping);
@@ -271,6 +288,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
   // Caht sẽ overlay tên mobile
   const dispatchRedux: AppDispatch = useDispatch();
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
+
   return (
     <div
       id={theme.darkmode}
@@ -305,6 +323,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         valueDefalutSearch={valueDefalutSearch}
         className={isOpenChat ? "hidden_toggle-mobile" : "open_toggle-mobile"}
         loading={isLoadding}
+        fileCallback={setFileUpload}
         mutationQuery={mutation.mutate}
       />
     </div>

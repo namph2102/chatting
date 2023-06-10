@@ -1,9 +1,9 @@
 import axios from "axios";
-
 import { messageType } from "../../components/chatContainer/chat.type";
 import { handleRequestMessage } from "./handleFeatchData";
-
 import { Spotify } from "../../components/chatContainer/component/spotify/spotify.contant";
+import { Configuration, OpenAIApi } from "openai";
+import { streamTextOpenAi } from ".";
 
 const VITE_MUSIC_CLIENT_DOMAIN =
   import.meta.env.VITE_MUSIC_CLIENT_DOMAIN ||
@@ -54,6 +54,15 @@ export enum TypeSearchSpotify {
   episode = "episode",
   audiobook = "audiobook",
 }
+class CustomFormData extends FormData {
+  getHeaders() {
+    return {};
+  }
+}
+const configuration = new Configuration({
+  apiKey: VITE_OPEN_AI_KEY,
+  formDataCtor: CustomFormData,
+});
 class OpenAIStream {
   #url_create_message = "https://api.openai.com/v1/chat/completions";
   #url_create_image = "https://api.openai.com/v1/images/generations";
@@ -73,29 +82,7 @@ class OpenAIStream {
       });
 
       const render = res.body?.getReader();
-      const decoder = new TextDecoder("utf-8");
-      // eslint-disable-next-line no-constant-condition
-      while (true) {
-        const chuck: any = await render?.read();
-        const { done, value } = chuck;
-        if (done) {
-          break;
-        }
-        const decodeChuck = decoder.decode(value);
-        const lines: string[] = decodeChuck.split("\n");
-        const paintlines = lines
-          .map((line) => line.replace(/^data: /, "").trim())
-          .filter((line) => line !== "" && line !== "[DONE]")
-          .map((item) => JSON.parse(item));
-        for (const paintLine of paintlines) {
-          const { choices } = paintLine;
-          const { delta } = choices[0];
-          const { content } = delta;
-          if (content) {
-            callback(content);
-          }
-        }
-      }
+      await streamTextOpenAi(render, callback);
     } catch {
       throw new Error(
         "Xin lỗi bạn! Có lẽ API Code của tôi đã hết hạn! Bạn có thể bảo <a target='_blank' class='text-primary text-primary-hover' href=`https://www.facebook.com/namhoai2102`>'Hoài Nam'</a> của tôi đi gia hạn không ? Tôi đang rất cần ạ!"
@@ -221,6 +208,33 @@ class OpenAIStream {
     } catch (err: { message: string } | any) {
       throw new Error(err.message);
     }
+  }
+  async getTextInAudio(file: File, language = "en") {
+    const openai = new OpenAIApi(configuration);
+
+    const res = await openai.createTranscription(
+      file,
+      "whisper-1",
+      "phiên dịch đầy đủ và chi tiết cho đoạn âm thanh đó",
+      undefined,
+      0.2,
+      language
+    );
+    const data =
+      language == "en"
+        ? { data: { text: "" } }
+        : await openai.createTranslation(
+            file,
+            "whisper-1",
+            undefined,
+            undefined,
+            0.2
+          );
+
+    return (
+      res.data.text +
+      (language !== "en" ? " <br/>  <br/>  <br/>  " + data.data.text : "")
+    );
   }
 }
 export default new OpenAIStream();

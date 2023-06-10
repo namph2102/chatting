@@ -24,10 +24,13 @@ import {
 } from "../../servies/utils";
 import ChatInputOptionsMore, { TlistSwipper } from "../Ui/ChatInputOptionsMore";
 import { componentsProps } from "../../styles/componentsProps";
+import SelectionOptions from "./component/SelectionOptions";
+import { optionsImage, optionsTranscriptions } from "./chat.utils";
 
 interface ChatInputProps {
   mutationQuery: (message: messageType) => void;
   loading: boolean;
+  fileCallback?: (file: File) => void;
   className: string;
   valueDefalutSearch: string;
 }
@@ -36,14 +39,20 @@ const ChatInput: FC<ChatInputProps> = ({
   valueDefalutSearch = "Đặt câu hỏi bạn nhé ...",
   mutationQuery,
   loading,
+  fileCallback,
   className,
 }) => {
   const [isOpenEmoji, setIsOpenEmoji] = useState<boolean>(false);
   const [isOpenEVoices, setIsOpenVoices] = useState<boolean>(false);
   const btnMoreRef = useRef<HTMLDivElement>(null);
   const btnMoreOpenRef = useRef<HTMLDivElement>(null);
-
   const chattingRef = useRef<HTMLTextAreaElement>(null);
+  const [isOpenSubOption, setIsOpenSubOptions] = useState<boolean>(false);
+  const [TitleSubOption, setTitleSubOptions] = useState<string>("");
+
+  const [ListOptions, setListOptions] = useState<
+    { title: string; value: string }[]
+  >([]);
 
   const handdleSelect = (emo: { native: string }) => {
     setIsOpenEmoji(false);
@@ -64,12 +73,11 @@ const ChatInput: FC<ChatInputProps> = ({
       }
       mutationQuery(messages);
       const text = chattingRef.current.value;
-
+      setIsOpenSubOptions(false);
       const match = text.match(/\*\*(.*?)\*\*/);
 
       if (match) {
         const matchedValue = match[1];
-
         chattingRef.current.value = `**${matchedValue}**`;
         chattingRef.current.innerText = `**${matchedValue}**`;
       } else {
@@ -100,7 +108,19 @@ const ChatInput: FC<ChatInputProps> = ({
     }
   }, []);
   const handleChoseSetting = (settings: TlistSwipper) => {
+    console.log(settings);
     if (chattingRef.current) {
+      if (settings.type == "img") {
+        setListOptions(optionsImage);
+        setTitleSubOptions("Kich thước ảnh ?");
+        setIsOpenSubOptions(true);
+      } else if (settings.type == "translate") {
+        setTitleSubOptions("Dịch sang ngôn ngữ ?");
+        setListOptions(optionsTranscriptions);
+        setIsOpenSubOptions(true);
+      } else {
+        setIsOpenSubOptions(false);
+      }
       chattingRef.current.value = `**${settings.type}**`;
       if (settings.type != "location") {
         chattingRef.current.focus();
@@ -135,6 +155,23 @@ const ChatInput: FC<ChatInputProps> = ({
       }
     }
   };
+
+  const optionCallback = (value: string) => {
+    if (chattingRef.current) {
+      if (chattingRef.current.value.includes("**")) {
+        const props = chattingRef.current.value.split("**").filter((p) => p);
+        if (props.length == 1) {
+          props.push(value);
+        } else if (props.length >= 2) {
+          props[1] = value;
+        }
+        chattingRef.current.value = "**" + props.join("**") + "**";
+      } else {
+        setIsOpenSubOptions(false);
+      }
+    }
+  };
+
   return (
     <section
       className={cn(
@@ -162,7 +199,10 @@ const ChatInput: FC<ChatInputProps> = ({
         >
           {/* Button More Chatinput */}
 
-          <ChatInputOptionsMore handleChoseSeeting={handleChoseSetting} />
+          <ChatInputOptionsMore
+            fileCallback={fileCallback}
+            handleChoseSeeting={handleChoseSetting}
+          />
 
           {/* end Button More Chatinput */}
           <Tooltip
@@ -261,6 +301,13 @@ const ChatInput: FC<ChatInputProps> = ({
           onEmojiSelect={handdleSelect}
         />
       </div>
+      {isOpenSubOption && (
+        <SelectionOptions
+          title={TitleSubOption}
+          optionCallback={optionCallback}
+          options={ListOptions}
+        />
+      )}
     </section>
   );
 };

@@ -29,3 +29,15 @@ export const handleRequestMessage = (messages: messageType[]) => {
   };
   return payload;
 };
+export const handleTranslate = (message: string) => {
+  const payload = {
+    model: "text-davinci-003",
+    prompt: `Write a creative ad for the following product to run on Facebook aimed at parents, childrent, student and write SEO keywork for products you must traslate vietname:\n\nProduct: ${message}`,
+    temperature: 0.5,
+    max_tokens: 200,
+    top_p: 1.0,
+    frequency_penalty: 0.0,
+    presence_penalty: 0.0,
+  };
+  return payload;
+};

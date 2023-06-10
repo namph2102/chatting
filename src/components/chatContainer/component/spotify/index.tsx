@@ -7,11 +7,14 @@ import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import { updateStatusModalSpotify } from "../../../../redux/Slice/SpotifySlice";
 import { zingAxios } from "../../../../servies/streamchatbox/openai-stream";
-import { IArtists } from "./spotify.contant";
+import { IArtists, IMusic } from "./spotify.contant";
 import "./spotify.scss";
 import { ToastNotify } from "../../../../servies/utils";
 // import { useMutation } from "react-query";
 import { RiHeartsFill } from "react-icons/ri";
+import SpotifyItem from "./SpotifyItem";
+import { nanoid } from "@reduxjs/toolkit";
+import { LoaddingOverLay } from "../../../loading";
 interface Isong {
   artists: IArtists[];
   like: number;
@@ -31,52 +34,71 @@ function handleSetHtml<T extends HTMLElement>(element: T, text: string) {
     element.innerHTML = text;
   }
 }
+function handleHidden<T extends HTMLElement>(element: T, isHidden: boolean) {
+  if (element) {
+    if (isHidden) {
+      element.classList.add("hidden");
+    } else {
+      element.classList.remove("hidden");
+    }
+  }
+}
+
 const SpotifyModal = () => {
   const { key, type } = useSelector((state: RootState) => state.spotifyStore);
   const [song, setSong] = useState<Isong>();
   const [urlSong, setUrlSong] = useState<string>("");
   const [listLyric, setListLyric] = useState<Ilyrics[]>([]);
-
+  const [playList, setPlayList] = useState<IMusic[]>([]);
+  const [artist, setArtist] = useState<IArtists[]>([]);
   const dispacth: AppDispatch = useDispatch();
-  // const mutation =useMutation()
+
   useEffect(() => {
     if (type == "song") {
       (async () => {
-        const [lyricts, link, songinfo] = await Promise.all([
-          zingAxios.get("lyric", { params: { id: key } }),
-          zingAxios.get("song", { params: { id: key } }),
-          zingAxios.get("infosong", { params: { id: key } }),
-        ]);
-        if (link.data.err) {
-          return ToastNotify(link.data.msg).info();
-        }
-        if (!link.data?.data["128"]) {
-          return ToastNotify("Hệ thống đang bị lỗi !").info();
-        }
-        setUrlSong(link.data.data["128"]);
-        setSong(songinfo.data.data);
-        if (lyricts.data.data.sentences) {
-          const HandleWorks = lyricts.data.data.sentences.map((item: any) => {
-            const listText = item.words
-              .map((item: { data: string }) => item.data)
-              .join(" ");
-            const startTime = item.words[0].startTime;
-            const endTime = item.words[item.words.length - 1].endTime;
-
-            return { text: listText, startTime, endTime };
-          });
-          setListLyric(HandleWorks);
-        } else {
-          if (lyricRef.current) {
-            lyricRef.current.classList.add("hidden");
+        try {
+          const [lyricts, link, songinfo] = await Promise.all([
+            zingAxios.get("lyric", { params: { id: key } }),
+            zingAxios.get("song", { params: { id: key } }),
+            zingAxios.get("infosong", { params: { id: key } }),
+          ]);
+          if (link.data.err) {
+            throw new Error(link.data.msg);
           }
-          setListLyric([]);
+          if (!link.data?.data["128"]) {
+            throw new Error("Chỉ dành cho tài khoản vip");
+          }
+          setUrlSong(link.data.data["128"]);
+          setSong(songinfo.data.data);
+          if (lyricts.data.data.sentences) {
+            const HandleWorks = lyricts.data.data.sentences.map((item: any) => {
+              const listText = item.words
+                .map((item: { data: string }) => item.data)
+                .join(" ");
+              const startTime = item.words[0].startTime;
+              const endTime = item.words[item.words.length - 1].endTime;
+
+              return { text: listText, startTime, endTime };
+            });
+            setListLyric(HandleWorks);
+          } else {
+            if (lyricRef.current) {
+              lyricRef.current.classList.add("hidden");
+            }
+            setListLyric([]);
+          }
+        } catch (err: { message: string } | any) {
+          ToastNotify(err.message).info();
+          dispacth(updateStatusModalSpotify(false));
         }
       })();
     } else {
       //type=="artist"
+
       zingAxios.get("detailplaylist", { params: { id: key } }).then((data) => {
-        console.log(data);
+        console.log(data.data);
+        setPlayList(data.data?.data?.song?.items || []);
+        setArtist(data.data?.data?.artists || []);
       });
     }
   }, [key, type]);
@@ -97,12 +119,17 @@ const SpotifyModal = () => {
     handleSetHtml<HTMLDivElement>(lyricRef.current, "Đã hết!");
   };
   const lyricRef = useRef<HTMLDivElement | any>(null);
+  const lyricContainerRef = useRef<HTMLDivElement | any>(null);
+
   const AudioRef = useRef<HTMLAudioElement | any>(null);
-  console.log(song);
+  if (!song && playList.length <= 0) {
+    return <LoaddingOverLay />;
+  }
+
   return (
     <article
       onClick={(e) => e.stopPropagation()}
-      className="lg:min-w[860px] relative md:min-w-[740px]  bg-black p-4 sm:min-w[650px] w-full min-w-[320px] "
+      className="lg:min-w[860px] relative md:min-w-[740px]  bg-black p-4 sm:min-w[650px] w-[95%]  mx-auto min-w-[320px] "
     >
       <button
         onClick={() => dispacth(updateStatusModalSpotify(false))}
@@ -110,10 +137,11 @@ const SpotifyModal = () => {
       >
         <BiXCircle />
       </button>
-      {song && urlSong && (
+
+      {song && type == "song" && urlSong && (
         <section>
-          <figure className="flex gap-4 items-start">
-            <div>
+          <figure className="flex   gap-4 items-center min-h-[400px] justify-around ">
+            <div className="h-full hidden sm:block">
               <img
                 src={song.thumbnailM}
                 className="rounded-lg"
@@ -127,16 +155,16 @@ const SpotifyModal = () => {
               </p>
             </div>
             <figcaption className="text-left flex justify-start flex-col">
-              <h6 className="mb-2">
+              <h6 className="mb-4">
                 <span className="text-gray-400 text-sm">Bài hát :</span>{" "}
                 {song.title}
               </h6>
               {song?.artists && (
-                <div className="w-fit flex items-center gap-2">
+                <div className="w-fit flex items-center gap-2 ">
                   {song.artists.length < 2 ? (
                     <Avatar
                       key={song.artists[0].id}
-                      className="w-4 h-4 "
+                      className="sm:w-4 sm:h-4 w-2 h-2 "
                       alt={song.artists[0].name}
                       src={song.artists[0].thumbnail}
                     />
@@ -146,22 +174,20 @@ const SpotifyModal = () => {
                         song.artists.map((item) => (
                           <Avatar
                             key={item.id}
-                            className="w-4 h-4 "
+                            className="sm:w-4 sm:h-4 w-2 h-2 "
                             alt={item.name}
                             src={item.thumbnail}
                           />
                         ))}
                     </AvatarGroup>
                   )}
-                  {song.artists?.length > 0 &&
-                    song.artists.map((item) => (
-                      <span key={item.id} className="text-xs">
-                        {item.name}
-                      </span>
-                    ))}
+                  <span className="text-sm"> {song.artistsNames}</span>
                 </div>
               )}
-              <div className="bg-image-music  bg-center bg-cover flex items-center justify-center text-center">
+              <div
+                ref={lyricContainerRef}
+                className="bg-image-music hidden  bg-center bg-cover flex items-center justify-center text-center"
+              >
                 <div
                   ref={lyricRef}
                   className="  w-64 my-4 h-64 p-8  flex items-center justify-center text-center "
@@ -174,7 +200,12 @@ const SpotifyModal = () => {
 
           {song && urlSong && (
             <AudioPlayer
+              autoPlay
               onEnded={handleVideoEnded}
+              onPause={() => {
+                handleHidden(lyricContainerRef.current, true);
+              }}
+              onPlay={() => handleHidden(lyricContainerRef.current, false)}
               ref={AudioRef}
               onLoadStart={() =>
                 handleSetHtml<HTMLDivElement>(lyricRef.current, song?.title)
@@ -186,6 +217,14 @@ const SpotifyModal = () => {
           )}
         </section>
       )}
+      <div className="overflow-y-auto max-h-[80vh]">
+        {artist &&
+          type == "artist" &&
+          playList.length > 0 &&
+          playList.map((music) => (
+            <SpotifyItem key={nanoid()} items={music} artists={artist} />
+          ))}
+      </div>
     </article>
   );
 };

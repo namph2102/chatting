@@ -195,7 +195,7 @@ const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
                 onClick={Debounced(handleSerach, 500)}
                 className="py-2 px-4 sm:w-[100px] w-1/2 rounded-xl ml-2 mt-2 opacity-90  hover:opacity-80 background-primary text-sm  "
               >
-                Thêm
+                Thêm tọa độ
               </button>
             </div>
             <button
