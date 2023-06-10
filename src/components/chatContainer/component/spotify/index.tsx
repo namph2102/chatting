@@ -102,16 +102,39 @@ const SpotifyModal = () => {
       });
     }
   }, [key, type]);
-
+  let idPrevs = 0;
   const handlePlayting = (e: Event | any) => {
     if (lyricRef.current) {
       if (!e) return "";
       const timeCurrent = Math.floor(e.target.currentTime * 1000);
       if (listLyric && listLyric.length > 0) {
-        const result = listLyric.find(
+        const result = listLyric.findIndex(
           (ly) => ly.endTime > timeCurrent && ly.startTime < timeCurrent
         );
-        handleSetHtml<HTMLDivElement>(lyricRef.current, result?.text || "");
+        console.log(idPrevs, result);
+        if (result > 0) {
+          const elementssOld =
+            document.getElementById(`current${idPrevs.toString()}`) || null;
+          const elementssNew =
+            document.getElementById(`current${result.toString()}`) || null;
+
+          if (elementssOld) {
+            elementssOld.style.color = "#ffffff";
+          }
+          if (elementssNew) {
+            elementssNew.style.color = "#ffff00";
+            elementssNew.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+              inline: "nearest",
+            });
+          }
+          idPrevs = result;
+          handleSetHtml<HTMLDivElement>(
+            lyricRef.current,
+            listLyric[result]?.text || ""
+          );
+        }
       }
     }
   };
@@ -125,23 +148,22 @@ const SpotifyModal = () => {
   if (!song && playList.length <= 0) {
     return <LoaddingOverLay />;
   }
-
   return (
     <article
       onClick={(e) => e.stopPropagation()}
-      className="lg:min-w[860px] relative md:min-w-[740px]  bg-black p-4 sm:min-w[650px] w-[95%]  mx-auto min-w-[320px] "
+      className="lg:min-w[860px] fixed inset-0 md:min-w-[740px]  bg-black p-4 sm:min-w[650px] w-[95%]  mx-auto min-w-[320px] "
     >
       <button
         onClick={() => dispacth(updateStatusModalSpotify(false))}
-        className=" absolute -top-3 -right-3 text-3xl hover:text-red-600"
+        className=" absolute top-3 right-3 text-4xl hover:text-red-600"
       >
         <BiXCircle />
       </button>
 
       {song && type == "song" && urlSong && (
         <section>
-          <figure className="flex   gap-4 items-center min-h-[400px] justify-around ">
-            <div className="h-full hidden sm:block">
+          <figure className="flex  gap-4 sm:items-center items-start py-8  sm:min-h-[600px] min-h-[300px] justify-around ">
+            <div className="h-full hidden md:block">
               <img
                 src={song.thumbnailM}
                 className="rounded-lg"
@@ -196,24 +218,35 @@ const SpotifyModal = () => {
                 </div>
               </div>
             </figcaption>
+            {listLyric?.length > 0 && (
+              <ul className="overflow-y-auto hidden sm:block md:max-h-[400px]   sm:max-h-[300px]">
+                {listLyric.map((text, index) => (
+                  <li id={"current" + index} key={text.startTime}>
+                    {text.text}
+                  </li>
+                ))}
+              </ul>
+            )}
           </figure>
 
           {song && urlSong && (
-            <AudioPlayer
-              autoPlay
-              onEnded={handleVideoEnded}
-              onPause={() => {
-                handleHidden(lyricContainerRef.current, true);
-              }}
-              onPlay={() => handleHidden(lyricContainerRef.current, false)}
-              ref={AudioRef}
-              onLoadStart={() =>
-                handleSetHtml<HTMLDivElement>(lyricRef.current, song?.title)
-              }
-              onListen={handlePlayting}
-              preload="metadata"
-              src={urlSong}
-            />
+            <div className="absolute bottom-2 rounded-lg right-0 w-full">
+              <AudioPlayer
+                autoPlay
+                onEnded={handleVideoEnded}
+                onPause={() => {
+                  handleHidden(lyricContainerRef.current, true);
+                }}
+                onPlay={() => handleHidden(lyricContainerRef.current, false)}
+                ref={AudioRef}
+                onLoadStart={() =>
+                  handleSetHtml<HTMLDivElement>(lyricRef.current, song?.title)
+                }
+                onListen={handlePlayting}
+                preload="metadata"
+                src={urlSong}
+              />
+            </div>
           )}
         </section>
       )}
