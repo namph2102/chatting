@@ -203,9 +203,13 @@ const SiderBar = () => {
       </section>
       <section
         id={theme.darkmode}
-        className="hover:overflow-y-auto  overflow-hidden ease-linear duration-200 lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-225px)]"
+        className="hover:overflow-y-auto  overflow-x-hidden ease-linear duration-200 lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-225px)]"
       >
         <div className={listChatting.length > 0 ? "hidden" : ""}>
+          <SkeletonLayout />
+          <SkeletonLayout />
+          <SkeletonLayout />
+          <SkeletonLayout />
           <SkeletonLayout />
           <SkeletonLayout />
           <SkeletonLayout />

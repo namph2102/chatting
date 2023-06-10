@@ -15,7 +15,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ id = "chatbox" }) => {
   console.log(id);
   const dispatchRedux: AppDispatch = useDispatch();
   return (
-    <section className=" px-4 py-3 min-h-[60px] flex items-center  border-main/10 border-b-[2px]  shadow relative z-20 top-0">
+    <section className=" px-4 py-4 min-h-[60px] flex items-center  border-main/10 border-b-[2px]  shadow relative z-20 top-0 ">
       <div className="bg-aside/30 backdrop-blur-sm  absolute inset-0"></div>
       <div className="flex opacity-7 absolute top-0 left-0 px-4 py-auto right-0 z-10 justify-between items-center w-full">
         <div className="flex sm:gap-5 items-center gap-2">
@@ -31,7 +31,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ id = "chatbox" }) => {
               alt="avata"
               height={40}
               width={40}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover sm:w-10 sm:h-10 w-6 h-6"
             />
             <div
               className={cn(
