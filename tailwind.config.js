@@ -8,25 +8,25 @@ delete colors["blueGray"];
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    screens: {
-      sm: "640px",
-      // => @media (min-width: 640px) { ... }
+    // screens: {
+    //   sm: "640px",
+    //   // => @media (min-width: 640px) { ... }
 
-      md: "768px",
-      // => @media (min-width: 768px) { ... }
+    //   md: "768px",
+    //   // => @media (min-width: 768px) { ... }
 
-      lg: "990px",
-      // => @media (min-width: 1024px) { ... }
+    //   lg: "990px",
+    //   // => @media (min-width: 1024px) { ... }
 
-      xl: "1280px",
-      // => @media (min-width: 1280px) { ... }
+    //   xl: "1280px",
+    //   // => @media (min-width: 1280px) { ... }
 
-      "2xl": "1536px",
-      // => @media (min-width: 1536px) { ... }
-    },
+    //   "2xl": "1536px",
+    //   // => @media (min-width: 1536px) { ... }
+    // },
     container: {
       padding: {
-        DEFAULT: "0rem",
+        DEFAULT: "0.5rem",
         "2xl": "1rem",
         "3xl": "3rem",
       },

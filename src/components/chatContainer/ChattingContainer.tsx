@@ -303,7 +303,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
 
       <section
         ref={boxChatContentRef}
-        className="chatting px-2 absolute top-0 left-0 right-0 scroll-smooth overflow-y-auto overflow-x-hidden w-full pt-14 max-h-[calc(100vh-100px)]"
+        className="chatting px-2 absolute top-0 left-0 right-0 overflow-y-auto overflow-x-hidden w-full pt-14 max-h-[calc(100vh-100px)]"
       >
         {listUserComments.length > 0 &&
           listUserComments.map((comment) => (

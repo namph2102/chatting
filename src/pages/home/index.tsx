@@ -13,7 +13,7 @@ const Home = () => {
   const dispacth: AppDispatch = useDispatch();
   return (
     <>
-      <div className="container mx-auto">
+      <div className="container mx-auto relative">
         <main className="flex w-full min-h-screen">
           <Header />
           <LayoutSidebar />
