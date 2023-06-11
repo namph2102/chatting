@@ -34,18 +34,12 @@ function handleSetHtml<T extends HTMLElement>(element: T, text: string) {
     element.innerHTML = text;
   }
 }
-function handleHidden<T extends HTMLElement>(element: T, isHidden: boolean) {
-  if (element) {
-    if (isHidden) {
-      element.classList.add("hidden");
-    } else {
-      element.classList.remove("hidden");
-    }
-  }
-}
 
 const SpotifyModal = () => {
   const { key, type } = useSelector((state: RootState) => state.spotifyStore);
+  const [indexSmooth] = useState<any>(
+    window.innerWidth > 640 ? "center" : "start"
+  );
   const [song, setSong] = useState<Isong>();
   const [urlSong, setUrlSong] = useState<string>("");
   const [listLyric, setListLyric] = useState<Ilyrics[]>([]);
@@ -103,6 +97,7 @@ const SpotifyModal = () => {
     }
   }, [key, type]);
   let idPrevs = 0;
+
   const handlePlayting = (e: Event | any) => {
     if (lyricRef.current) {
       if (!e) return "";
@@ -111,8 +106,8 @@ const SpotifyModal = () => {
         const result = listLyric.findIndex(
           (ly) => ly.endTime > timeCurrent && ly.startTime < timeCurrent
         );
-        console.log(idPrevs, result);
-        if (result > 0) {
+
+        if (result >= 0) {
           const elementssOld =
             document.getElementById(`current${idPrevs.toString()}`) || null;
           const elementssNew =
@@ -125,7 +120,7 @@ const SpotifyModal = () => {
             elementssNew.style.color = "#ffff00";
             elementssNew.scrollIntoView({
               behavior: "smooth",
-              block: "center",
+              block: indexSmooth ? indexSmooth : "start",
               inline: "nearest",
             });
           }
@@ -138,6 +133,7 @@ const SpotifyModal = () => {
       }
     }
   };
+
   const handleVideoEnded = () => {
     handleSetHtml<HTMLDivElement>(lyricRef.current, "Đã hết!");
   };
@@ -208,7 +204,7 @@ const SpotifyModal = () => {
               )}
               <div
                 ref={lyricContainerRef}
-                className="bg-image-music  hidden bg-center bg-cover flex items-center justify-center text-center"
+                className="bg-image-music   bg-center bg-cover flex items-center justify-center text-center"
               >
                 <div
                   ref={lyricRef}
@@ -219,7 +215,7 @@ const SpotifyModal = () => {
               </div>
             </figcaption>
             {listLyric?.length > 0 && (
-              <ul className="overflow-y-auto  md:block md:max-h-[400px] text-center max-h-[100px]  sm:max-h-[300px]">
+              <ul className="overflow-y-auto  md:block md:max-h-[400px] text-center max-h-[calc(100vh-500px)]  sm:max-h-[300px]">
                 {listLyric.map((text, index) => (
                   <li id={"current" + index} key={text.startTime}>
                     {text.text}
@@ -230,18 +226,14 @@ const SpotifyModal = () => {
           </figure>
 
           {song && urlSong && (
-            <div className="absolute bottom-2 rounded-lg right-0 w-full">
+            <div className="absolute bottom-0 rounded-lg right-0 w-full">
               <AudioPlayer
                 autoPlay
                 onEnded={handleVideoEnded}
-                onPause={() => {
-                  handleHidden(lyricContainerRef.current, true);
-                }}
-                onPlay={() => handleHidden(lyricContainerRef.current, false)}
                 ref={AudioRef}
-                onLoadStart={() =>
-                  handleSetHtml<HTMLDivElement>(lyricRef.current, song?.title)
-                }
+                onLoadStart={() => {
+                  handleSetHtml<HTMLDivElement>(lyricRef.current, song?.title);
+                }}
                 onListen={handlePlayting}
                 preload="metadata"
                 src={urlSong}

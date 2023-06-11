@@ -7,7 +7,7 @@ import { streamTextOpenAi } from ".";
 
 const VITE_MUSIC_CLIENT_DOMAIN =
   import.meta.env.VITE_MUSIC_CLIENT_DOMAIN ||
-  "https://full-music-app-server.vercel.app/api/";
+  "https://zeckysever.onrender.com/music/";
 
 export const zingAxios = axios.create({
   baseURL: VITE_MUSIC_CLIENT_DOMAIN,
