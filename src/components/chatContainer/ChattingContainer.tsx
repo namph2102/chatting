@@ -17,11 +17,10 @@ import {
   handleCoverComment,
 } from "./chat.utils";
 import { ScroolToBottom, ToastNotify, cn } from "../../servies/utils";
-import { AppDispatch, RootState } from "../../redux";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux";
+import { useSelector } from "react-redux";
 
 import openaiStream from "../../servies/streamchatbox/openai-stream";
-import { setIsOpenDisplayTable } from "../../redux/Slice/AccountSlice";
 import { Spotify } from "./component/spotify/spotify.contant";
 import { getLocation } from "./component/loadmap/index.util";
 
@@ -277,8 +276,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       }
     },
   });
-  // Caht sẽ overlay tên mobile
-  const dispatchRedux: AppDispatch = useDispatch();
+
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
   console.log(isOpenChat);
   return (
