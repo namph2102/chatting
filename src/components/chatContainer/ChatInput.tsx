@@ -236,6 +236,7 @@ const ChatInput: FC<ChatInputProps> = ({
             <TextareaAutosize
               ref={chattingRef}
               onFocus={() => handleForcusChatting(true)}
+              onTouchEnd={() => handleForcusChatting(true)}
               onBlur={() => handleForcusChatting(false)}
               className="w-full py-3  block form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
               placeholder="Lời nhắn?"

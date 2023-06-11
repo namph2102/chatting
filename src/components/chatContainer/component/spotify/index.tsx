@@ -162,7 +162,7 @@ const SpotifyModal = () => {
 
       {song && type == "song" && urlSong && (
         <section>
-          <figure className="flex  gap-4 sm:items-center items-start py-8  sm:min-h-[600px] min-h-[300px] justify-around ">
+          <figure className="flex sm:flex-row flex-col gap-4 sm:items-center  py-8  sm:min-h-[600px] min-h-[300px] sm:justify-around ">
             <div className="h-full hidden md:block">
               <img
                 src={song.thumbnailM}
@@ -176,7 +176,7 @@ const SpotifyModal = () => {
                 <RiHeartsFill /> {song.like.toLocaleString("en-vi")}
               </p>
             </div>
-            <figcaption className="text-left flex justify-start flex-col">
+            <figcaption className="text-left flex justify-start items-center flex-col">
               <h6 className="mb-4">
                 <span className="text-gray-400 text-sm">Bài hát :</span>{" "}
                 {song.title}
@@ -208,18 +208,18 @@ const SpotifyModal = () => {
               )}
               <div
                 ref={lyricContainerRef}
-                className="bg-image-music hidden  bg-center bg-cover flex items-center justify-center text-center"
+                className="bg-image-music  hidden bg-center bg-cover flex items-center justify-center text-center"
               >
                 <div
                   ref={lyricRef}
-                  className="  w-64 my-4 h-64 p-8  flex items-center justify-center text-center "
+                  className="w-64 my-4 h-64  p-8  flex items-center justify-center text-center "
                 >
                   {song && song.title}
                 </div>
               </div>
             </figcaption>
             {listLyric?.length > 0 && (
-              <ul className="overflow-y-auto hidden sm:block md:max-h-[400px]   sm:max-h-[300px]">
+              <ul className="overflow-y-auto  md:block md:max-h-[400px] text-center max-h-[100px]  sm:max-h-[300px]">
                 {listLyric.map((text, index) => (
                   <li id={"current" + index} key={text.startTime}>
                     {text.text}

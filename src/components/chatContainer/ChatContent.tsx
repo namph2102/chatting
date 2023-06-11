@@ -22,21 +22,24 @@ export interface ChatContentProps {
 const ChatContent: FC<ChatContentProps> = (props) => {
   const codeRef = useRef<HTMLElement>(null);
   const classname =
-    "w-[fit-content]  flex-col sm:flex-row  rounded-lg font-medium pb-2 px-2 shadow-inner mt-3 ";
+    "w-[fit-content]  flex-start  flex-col sm:flex-row  rounded-lg font-medium pb-2 px-2 shadow-inner mt-3 ";
   return (
     <article
       className={cn(
-        "flex items-end   t gap-2 mt-3",
-        props.isUser ? "flex-row-reverse " : "flex-row"
+        "flex items-end mt-3",
+        props.isUser ? "flex-row-reverse gap-2" : "flex-row gap-2"
       )}
     >
       <img
         src={props.isUser ? "/images/avata.jpg" : "/images/botai.png"}
         alt="avata"
-        className=" sw:h-10  h-6 rounded-full object-cover"
+        width={24}
+        height={24}
+        loading="lazy"
+        className="sw:h-10 w-6 h-6  rounded-full object-cover"
       />
 
-      <div className="chat_item-user m-w-[calc(100%-60px)] flex flex-col gap-2">
+      <div className="chat_item-user m-w-[calc(100%-60px)]  flex flex-col gap-2">
         <div
           className={cn(
             classname,
@@ -48,7 +51,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           {props.type == "text" && (
             <p className="whitespace-pre-wrap pl-2">
               <code
-                className="javascript font-main  text-[15px]  whitespace-pre-wrap w-fit indent-4"
+                className="javascript font-main  text-[15px]  whitespace-pre-wrap w-[fit-content] indent-4"
                 dangerouslySetInnerHTML={{ __html: props.comment }}
                 ref={codeRef}
               ></code>

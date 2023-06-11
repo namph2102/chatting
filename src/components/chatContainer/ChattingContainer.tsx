@@ -49,14 +49,6 @@ const ChattingContainer = () => {
   const { theme } = useSelector((state: RootState) => state.userStore) || {};
 
   useEffect(() => {
-    try {
-      if (window?.innerWidth) {
-        dispatchRedux(setIsOpenDisplayTable(window.innerWidth <= 990));
-      }
-    } catch {
-      console.log("err");
-    }
-
     if (contentSlideAnimation.current) {
       hljs.highlightBlock(contentSlideAnimation.current);
       document.addEventListener("DOMContentLoaded", () => {
@@ -288,7 +280,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
   // Caht sẽ overlay tên mobile
   const dispatchRedux: AppDispatch = useDispatch();
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
-
+  console.log(isOpenChat);
   return (
     <div
       id={theme.darkmode}
@@ -296,7 +288,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       className={cn(
         "w-full lg:relative  fixed inset-0 z-20 ",
 
-        isOpenChat ? "hidden_toggle-mobile" : "open_toggle-mobile"
+        !isOpenChat ? "open_toggle-mobile" : "hidden_toggle-mobile"
       )}
     >
       <ChatHeader id="chatwithbotai" />
@@ -321,7 +313,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       </section>
       <ChatInput
         valueDefalutSearch={valueDefalutSearch}
-        className={isOpenChat ? "hidden_toggle-mobile" : "open_toggle-mobile"}
+        className={!isOpenChat ? "open_toggle-mobile" : "hidden_toggle-mobile"}
         loading={isLoadding}
         fileCallback={setFileUpload}
         mutationQuery={mutation.mutate}

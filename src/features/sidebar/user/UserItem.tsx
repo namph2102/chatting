@@ -11,7 +11,9 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
 
   return (
     <div
-      onClick={() => dispatchRedux(setIsOpenDisplayTable(true))}
+      onClick={() =>
+        window.innerWidth <= 1024 && dispatchRedux(setIsOpenDisplayTable(true))
+      }
       className="flex justify-between mb-2 items-center cursor-pointer"
       title={`${user.fullname}`}
     >
