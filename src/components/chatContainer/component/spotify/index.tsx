@@ -144,6 +144,9 @@ const SpotifyModal = () => {
   if (!song && playList.length <= 0) {
     return <LoaddingOverLay />;
   }
+  if (type == "artist" && playList.length <= 0 && artist.length <= 0) {
+    return <LoaddingOverLay />;
+  }
   return (
     <article
       onClick={(e) => e.stopPropagation()}
@@ -242,14 +245,19 @@ const SpotifyModal = () => {
           )}
         </section>
       )}
-      <div className="overflow-y-auto max-h-[80vh]">
-        {artist &&
-          type == "artist" &&
-          playList.length > 0 &&
-          playList.map((music) => (
-            <SpotifyItem key={nanoid()} items={music} artists={artist} />
-          ))}
-      </div>
+
+      {artist && type == "artist" && playList.length > 0 && (
+        <div className="flex flex-col justify-center items-center">
+          <h2 className="font-bold sm:text-xl text-base ">
+            Danh sách nhạc của {artist[0].name}
+          </h2>
+          <div className="md:w-[60%] sm:w-[80%] w-full h-[80vh] overflow-y-auto  mt-[2vh]">
+            {playList.map((music) => (
+              <SpotifyItem key={nanoid()} items={music} artists={artist} />
+            ))}
+          </div>
+        </div>
+      )}
     </article>
   );
 };

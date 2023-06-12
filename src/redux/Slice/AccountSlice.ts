@@ -4,6 +4,7 @@ import { initialAccount } from "./initvalue.util";
 import { AppDispatch } from "..";
 import { IAccount } from "./slice.type";
 import instance from "../../config";
+import { ToastNotify } from "../../servies/utils";
 const theme = {
   backgroundthem: "/theme/theme4.png",
   darkmode: "dark-mode",
@@ -44,15 +45,19 @@ export const {
 
 type PayloadCreateAccount = Pick<
   IAccount & { password: string },
-  "fullname" | "username" | "password"
+  "fullname" | "username" | "password" | "avatar" | "uid"
 >;
-
+const acctackToken = (username: string, accessToken: string) => {
+  instance.defaults.headers.common["Authorization"] = accessToken;
+  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem("username", username);
+};
 // create new  account
 export const CreateAccount = (
   payload: PayloadCreateAccount,
   signal: AbortSignal
 ) => {
-  return async (dispach: AppDispatch) => {
+  return async (dispatch: AppDispatch) => {
     let message = "";
     return instance
       .post("/user/create", {
@@ -63,12 +68,8 @@ export const CreateAccount = (
         const data = response.data;
 
         const account: IAccount = data.account;
-        message = data.message || "Tạo tài khoảng thành công!";
-
-        instance.defaults.headers.common["Authorization"] = account.accessToken;
-        localStorage.setItem("accessToken", account.accessToken);
-        localStorage.setItem("username", account.username);
-        dispach(AccountSlice.actions.UpdateAccount(account));
+        message = data.message || "Tạo tài khoản thành công!";
+        uploadFullAccount(dispatch, account);
         return message;
       })
       .catch((error) => {
@@ -78,4 +79,35 @@ export const CreateAccount = (
         throw new Error(message);
       });
   };
+};
+export const LoginAccount = (
+  payload: Pick<PayloadCreateAccount, "username" | "password">,
+  signal: AbortSignal
+) => {
+  return async (dispatch: AppDispatch) => {
+    return instance
+      .post("user/login", { data: payload, signal })
+      .then((res) => {
+        if (res?.data?.account) {
+          const account = res?.data?.account;
+          uploadFullAccount(dispatch, account);
+          ToastNotify("Bạn đang nhập thành công").success({ autoClose: 2000 });
+          return true;
+        }
+      })
+      .catch((error) => {
+        ToastNotify(
+          error?.response?.data.message ||
+            "Lỗi sever! Bạn vui lòng liên hệ admin"
+        ).warning({ autoClose: 4000 });
+        return false;
+      });
+  };
+};
+export const uploadFullAccount = (dispatch: AppDispatch, account: IAccount) => {
+  // đính token
+  if (account.username && account.accessToken) {
+    acctackToken(account.username, account.accessToken);
+  }
+  dispatch(AccountSlice.actions.UpdateAccount(account));
 };

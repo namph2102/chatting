@@ -108,6 +108,7 @@ const ChattingContainer = () => {
           }
         }
       };
+
       // handle chose setting
       if (message.text.includes("**img**")) {
         const prompt: string = message.text.includes("**img**")
@@ -132,7 +133,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         setValueDefaultSearch("**img**");
 
         typeChatting = "image";
-        console.log(des, size);
+
         const test = await openaiStream.createImage(des, `${size}x${size}`);
         const data: { url: string }[] = await test.data;
 
@@ -177,7 +178,6 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         } else {
           reply = "Thời tiết hôm nay của bạn*0*0";
         }
-        console.log(reply);
         // show thời tiết
         typeChatting = "weather";
 
@@ -211,33 +211,34 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         if (proms.includes("**")) {
           language = proms.split("**")[0].trim() || "en";
         }
-        if (!fileUpload) throw new Error("Bạn chưa upload file âm thanh");
+        if (!fileUpload) throw new Error("Có lẽ chưa tải file dúng yêu cầu?");
         ToastNotify("Vui lòng chờ đợi trong ít giây bạn nhé!").success({
           autoClose: 5000,
         });
-        reply = ` Hệ thống đã dịch thành công:<br/>
+        reply = `File Audio của bạn Có nội dung là:<br/>
          ${await openaiStream.getTextInAudio(fileUpload, language)} `;
         typeChatting = "translate";
         if (!reply) {
           throw new Error("Xin lỗi hệ thống đang quá tải!");
         }
+
+        setValueDefaultSearch("");
       } else {
         setValueDefaultSearch("");
         await openaiStream.createMessage(message, handleGetValueTyping);
       }
+
       if (boxChatContentRef.current) {
         ScroolToBottom(boxChatContentRef.current, 1000);
       }
       // const regex = /https?:\/\/[^\s]+/g;
       // const links = [...(reply.match(regex) || [])] || [];
-
       // console.log(links);
       if (typeChatting == "text") {
         reply = hljs.highlightAuto(handleCoverComment(reply)).value || "";
       } else {
         reply = reply || "";
       }
-
       dispatch(
         handleAddComment({
           id: nanoid(),
@@ -278,7 +279,6 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
   });
 
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
-  console.log(isOpenChat);
   return (
     <div
       id={theme.darkmode}

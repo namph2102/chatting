@@ -108,7 +108,6 @@ const ChatInput: FC<ChatInputProps> = ({
     }
   }, []);
   const handleChoseSetting = (settings: TlistSwipper) => {
-    console.log(settings);
     if (chattingRef.current) {
       if (settings.type == "img") {
         setListOptions(optionsImage);

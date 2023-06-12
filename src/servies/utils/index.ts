@@ -55,7 +55,7 @@ export function handleStopPropagation<T extends React.MouseEvent>(
 }
 export function Debounced(callback: () => void, delay: number) {
   delay = delay || 0;
-  let timeId: number | undefined;
+  let timeId: number | undefined | any;
   // console.log("time  next at", timeId);
   return () => {
     // console.log("time  previos at", timeId);

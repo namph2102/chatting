@@ -9,6 +9,7 @@ export const initialAccount: IAccount = {
   refreshToken: "",
   follows: "",
   friends: [],
+  uid: "",
   rooms: [],
   blocked: false,
   permission: "",

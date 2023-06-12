@@ -1,5 +1,6 @@
 import axios from "axios";
-const domainserver = "http://localhost:3000/";
+const domainserver =
+  import.meta.env.VITE_DOMAIN_SEVER || "https://zeckysever.onrender.com/";
 const instance = axios.create({
   baseURL: domainserver,
   timeout: 3 * 1000,

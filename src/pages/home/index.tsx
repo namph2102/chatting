@@ -8,9 +8,13 @@ import VideoSidebar from "../../features/videocall";
 import SpotifyModal from "../../components/chatContainer/component/spotify";
 import { updateStatusModalSpotify } from "../../redux/Slice/SpotifySlice";
 import ModalProviderOverlay from "../../components/Ui/ModalProviderOverlay";
+import { useEffect } from "react";
 const Home = () => {
   const { userStore, spotifyStore } = useSelector((state: RootState) => state);
   const dispacth: AppDispatch = useDispatch();
+  useEffect(() => {
+    document.title = "Zecky";
+  }, []);
   return (
     <>
       <div className="container mx-auto relative">

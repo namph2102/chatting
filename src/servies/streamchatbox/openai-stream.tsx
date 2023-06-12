@@ -80,7 +80,6 @@ class OpenAIStream {
         },
         body: JSON.stringify(payload),
       });
-
       const render = res.body?.getReader();
       await streamTextOpenAi(render, callback);
     } catch {
@@ -163,7 +162,7 @@ class OpenAIStream {
       responsiveZingmp3.data.counter.song <= 0
     ) {
       throw new Error(
-        "Xin lỗi bạn! Mình không tìm thấy theo keyword: " + search
+        "Xin lỗi bạn! Mình không tìm thấy theo từ khóa: " + search
       );
     }
 

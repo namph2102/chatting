@@ -10,6 +10,7 @@ export interface IAccount {
   rooms: string[];
   blocked: boolean;
   permission: string;
+  uid: string;
   address: string;
   phone: string;
   email: string;

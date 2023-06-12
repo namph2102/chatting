@@ -1,9 +1,10 @@
 import InputElement from "../../components/form/InputElement";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ToastNotify, customeValue } from "../../servies/utils";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { ToastNotify } from "../../servies/utils";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   BsFacebook,
   BsFillChatSquareTextFill,
@@ -12,15 +13,18 @@ import {
 } from "react-icons/bs";
 import { LoaddingOverLay } from "../../components/loading";
 import { useDispatch } from "react-redux";
-import { CreateAccount } from "../../redux/Slice/AccountSlice";
+import {
+  LoginAccount,
+  uploadFullAccount,
+} from "../../redux/Slice/AccountSlice";
 import { AppDispatch } from "../../redux";
-
-const Register = () => {
+import Authentication from "../../config/auth";
+import instance from "../../config";
+const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const aboutController = new AbortController();
   const signal = aboutController.signal;
-
   useEffect(() => {
     document.title = "Đăng ký tại Zecky";
 
@@ -28,57 +32,78 @@ const Register = () => {
       aboutController.abort();
     };
   }, []);
+  const responsiveLoggin = useCallback(
+    (response: {
+      user: {
+        uid: string;
+        email: string;
+      };
+    }) => {
+      if (!response?.user) return;
+      setIsloading(true);
+      if (response?.user?.uid) {
+        instance
+          .post("user/login/firebase", {
+            data: {
+              uid: response.user.uid,
+              username:
+                response?.user?.email || localStorage.getItem("username"),
+            },
+          })
+          .then((res) => {
+            if (res.data?.account) {
+              uploadFullAccount(dispatch, res.data?.account);
 
+              const idTimeout = setTimeout(() => {
+                setIsloading(false);
+                ToastNotify(res.data.message).success();
+                clearTimeout(idTimeout);
+                navigate("/");
+              }, 2000);
+              return;
+            } else {
+              ToastNotify("Sever đang bị lỗi!").info();
+            }
+          })
+          .catch((err) => {
+            setIsloading(false);
+            const message =
+              err?.response?.data?.message || "Tài khoản chưa đăng ký";
+            ToastNotify(message).error();
+          });
+      }
+    },
+    []
+  );
   const [isLoading, setIsloading] = useState<boolean>(false);
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: {
-      fullname: "",
       password: "",
       username: "",
     },
     validationSchema: Yup.object().shape({
-      fullname: Yup.string()
-        .required("không được để trống")
-        .matches(/^[\D \s]+$/, 'chỉ bao gồm "chữ cái"')
-        .min(2, "Ít nhất là 2 ký tự")
-        .max(50, "không vượt quá 50 ký tự"),
       password: Yup.string()
-
         .required("không được để trống")
-        .min(5, "Ít nhất là 5 ký tự")
         .max(50, "không vượt vượt quá 50 ký tự"),
       username: Yup.string()
-        .matches(
-          /^[a-zA-Z0-9@.]+$/,
-          'chỉ bao gồm "chữ số" , "chữ cái" và không có "dấu cách"'
-        )
         .required("không được để trống")
-        .min(3, "Ít nhất là 3 ký tự")
         .max(50, "không vượt vượt quá 50 ký tự"),
     }),
     onSubmit: async (objvalue) => {
       const data = {
         username: objvalue.username.trim(),
-        fullname: customeValue(objvalue.fullname),
         password: objvalue.password.trim(),
       };
       setIsloading(true);
-      dispatch(CreateAccount(data, signal))
-        .then((message) => {
-          ToastNotify(message).success();
-          formik.resetForm();
-          navigate("/");
-        })
-        .catch((err) => {
-          ToastNotify(err.message).warning();
-          formik.setFieldError("username", err.message);
-        })
-        .finally(() => {
-          const idSettimeout = setTimeout(() => {
-            setIsloading(false);
-            clearTimeout(idSettimeout);
-          }, 2000);
-        });
+      const isRedis = await dispatch(LoginAccount({ ...data }, signal)).finally(
+        () => {
+          setIsloading(false);
+        }
+      );
+      if (isRedis) {
+        ToastNotify("Đăng nhập thành công!").success();
+        navigate("/");
+      }
     },
   });
 
@@ -101,22 +126,14 @@ const Register = () => {
           className="lg:basis-3/4 basis-full flex flex-col items-center justify-center rounded-xl py-6 px-2"
         >
           <div className="text-center mb-6">
-            <h2 className="font-bold text-3xl">Đăng Kí Tài Khoản</h2>
+            <h2 className="font-bold text-3xl">Đăng nhập</h2>
             <p className="text-sm mt-3 text-transparent/60">
-              Tạo tài khoản miễn phí của bạn ngay đây thôi.
+              Cùng trò chuyện với bạn bè nào.
             </p>
           </div>
 
           <form method="POST" onSubmit={formik.handleSubmit}>
             <div className="grid gap-2 mb-1 md:grid-cols-1">
-              <InputElement
-                name="fullname"
-                error={formik.errors.fullname}
-                value={formik.values.fullname}
-                handleChange={formik.handleChange}
-                title="họ và tên"
-              />
-
               <InputElement
                 name="username"
                 error={formik.errors.username}
@@ -136,29 +153,35 @@ const Register = () => {
 
             <p className="text-sm text-center">
               Chấp nhận chính sách của tôi{" "}
-              <strong className="text-primary">Terms of Use</strong>
+              <Link to="/chinh-sach">
+                <strong className="text-primary">Terms of Use</strong>
+              </Link>
             </p>
             <button
               type="submit"
               className="py-2 w-full my-3 text-base text-[#fff] background-primary hover:opacity-95 rounded-lg"
             >
-              Đăng kí ngay
+              Đăng nhập ngay
             </button>
             <p className="text-center mb-2">Có thể sử dụng với</p>
             <div className="grid grid-cols-3 gap-4">
               <button
-                type="button"
-                className="py-4 rounded-xl bg-slate-200 hover:bg-slate-300 flex justify-center"
-              >
-                <BsFacebook fill="#560BAD" className="sm:text-base text-sm" />
-              </button>
-              <button
+                onClick={() => Authentication.signGoogle(responsiveLoggin)}
                 type="button"
                 className="py-4 rounded-xl bg-slate-200 hover:bg-slate-300 flex justify-center"
               >
                 <BsGoogle fill="#EF476F" className="sm:text-base text-sm" />
               </button>
               <button
+                type="button"
+                onClick={() => Authentication.signFacebook(responsiveLoggin)}
+                className="py-4 rounded-xl bg-slate-200 hover:bg-slate-300 flex justify-center"
+              >
+                <BsFacebook fill="#560BAD" className="sm:text-base text-sm" />
+              </button>
+
+              <button
+                onClick={() => Authentication.signGithub(responsiveLoggin)}
                 type="button"
                 className="py-4 rounded-xl bg-slate-200 hover:bg-slate-300 flex justify-center"
               >
@@ -167,12 +190,22 @@ const Register = () => {
             </div>
           </form>
           <p className="my-10">
-            Already have an account ?{" "}
-            <span className="text-primary">Đăng nhập</span>
+            Bạn chưa có tài khoản ?
+            <Link to="/dang-ky" className="text-primary ml-2">
+              Đăng ký ngay
+            </Link>
           </p>
           <p className="text-sm text-primay opacity-75 pt-4 px-2">
             &copy; Zecky. Được tạo bởi <span className="text-red-600">❤️</span>{" "}
-            Hoài Nam Devloper
+            <a
+              href="https://www.facebook.com/namhoai2102"
+              target="_blank"
+              className="mx-1 text-primary"
+            >
+              {" "}
+              Hoài Nam
+            </a>
+            Developer
           </p>
         </article>
       </div>
@@ -191,4 +224,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default LoginPage;
