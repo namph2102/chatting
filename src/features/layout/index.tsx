@@ -11,7 +11,7 @@ const Layout = () => {
         <Route path="/*" Component={Home}></Route>
         <Route path="dang-ky" Component={RegisterPage}></Route>
         <Route path="dang-nhap" Component={LoginPage}></Route>
-        <Route path="404" element={<PageNotFound />} />
+        <Route path="/*/*" element={<PageNotFound />} />
       </Routes>
     </>
   );

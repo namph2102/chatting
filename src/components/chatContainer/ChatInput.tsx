@@ -174,7 +174,7 @@ const ChatInput: FC<ChatInputProps> = ({
   return (
     <section
       className={cn(
-        "absolute bg-follow-darkmode   bottom-0 left-0 right-0 p-4",
+        "absolute bg-follow-darkmode  w-full bottom-0 left-0 right-0 p-4",
 
         className
       )}
@@ -230,14 +230,14 @@ const ChatInput: FC<ChatInputProps> = ({
           </Tooltip>
         </div>
 
-        <div className="w-full  flex items-center ease-out duration-200  flex-1  p-2  rounded-sm">
+        <div className="flex items-center ease-out duration-200  flex-1  p-2  rounded-sm">
           {!loading ? (
             <TextareaAutosize
               ref={chattingRef}
               onFocus={() => handleForcusChatting(true)}
               onTouchEnd={() => handleForcusChatting(true)}
               onBlur={() => handleForcusChatting(false)}
-              className="w-full py-3  block form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
+              className="py-3 block form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
               placeholder="Lời nhắn?"
               defaultValue={valueDefalutSearch}
               maxRows={6}
