@@ -26,7 +26,7 @@ const SiderBar = () => {
     _id: "chatbot",
     active: true,
     avata: "/images/botai.png",
-    fullname: "chatbotai",
+    fullname: "ChatGPT-Plus",
   };
 
   let listChattingLocal = historyChatting("searchHistory");
