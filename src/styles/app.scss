@@ -122,3 +122,8 @@ button {
 
   padding: 8px !important;
 }
+@media screen and (min-width: 500px) {
+  .btn_send-chatting {
+    background-color: rgba(var(--primary-color));
+  }
+}

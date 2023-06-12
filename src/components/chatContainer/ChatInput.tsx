@@ -165,6 +165,7 @@ const ChatInput: FC<ChatInputProps> = ({
           props[1] = value;
         }
         chattingRef.current.value = "**" + props.join("**") + "**";
+        setIsOpenSubOptions(false);
       } else {
         setIsOpenSubOptions(false);
       }
@@ -174,18 +175,18 @@ const ChatInput: FC<ChatInputProps> = ({
   return (
     <section
       className={cn(
-        "absolute bg-follow-darkmode  w-full bottom-0 left-0 right-0 p-4",
+        "absolute bg-follow-darkmode  bottom-0 left-0 right-0 sm:p-4 py-4 px-1",
 
         className
       )}
     >
-      <div className="flex justify-between  gap-4 items-center h-full">
+      <div className="flex  justify-between w-full overflow-x-hidden  sm:gap-4 gap-2 items-center h-full">
         <div
           ref={btnMoreOpenRef}
           title="Mở rộng"
           onClick={() => {
             handleForcusChatting(false),
-              window.innerWidth < 560 &&
+              window.innerWidth < 640 &&
                 btnMoreOpenRef.current?.classList?.toggle("hidden");
           }}
           className="sm:hidden hidden absolute cursor-pointer"
@@ -237,7 +238,7 @@ const ChatInput: FC<ChatInputProps> = ({
               onFocus={() => handleForcusChatting(true)}
               onTouchEnd={() => handleForcusChatting(true)}
               onBlur={() => handleForcusChatting(false)}
-              className="py-3 block form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
+              className="py-3 block min-w-[60px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
               placeholder="Lời nhắn?"
               defaultValue={valueDefalutSearch}
               maxRows={6}
@@ -250,7 +251,7 @@ const ChatInput: FC<ChatInputProps> = ({
           )}
         </div>
 
-        <div className="sm:min-w-[100px]  justify-around items-center flex">
+        <div className=" sm:min-w-[100px]  justify-around items-center flex">
           <Tooltip
             title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
             componentsProps={componentsProps}
@@ -275,7 +276,7 @@ const ChatInput: FC<ChatInputProps> = ({
               }
               handleSubmitMessage();
             }}
-            className="background-primary hover:opacity-80 sm:py-2.5 sm:px-3 py-1.5 px-2 rounded-xl"
+            className="btn_send-chatting hover:opacity-80 sm:py-2.5 sm:px-3 py-1.5 px-2 rounded-xl"
           >
             {loading ? (
               <BiLoaderCircle

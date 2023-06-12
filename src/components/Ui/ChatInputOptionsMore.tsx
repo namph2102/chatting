@@ -94,7 +94,7 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
         setPageinTWipper(4);
         break;
       default:
-        setPageinTWipper(3);
+        setPageinTWipper(2);
         break;
     }
   }, [isPageInSwiper]);
@@ -114,7 +114,7 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
     console.log(file);
     if (file) {
       const pathLastfile: string = file.name.split(".").pop() || "nohave";
-      console.log(pathLastfile);
+
       if (file.size > 1024 * 1000 * 100) {
         ToastNotify("Dung lượng file đã > 100Mb!").success();
 
@@ -142,7 +142,7 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
 
   return (
     <>
-      <div className="relative">
+      <div className="relative left-0">
         <Tooltip
           title="More"
           componentsProps={componentsProps}
