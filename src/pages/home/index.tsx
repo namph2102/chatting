@@ -13,7 +13,7 @@ const Home = () => {
   const { userStore, spotifyStore } = useSelector((state: RootState) => state);
   const dispacth: AppDispatch = useDispatch();
   useEffect(() => {
-    document.title = "Zecky";
+    document.title = "Zecky - Trang chủ";
   }, []);
   return (
     <>

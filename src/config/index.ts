@@ -3,8 +3,11 @@ const domainserver =
   import.meta.env.VITE_DOMAIN_SEVER || "https://zeckysever.onrender.com/";
 const instance = axios.create({
   baseURL: domainserver,
-  timeout: 3 * 1000,
-  headers: { "Content-Type": "application/json" },
+  timeout: 6 * 1000,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("accessToken") || "",
+  },
 });
 
 instance.interceptors.request.use(

@@ -175,7 +175,7 @@ const ChatInput: FC<ChatInputProps> = ({
   return (
     <section
       className={cn(
-        "absolute bg-follow-darkmode  bottom-0 left-0 right-0 sm:p-4 py-4 px-1",
+        "absolute bg-follow-darkmode  bottom-0 left-0 right-0 sm:p-4 py-4 px-3",
 
         className
       )}
@@ -184,7 +184,7 @@ const ChatInput: FC<ChatInputProps> = ({
         <div
           ref={btnMoreOpenRef}
           title="Mở rộng"
-          onClick={() => {
+          onTouchStart={() => {
             handleForcusChatting(false),
               window.innerWidth < 640 &&
                 btnMoreOpenRef.current?.classList?.toggle("hidden");
@@ -236,7 +236,7 @@ const ChatInput: FC<ChatInputProps> = ({
             <TextareaAutosize
               ref={chattingRef}
               onFocus={() => handleForcusChatting(true)}
-              onTouchEnd={() => handleForcusChatting(true)}
+              onTouchStart={() => handleForcusChatting(true)}
               onBlur={() => handleForcusChatting(false)}
               className="py-3 block min-w-[60px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
               placeholder="Lời nhắn?"

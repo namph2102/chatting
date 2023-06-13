@@ -3,7 +3,15 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "./features/layout";
 import ImageLayout from "./assets/opengraph-image.png";
+import { useEffect } from "react";
+import { firstloginWebsite } from "./redux/Slice/AccountSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./redux";
 function App() {
+  const dispacth: AppDispatch = useDispatch();
+  useEffect(() => {
+    dispacth(firstloginWebsite());
+  }, []);
   return (
     <div className="myapp">
       <img

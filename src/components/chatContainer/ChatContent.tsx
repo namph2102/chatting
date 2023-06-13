@@ -13,6 +13,7 @@ import ImageChatComment from "./component/imagechatting";
 export interface ChatContentProps {
   id: string;
   isUser: boolean;
+  avatar: string;
   comment: any;
   time: string;
   type: string;
@@ -31,7 +32,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
       )}
     >
       <img
-        src={props.isUser ? "/images/avata.jpg" : "/images/botai.png"}
+        src={props.avatar || "/images/avata.jpg"}
         alt="avata"
         width={24}
         height={24}

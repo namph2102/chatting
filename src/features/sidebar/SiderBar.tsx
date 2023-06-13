@@ -23,7 +23,7 @@ const SiderBar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { account, theme } = useSelector((state: RootState) => state.userStore);
   const boxID = {
-    _id: "chatbot",
+    _id: "ChatGPT",
     active: true,
     avata: "/images/botai.png",
     fullname: "ChatGPT-Plus",
@@ -218,11 +218,11 @@ const SiderBar = () => {
 
         {listChatting.length > 0 && (
           <div className="px-4">
-            <UserListContainer title="CHATBOT" listUser={[boxID]} />
-            <UserListContainer title="CHATBOX" listUser={listChatting} />
-            <UserListContainer title="CHATBOX" listUser={listChatting} />
-            <UserListContainer title="CHATBOX" listUser={listChatting} />
-            <UserListContainer title="CHATBOX" listUser={listChatting} />
+            <UserListContainer title="ChatGPT" listUser={[boxID]} />
+            <UserListContainer
+              title="Hiện tại chỉ có thể sử dụng chatGPT Plus"
+              listUser={listChatting}
+            />
           </div>
         )}
       </section>
@@ -236,34 +236,27 @@ function getData(): Promise<IUserItem[]> {
       _id: "8v6of181wimXsAVGg6S7B",
       active: true,
       avata: "/images/avata.jpg",
-      fullname: "3qtOJ3Zde11gj1IsQZwmv",
+      fullname: "Thư nguyễn",
       contentWatting: 2,
     },
     {
       _id: "Z3GUCCdydP_OAHdAHjX4q",
       active: false,
       avata: "/images/avata.jpg",
-      fullname: "Uxr0k8BKp6OAqQ3ZzV-Xo",
+      fullname: "Hoàng Mai",
     },
     {
-      _id: "powMTcLi5_Nu6Ayc_jFnu",
+      _id: "8v6of181wimXsAVGg6S7B",
       active: true,
       avata: "/images/avata.jpg",
-      fullname: "cQrygiOjt0GFmgUhuxHjn",
+      fullname: "Hoài Nam",
       contentWatting: 2,
     },
     {
-      _id: "kw_CRtyUuPWtqxkBZhmsa",
+      _id: "Z3GUCCdydP_OAHdAHjX4q",
       active: false,
       avata: "/images/avata.jpg",
-      fullname: "_7XsGSyVUMLcFQJAd0dyI",
-      contentWatting: 2,
-    },
-    {
-      _id: "gXHQ8FpLEkfS4k53M0CJw",
-      active: true,
-      avata: "/images/avata.jpg",
-      fullname: "X9RFb4ApOyid_pqL4k1p5",
+      fullname: "Sơn Tùng MTP",
     },
   ];
 

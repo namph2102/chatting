@@ -30,6 +30,7 @@ const initState: ChatContentProps[] = [
     comment:
       "Chào mừng bạn đến với trang web zecky.online! Bạn cần giúp đỡ gì ạ!",
     isUser: false,
+    avatar: "/images/botai.png",
     time: getTime(),
     type: "text",
     isSee: true,
@@ -45,7 +46,8 @@ const ChattingContainer = () => {
   const boxChatContentRef = useRef<HTMLElement>(null);
   const contentSlideAnimation = useRef<HTMLDivElement>(null);
   const [fileUpload, setFileUpload] = useState<File>();
-  const { theme } = useSelector((state: RootState) => state.userStore) || {};
+  const { theme, account } =
+    useSelector((state: RootState) => state.userStore) || {};
 
   useEffect(() => {
     if (contentSlideAnimation.current) {
@@ -72,11 +74,12 @@ const ChattingContainer = () => {
           setValueDefaultSearch("");
         }
       }
-      // add comment suer chat
+      // add comment usechat
       dispatch(
         handleAddComment({
           id: nanoid(),
           isUser: true,
+          avatar: account.avatar,
           type: "text",
           comment: message.text.trim(),
           time: getTime(),
@@ -243,6 +246,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         handleAddComment({
           id: nanoid(),
           isUser: false,
+          avatar: "/images/botai.png",
           comment: reply,
           type: typeChatting,
           time: getTime(),
@@ -267,6 +271,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
           id: nanoid(),
           isUser: false,
           type: "text",
+          avatar: "/images/botai.png",
           comment: err.message,
           time: getTime(),
           isSee: true,

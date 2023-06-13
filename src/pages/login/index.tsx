@@ -56,7 +56,7 @@ const LoginPage = () => {
 
               const idTimeout = setTimeout(() => {
                 setIsloading(false);
-                ToastNotify(res.data.message).success();
+
                 clearTimeout(idTimeout);
                 navigate("/");
               }, 2000);

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { initialAccount } from "./initvalue.util";
 import { AppDispatch } from "..";
@@ -34,6 +34,15 @@ const AccountSlice = createSlice({
       state.accessTokenSpotify = action.payload;
     },
   },
+  extraReducers(builder) {
+    builder.addCase(firstloginWebsite.fulfilled, (state, action) => {
+      if (action.payload?.accessToken) {
+        state.account = action.payload;
+
+        acctackToken(action.payload.accessToken);
+      }
+    });
+  },
 });
 export default AccountSlice.reducer;
 export const {
@@ -47,10 +56,9 @@ type PayloadCreateAccount = Pick<
   IAccount & { password: string },
   "fullname" | "username" | "password" | "avatar" | "uid"
 >;
-const acctackToken = (username: string, accessToken: string) => {
-  instance.defaults.headers.common["Authorization"] = accessToken;
+const acctackToken = (accessToken: string) => {
+  instance.defaults.headers.common["Authorization"] = "Bearer  " + accessToken;
   localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("username", username);
 };
 // create new  account
 export const CreateAccount = (
@@ -73,9 +81,7 @@ export const CreateAccount = (
         return message;
       })
       .catch((error) => {
-        message =
-          error?.response?.data.message ||
-          "Hình như lỗi gì đó bạn hãy tạo lại!";
+        message = error?.response?.data?.message || "đã tồn tại";
         throw new Error(message);
       });
   };
@@ -91,7 +97,7 @@ export const LoginAccount = (
         if (res?.data?.account) {
           const account = res?.data?.account;
           uploadFullAccount(dispatch, account);
-          ToastNotify("Bạn đang nhập thành công").success({ autoClose: 2000 });
+
           return true;
         }
       })
@@ -107,7 +113,31 @@ export const LoginAccount = (
 export const uploadFullAccount = (dispatch: AppDispatch, account: IAccount) => {
   // đính token
   if (account.username && account.accessToken) {
-    acctackToken(account.username, account.accessToken);
+    acctackToken(account.accessToken);
   }
   dispatch(AccountSlice.actions.UpdateAccount(account));
 };
+export const firstloginWebsite = createAsyncThunk(
+  "/user/firstlogin",
+  async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        throw new Error("Tài khoản chưa đăng nhập lần nào");
+      }
+
+      return instance
+        .get("/user/firstlogin")
+        .then((res) => {
+          if (res.data.account) {
+            return res.data.account;
+          }
+        })
+        .catch(() => {
+          console.error("Tài khoản chưa đăng ký lần nào");
+        });
+    } catch (err: { message: string } | any) {
+      console.error(err.message);
+    }
+  }
+);

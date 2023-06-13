@@ -10,7 +10,7 @@ interface ChatHeaderProps {
   id: string;
 }
 // eslint-disable-next-line react-refresh/only-export-components
-const ChatHeader: FC<ChatHeaderProps> = ({ id = "chatbox" }) => {
+const ChatHeader: FC<ChatHeaderProps> = ({ id = "chatbot" }) => {
   const [active] = useState<boolean>(true);
   console.log(id);
   const dispatchRedux: AppDispatch = useDispatch();
@@ -53,8 +53,8 @@ const ChatHeader: FC<ChatHeaderProps> = ({ id = "chatbox" }) => {
             </div>
           </div>
           <div>
-            <h3 className=" capitalize sm:text-lg text-sm font-semibold drop-shadow-sm">
-              ChatBot
+            <h3 className=" capitalize sm:text-lg text-sm line-clamp-1 font-semibold drop-shadow-sm">
+              ChatGPT- Plus
             </h3>
             <p className="text-[12px]">{active ? "Active" : "off"}</p>
           </div>
