@@ -32,6 +32,7 @@ export default {
       },
     },
     fontFamily: {
+      chat: ["Inter", "Open Sans", "sans-serif"],
       main: ["Open Sans", "sans-serif"],
       sans: [
         "ui-sans-serif",

@@ -34,7 +34,7 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
             )}
           ></div>
         </div>
-        <p className="lg:max-w-[200px]  sm:max-w-full   whitespace-nowrap overflow-hidden  capitalize  text-xs  font-medium  text-ellipsis">
+        <p className="lg:max-w-[200px]  sm:max-w-full    whitespace-nowrap overflow-hidden  capitalize  text-[14px]  font-medium  text-ellipsis">
           {user.fullname}
         </p>
       </div>

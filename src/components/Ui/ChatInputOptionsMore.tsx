@@ -35,7 +35,7 @@ export const listSwipper: TlistSwipper[] = [
   },
   {
     id: 3,
-    title: "mp3",
+    title: "Nhạc",
     Icon: BiHeadphone,
     type: "mp3",
   },

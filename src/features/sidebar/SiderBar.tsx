@@ -240,13 +240,13 @@ function getData(): Promise<IUserItem[]> {
       contentWatting: 2,
     },
     {
-      _id: "Z3GUCCdydP_OAHdAHjX4q",
+      _id: "sssssss",
       active: false,
       avata: "/images/avata.jpg",
       fullname: "Hoàng Mai",
     },
     {
-      _id: "8v6of181wimXsAVGg6S7B",
+      _id: "dsadsads",
       active: true,
       avata: "/images/avata.jpg",
       fullname: "Hoài Nam",

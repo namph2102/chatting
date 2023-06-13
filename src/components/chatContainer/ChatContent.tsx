@@ -40,7 +40,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
         className="sw:h-10 w-6 h-6  rounded-full object-cover"
       />
 
-      <div className="chat_item-user m-w-[calc(100%-60px)]  flex flex-col gap-2">
+      <div className="chat_item-user font_inter-chatting   text-base font-normal   m-w-[calc(100%-60px)]  flex flex-col gap-2">
         <div
           className={cn(
             classname,
@@ -52,7 +52,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           {props.type == "text" && (
             <p className="whitespace-pre-wrap pl-2">
               <code
-                className="javascript font-main  text-[15px]  whitespace-pre-wrap w-[fit-content] indent-4"
+                className="javascript whitespace-pre-wrap w-[fit-content]  font_inter-chatting indent-4"
                 dangerouslySetInnerHTML={{ __html: props.comment }}
                 ref={codeRef}
               ></code>
@@ -60,7 +60,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           )}
           {props.type == "translate" && (
             <p
-              className="text-base font-sans font-normal"
+              className="font_inter-chatting font-light "
               dangerouslySetInnerHTML={{ __html: props.comment }}
             />
           )}

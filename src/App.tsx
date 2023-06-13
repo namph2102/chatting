@@ -7,10 +7,11 @@ import { useEffect } from "react";
 import { firstloginWebsite } from "./redux/Slice/AccountSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "./redux";
+
 function App() {
   const dispacth: AppDispatch = useDispatch();
   useEffect(() => {
-    dispacth(firstloginWebsite());
+    localStorage.getItem("accessToken") && dispacth(firstloginWebsite());
   }, []);
   return (
     <div className="myapp">

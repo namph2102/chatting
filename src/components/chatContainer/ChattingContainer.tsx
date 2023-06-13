@@ -28,7 +28,7 @@ const initState: ChatContentProps[] = [
   {
     id: "chatbox",
     comment:
-      "Chào mừng bạn đến với trang web zecky.online! Bạn cần giúp đỡ gì ạ!",
+      "Chào mừng bạn đã đến với Zecky! Hiện tại Website vẫn đang trong giai đoạn phát triển. Rất vui và hãy sử dụng một số tiện ích có sẵn được xây dựng bởi ChatGPT phiên bản Plus hoàn toàn miễn phí tại chúng tôi. </br> Cảm ơn bạn đã sử dụng!",
     isUser: false,
     avatar: "/images/botai.png",
     time: getTime(),
@@ -298,17 +298,17 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
 
       <section
         ref={boxChatContentRef}
-        className="chatting px-2 absolute top-0 left-0 right-0 overflow-y-auto overflow-x-hidden w-full pt-14 max-h-[calc(100vh-100px)]"
+        className="chatting px-2 absolute top-0 left-0 right-0 overflow-y-auto overflow-x-hidden w-full pt-24 max-h-[calc(100vh-100px)]"
       >
         {listUserComments.length > 0 &&
           listUserComments.map((comment) => (
             <ChatContent {...comment} key={comment.id} />
           ))}
 
-        <div className="whitespace-pre-wrap mt-4">
+        <div className="font_inter-chatting whitespace-pre-wrap mt-4">
           <p className="rounded-xl whitespace-pre-wrap px-3">
             <code
-              className="language-javascript "
+              className="language-javascript  "
               ref={contentSlideAnimation}
             ></code>
           </p>
