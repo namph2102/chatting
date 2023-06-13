@@ -79,3 +79,34 @@
   scale: 0 !important;
   font-size: 0 !important;
 }
+
+.bg_coding-result {
+  background-color: #000 !important;
+}
+@media screen and (min-width: 768px) {
+  .show_destop {
+    position: fixed;
+    display: block !important;
+  }
+}
+@media screen and (max-width: 990px) {
+  .hidden_toggle-mobile {
+    transform: translateX(100%);
+    transition: 0.3s ease-in;
+  }
+  .open_toggle-mobile {
+    transform: translateX(0);
+    transition: 0.3s ease-in;
+  }
+}
+
+.box_chat-content {
+  .text_copy {
+    display: none;
+  }
+  &:hover {
+    .text_copy {
+      display: flex !important;
+    }
+  }
+}

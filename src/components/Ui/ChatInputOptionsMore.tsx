@@ -121,7 +121,9 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
         e.target.value = "";
         return;
       } else if (
-        !" mp3 mp4 mpeg mpga m4a wav  webm".includes(pathLastfile?.trim())
+        !"mp3 mp4 mpeg mpga m4a wav webm flac aac avi mov wmv mkv".includes(
+          pathLastfile?.trim()
+        )
       ) {
         ToastNotify(
           `Đuôi.${pathLastfile} phải file thuộc loại audio!`

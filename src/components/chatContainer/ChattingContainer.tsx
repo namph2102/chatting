@@ -10,7 +10,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import xml from "highlight.js/lib/languages/xml";
 hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("xml", xml);
-import "./chatting.scss";
+import "./chating.scss";
 import {
   CommentReducer,
   handleAddComment,
@@ -31,7 +31,7 @@ const initState: ChatContentProps[] = [
       "Chào mừng bạn đã đến với Zecky! Hiện tại Website vẫn đang trong giai đoạn phát triển. Rất vui và hãy sử dụng một số tiện ích có sẵn được xây dựng bởi ChatGPT phiên bản Plus hoàn toàn miễn phí tại chúng tôi. </br> Cảm ơn bạn đã sử dụng!",
     isUser: false,
     avatar: "/images/botai.png",
-    time: getTime(),
+    time: new Date().toISOString(),
     type: "text",
     isSee: true,
   },
@@ -327,10 +327,9 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
 
 export default ChattingContainer;
 function getTime(): string {
-  const datenew = new Date();
-  const time =
-    datenew.getHours().toString().padStart(2, "0") +
-    ":" +
-    datenew.getMinutes().toString().padStart(2, "0");
-  return time;
+  return new Date().toISOString();
+
+  // datenew.getHours().toString().padStart(2, "0") +
+  // ":" +
+  // datenew.getMinutes().toString().padStart(2, "0");
 }

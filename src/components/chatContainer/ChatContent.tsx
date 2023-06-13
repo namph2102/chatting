@@ -1,7 +1,7 @@
 import { Tooltip } from "@mui/material";
 
 import React, { FC, useRef } from "react";
-import { BiCheckDouble } from "react-icons/bi";
+import { BiCheckDouble, BiDetail, BiPlayCircle } from "react-icons/bi";
 import "./chating.scss";
 import { cn } from "../../servies/utils";
 import { componentsProps } from "../../styles/componentsProps";
@@ -10,6 +10,7 @@ import YotubeContainer from "./component/Youtube";
 import WeatherForecast from "./component/Weather";
 import SpotifyContainer from "./component/spotify/SpotifyContainer";
 import ImageChatComment from "./component/imagechatting";
+import moment from "moment";
 export interface ChatContentProps {
   id: string;
   isUser: boolean;
@@ -20,10 +21,36 @@ export interface ChatContentProps {
   component?: React.FC;
   isSee?: boolean;
 }
+const handleCopyText = (e: any, text: string) => {
+  if (e) {
+    const ElementCreate = document.createElement("p");
+    ElementCreate.innerHTML = text;
+    navigator.clipboard
+      .writeText(ElementCreate.textContent || "Copy thất bại!")
+      .then(() => {
+        e.target.innerHTML = "Đã sao chép!";
+      })
+      .catch(() => {
+        e.target.innerHTML = "Sao chép thất bại!";
+      });
+  }
+};
+const SpeakText = (text: string) => {
+  const ElementCreate = document.createElement("p");
+  ElementCreate.innerHTML = text;
+  const valueSpeadk = ElementCreate.textContent || "Chúng tôi không đọc được";
+  const utterance: any = new SpeechSynthesisUtterance();
+  utterance.text = valueSpeadk;
+  utterance.lang = "en-US";
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  speechSynthesis.speak(utterance);
+};
 const ChatContent: FC<ChatContentProps> = (props) => {
   const codeRef = useRef<HTMLElement>(null);
   const classname =
-    "w-[fit-content]  flex-start  flex-col sm:flex-row  rounded-lg font-medium pb-2 px-2 shadow-inner mt-3 ";
+    "w-[fit-content]  box_chat-content   flex-start  flex-col sm:flex-row  rounded-lg font-medium pb-2 px-2 shadow-inner mt-3 ";
   return (
     <article
       className={cn(
@@ -40,13 +67,13 @@ const ChatContent: FC<ChatContentProps> = (props) => {
         className="sw:h-10 w-6 h-6  rounded-full object-cover"
       />
 
-      <div className="chat_item-user font_inter-chatting   text-base font-normal   m-w-[calc(100%-60px)]  flex flex-col gap-2">
+      <div className="chat_item-user relative font_inter-chatting   text-base font-normal   m-w-[calc(100%-60px)]  flex flex-col gap-2">
         <div
           className={cn(
             classname,
             props.isUser
-              ? "background-primary_chatting-isuser py-1 "
-              : "form-control py-2"
+              ? "background-primary_chatting-isuser py-1 text-right "
+              : "form-control py-2 text-left"
           )}
         >
           {props.type == "text" && (
@@ -60,7 +87,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           )}
           {props.type == "translate" && (
             <p
-              className="font_inter-chatting font-light "
+              className="font_inter-chatting font-light"
               dangerouslySetInnerHTML={{ __html: props.comment }}
             />
           )}
@@ -108,8 +135,34 @@ const ChatContent: FC<ChatContentProps> = (props) => {
                 </span>
               </Tooltip>
             )}
-            <span className="text-xs">{props.time}</span>
+            <span className="text-sm font-light mt-2 opacity-80">
+              {moment(props.time).format("HH:mm:ss DD/MM/YYYY")}
+            </span>
           </small>
+          {!props.isUser &&
+            (props.type == "text" || props.type == "translate") && (
+              <>
+                <div
+                  onClick={(e) => handleCopyText(e, props.comment)}
+                  className="absolute  text_copy  cursor-pointer right-2 bottom-2  gap-2 items-center font-light text-primary  border-[rgb(var(--primary-color))] border-[1px] rounded-sm p-1"
+                >
+                  <BiDetail className="text-sm" />{" "}
+                  <span className="text-sm ">Sao chép văn bản</span>
+                </div>
+                <Tooltip
+                  title="Đọc văn bản"
+                  arrow
+                  componentsProps={componentsProps}
+                >
+                  <div
+                    onClick={() => SpeakText(props.comment)}
+                    className="top-3  text_copy right-0 absolute cursor-pointer"
+                  >
+                    <BiPlayCircle className="text-3xl text-primary " />
+                  </div>
+                </Tooltip>
+              </>
+            )}
         </div>
       </div>
     </article>

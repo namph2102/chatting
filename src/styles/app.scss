@@ -10,6 +10,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  background-image: url("/theme/stars.png");
 }
 .font_inter-chatting {
   font-family: "Inter", sans-serif !important;
@@ -59,7 +60,7 @@ html {
   font-size: 12px;
 }
 #light-mode {
-  background-color: #ffffff;
+  background-color: #f3f0f0;
   color: #1a1919;
   .bg-follow-darkmode {
     border-top: 1px solid rgb(204, 201, 201);
@@ -138,5 +139,6 @@ button {
 @media screen and (min-width: 500px) {
   .btn_send-chatting {
     background-color: rgba(var(--primary-color));
+    color: rgb(223, 221, 221);
   }
 }

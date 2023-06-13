@@ -112,7 +112,7 @@ const SiderBar = () => {
   };
   return (
     <>
-      <section className="mb-2">
+      <section className="mb-2 ">
         <div className="flex justify-between">
           <h2 className="text-xl font-semibold"> Chats</h2>
           <button className="w-8 h-8 hover:bg-[var(--primary-color)]  border-[1px] border-gray-500 hover:opacity-100 bg-[var(--primary-color)]  opacity-50 hover:text-[#fff] rounded-sm">
@@ -203,7 +203,7 @@ const SiderBar = () => {
       </section>
       <section
         id={theme.darkmode}
-        className="hover:overflow-y-auto  overflow-x-hidden ease-linear duration-200 lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-225px)]"
+        className="hover:overflow-y-auto   overflow-x-hidden lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-225px)]"
       >
         <div className={listChatting.length > 0 ? "hidden" : ""}>
           <SkeletonLayout />

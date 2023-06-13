@@ -7,7 +7,7 @@ import instance from "../../config";
 import { ToastNotify } from "../../servies/utils";
 const theme = {
   backgroundthem: "/theme/theme4.png",
-  darkmode: "dark-mode",
+  darkmode: localStorage.getItem("darkmode") || "dark-mode",
   primaryColor: "#4eac6d",
 };
 
@@ -33,12 +33,14 @@ const AccountSlice = createSlice({
     updateAccesTokenSpotify: (state, action) => {
       state.accessTokenSpotify = action.payload;
     },
+    updateTheme: (state, action) => {
+      state.theme = { ...state.theme, ...action.payload };
+    },
   },
   extraReducers(builder) {
     builder.addCase(firstloginWebsite.fulfilled, (state, action) => {
       if (action.payload?.accessToken) {
         state.account = action.payload;
-
         acctackToken(action.payload.accessToken);
       }
     });
@@ -50,6 +52,7 @@ export const {
   setIsOpenDisplayTable,
   setIsopenCallvideo,
   updateAccesTokenSpotify,
+  updateTheme,
 } = AccountSlice.actions;
 
 type PayloadCreateAccount = Pick<

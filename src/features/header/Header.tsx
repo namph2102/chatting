@@ -7,17 +7,28 @@ import { MenuItem } from "./MenuItem";
 import { listMenu } from "./header.util";
 import { cn, deFaultIconSize } from "../../servies/utils";
 import { componentsProps } from "../../styles/componentsProps";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux";
-import { IAccount } from "../../redux/Slice/slice.type";
-import { BiSun } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux";
+
+import { BiSun, BiMoon } from "react-icons/bi";
+import { updateTheme } from "../../redux/Slice/AccountSlice";
 
 const Header = () => {
   const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false);
+  const { account, theme } = useSelector((state: RootState) => state.userStore);
+  const dispacth: AppDispatch = useDispatch();
+  const handleToggleTheme = (e: any) => {
+    e.target.classList.toggle("active");
+    const configTheme = { darkmode: "" };
 
-  const account: IAccount = useSelector(
-    (state: RootState) => state.userStore.account
-  );
+    if (theme.darkmode == "light-mode") {
+      configTheme.darkmode = "dark-mode";
+    } else {
+      configTheme.darkmode = "light-mode";
+    }
+    localStorage.setItem("darkmode", configTheme.darkmode);
+    dispacth(updateTheme(configTheme));
+  };
   return (
     <header
       className={cn(
@@ -43,16 +54,21 @@ const Header = () => {
             >
               <Tooltip
                 componentsProps={componentsProps}
-                title="Dark mode"
+                title={
+                  <span className="capitalize">
+                    {theme.darkmode.replace("-", " ")}
+                  </span>
+                }
                 arrow
                 placement="left"
-                className="text-xl cursor-pointer"
+                className="text-xl cursor-pointer capitalize"
               >
-                <span
-                  onClick={(e: any) => e.target.classList.toggle("active")}
-                  className="lg"
-                >
-                  <BiSun fontSize={deFaultIconSize} />
+                <span onClick={handleToggleTheme} className="lg">
+                  {theme.darkmode == "dark-mode" ? (
+                    <BiMoon fontSize={deFaultIconSize} />
+                  ) : (
+                    <BiSun fontSize={deFaultIconSize} />
+                  )}
                 </span>
               </Tooltip>
             </span>
