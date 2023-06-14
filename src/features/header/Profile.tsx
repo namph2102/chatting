@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { BiCog, BiLock, BiLogOutCircle, BiUserCircle } from "react-icons/bi";
 import { cn } from "../../servies/utils";
+import { Link } from "react-router-dom";
 interface ProfileProps {
   username: string;
   fullname: string;
@@ -29,20 +30,20 @@ const Profile: FC<ProfileProps> = ({ username, fullname, isOpen }) => {
           </a>
         </li>
         <li>
-          <a
-            href="#"
+          <Link
+            to="/dang-nhap"
             className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30"
           >
             Cài đặt <BiCog fontSize="1rem" />
-          </a>
+          </Link>
         </li>
         <li>
-          <a
-            href="#"
+          <Link
+            to="/dang-ky"
             className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30"
           >
             Đổi mật khẩu <BiLock fontSize="1rem" />
-          </a>
+          </Link>
         </li>
       </ul>
       <div className="py-1 border-t-[1px] border-primary">
