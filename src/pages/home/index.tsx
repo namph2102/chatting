@@ -9,12 +9,16 @@ import SpotifyModal from "../../components/chatContainer/component/spotify";
 import { updateStatusModalSpotify } from "../../redux/Slice/SpotifySlice";
 import ModalProviderOverlay from "../../components/Ui/ModalProviderOverlay";
 import { useEffect } from "react";
+import ChatPerSonContainer from "../../components/ChatPerSonContainer";
 const Home = () => {
-  const { userStore, spotifyStore } = useSelector((state: RootState) => state);
+  const { userStore, spotifyStore, personStore } = useSelector(
+    (state: RootState) => state
+  );
   const dispacth: AppDispatch = useDispatch();
   useEffect(() => {
     document.title = "Zecky - Trang chủ";
   }, []);
+
   return (
     <>
       <div className="container mx-auto relative">
@@ -22,7 +26,12 @@ const Home = () => {
           <Header />
           <LayoutSidebar />
           {userStore.isOpencallVideo && <VideoSidebar />}
-          <ChattingContainer />
+          {personStore.person._id == "chatbot" ? (
+            <ChattingContainer person={personStore.person} />
+          ) : (
+            <ChatPerSonContainer person={personStore.person} />
+          )}
+
           {spotifyStore.isOpenSoptify && (
             <ModalProviderOverlay
               setIsCloseModal={() => {

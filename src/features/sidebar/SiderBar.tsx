@@ -1,20 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BiLoaderCircle, BiSearch, BiX } from "react-icons/bi";
 import UserListContainer from "./user/UserListContainer";
-import UserSearch, { UserSearchProps } from "./user/UserSearch";
+import UserSearch, { IUserSearch } from "./user/UserSearch";
 import { Tooltip } from "@mui/material";
 import SkeletonLayout from "./Skeleton";
 import { IUserItem } from "./user/user.type";
 import { componentsProps } from "../../styles/componentsProps";
-import { Debounced, historyChatting } from "../../servies/utils";
-import { useSelector } from "react-redux";
+import { Debounced, ToastNotify, historyChatting } from "../../servies/utils";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { useMutation } from "react-query";
 import instance from "../../config";
+import { nanoid } from "@reduxjs/toolkit";
+import { updatePerson } from "../../redux/Slice/ChatPersonSlice";
+
+const boxID = {
+  _id: "chatbot",
+  avata: "/images/botai.png",
+  fullname: "ChatGPT-Plus",
+  status: true,
+};
 let listChatDefault: IUserItem[] = [];
 // eslint-disable-next-line react-refresh/only-export-components
 const SiderBar = () => {
-  const [listSearch, setListSearch] = useState<UserSearchProps[]>([]);
+  const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
   const [isShowSearchBox, setIsShowSearchBox] = useState<boolean>(false);
   const [_, setIsLoadding] = useState<boolean>(true);
   const [listChatting, setListchatting] =
@@ -22,12 +31,6 @@ const SiderBar = () => {
   const SubSearch = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { account, theme } = useSelector((state: RootState) => state.userStore);
-  const boxID = {
-    _id: "ChatGPT",
-    active: true,
-    avata: "/images/botai.png",
-    fullname: "ChatGPT-Plus",
-  };
 
   let listChattingLocal = historyChatting("searchHistory");
   useEffect(() => {
@@ -49,7 +52,7 @@ const SiderBar = () => {
     onSuccess(data: any) {
       if (!data) return;
       if (data.listUserSearchs && data.listUserSearchs.length > 0) {
-        const listAccount: UserSearchProps[] = [];
+        const listAccount: IUserSearch[] = [];
 
         data.listUserSearchs.map(
           (acc: {
@@ -57,26 +60,31 @@ const SiderBar = () => {
             _id: string;
             fullname: string;
             avatar: string;
+            status: boolean;
           }) => {
             const isfrend = account.friends.includes(acc._id);
             listAccount.push({
               _id: acc._id,
               avatar: acc.avatar,
-              des: isfrend ? "bạn bè" : "",
-              title: acc.fullname,
+              status: acc.status,
+              relationship: isfrend ? "bạn bè" : "",
+              fullname: acc.fullname,
               isShowimage: true,
             });
           }
         );
-        setListSearch([...listAccount, ...listChattingLocal.getFollow(7)]);
+        if (listAccount.length > 5) listAccount.length = 5;
+        setListSearch(listAccount);
         return;
       }
-      setListSearch(listChattingLocal.getFollow(7));
+      setListSearch(listChattingLocal.getFollow(5));
     },
   });
   const getListUserSearch = () => {
     setIsShowSearchBox(true);
     if (inputRef?.current?.value) {
+      console.log(inputRef?.current?.value);
+
       mutation.mutate(inputRef.current?.value.trim().toLowerCase());
     }
   };
@@ -94,12 +102,16 @@ const SiderBar = () => {
     }
   };
   const handleForcusSearchInput = () => {
+    if (!account._id) {
+      ToastNotify("Bạn không thể thực hiện chức năng này!").info();
+      return;
+    }
     if (listSearch.length > 0) return;
 
-    setListSearch(listChattingLocal.getFollow(7).reverse());
+    setListSearch(listChattingLocal.getFollow(5).reverse());
     setIsShowSearchBox(true);
   };
-  const handleSearchAccount = (userLocal: UserSearchProps) => {
+  const handleSearchAccount = (userLocal: IUserSearch) => {
     setIsShowSearchBox(true);
 
     listChattingLocal.add({ ...userLocal, isShowimage: false });
@@ -109,6 +121,21 @@ const SiderBar = () => {
     if (listChattingLocal.getAll().length <= 0) return [];
     setListSearch(listChattingLocal.getAll().reverse());
     setIsShowSearchBox(true);
+  };
+
+  const dispatch = useDispatch();
+  const handleGetInfoPersonChatting = (_idUser: string) => {
+    const acccount: any =
+      listSearch.find((acc) => acc._id === _idUser) || boxID;
+
+    if (acccount) {
+      dispatch(updatePerson(acccount));
+      handleCloseSearch();
+    }
+  };
+  const handleCloseSearch = () => {
+    setIsShowSearchBox(!isShowSearchBox);
+    resetInput();
   };
   return (
     <>
@@ -126,6 +153,7 @@ const SiderBar = () => {
             type="text"
             id="inptuSeacr_content"
             ref={inputRef}
+            disabled={account._id ? false : true}
             onFocus={handleForcusSearchInput}
             onChange={handleChangeinputSearch}
             onInput={Debounced(getListUserSearch, 1000)}
@@ -141,10 +169,7 @@ const SiderBar = () => {
             <label htmlFor={isShowSearchBox ? "inptuSeacr_content" : "nothave"}>
               <button
                 type="button"
-                onClick={() => {
-                  setIsShowSearchBox(!isShowSearchBox);
-                  resetInput();
-                }}
+                onClick={handleCloseSearch}
                 className="w-[20px] hover:text-main/40 h-full text-center"
               >
                 {!isShowSearchBox ? (
@@ -175,8 +200,8 @@ const SiderBar = () => {
             {/* show list userSreach */}
             {listSearch.length > 0 &&
               listSearch.map((acc) => (
-                <div key={acc._id} onClick={() => handleSearchAccount(acc)}>
-                  <UserSearch {...acc} />
+                <div key={nanoid()} onClick={() => handleSearchAccount(acc)}>
+                  <UserSearch callback={handleGetInfoPersonChatting} {...acc} />
                 </div>
               ))}
 
@@ -186,7 +211,7 @@ const SiderBar = () => {
                   type="button"
                   className="py-2 px-2 bg-main hover:bg-main/80 btn_search--bg rounded-full text-center"
                 >
-                  <BiSearch />
+                  <BiSearch className="text-[#cfcdcd]" />
                 </button>
                 <p className="text-main text-xs font-bold">
                   Tìm kiếm: <span ref={SubSearch}></span>
@@ -234,27 +259,27 @@ function getData(): Promise<IUserItem[]> {
   const listUser: IUserItem[] = [
     {
       _id: "8v6of181wimXsAVGg6S7B",
-      active: true,
+      status: true,
       avata: "/images/avata.jpg",
       fullname: "Thư nguyễn",
       contentWatting: 2,
     },
     {
       _id: "sssssss",
-      active: false,
+      status: false,
       avata: "/images/avata.jpg",
       fullname: "Hoàng Mai",
     },
     {
       _id: "dsadsads",
-      active: true,
+      status: true,
       avata: "/images/avata.jpg",
       fullname: "Hoài Nam",
       contentWatting: 2,
     },
     {
       _id: "Z3GUCCdydP_OAHdAHjX4q",
-      active: false,
+      status: false,
       avata: "/images/avata.jpg",
       fullname: "Sơn Tùng MTP",
     },

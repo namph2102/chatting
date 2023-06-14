@@ -1,8 +1,8 @@
-import { useState, useRef, useReducer, useEffect } from "react";
+import { useState, useRef, useReducer, useEffect, FC } from "react";
 import { useMutation } from "react-query";
 import ChatInput from "./ChatInput";
 import ChatHeader from "./ChatHeader";
-import ChatContent, { ChatContentProps } from "./ChatContent";
+import ChatContent from "./ChatContent";
 import { messageType } from "./chat.type";
 import { nanoid } from "nanoid";
 import hljs from "highlight.js";
@@ -15,6 +15,7 @@ import {
   CommentReducer,
   handleAddComment,
   handleCoverComment,
+  initState,
 } from "./chat.utils";
 import { ScroolToBottom, ToastNotify, cn } from "../../servies/utils";
 import { RootState } from "../../redux";
@@ -23,32 +24,22 @@ import { useSelector } from "react-redux";
 import openaiStream from "../../servies/streamchatbox/openai-stream";
 import { Spotify } from "./component/spotify/spotify.contant";
 import { getLocation } from "./component/loadmap/index.util";
+import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
 
-const initState: ChatContentProps[] = [
-  {
-    id: "chatbox",
-    comment:
-      "Chào mừng bạn đã đến với Zecky! Hiện tại Website vẫn đang trong giai đoạn phát triển. Rất vui và hãy sử dụng một số tiện ích có sẵn được xây dựng bởi ChatGPT phiên bản Plus hoàn toàn miễn phí tại chúng tôi. </br> Cảm ơn bạn đã sử dụng!",
-    isUser: false,
-    avatar: "/images/botai.png",
-    time: new Date().toISOString(),
-    type: "text",
-    isSee: true,
-  },
-];
 const controller = new AbortController();
 
-const ChattingContainer = () => {
+interface ChattingContainerProps {
+  person: PserSonChating;
+}
+const ChattingContainer: FC<ChattingContainerProps> = ({ person }) => {
   const [listUserComments, dispatch] = useReducer(CommentReducer, initState);
   const [isLoadding, setIsLoadding] = useState<boolean>(false);
   const [valueDefalutSearch, setValueDefaultSearch] = useState<string>("");
-
   const boxChatContentRef = useRef<HTMLElement>(null);
   const contentSlideAnimation = useRef<HTMLDivElement>(null);
   const [fileUpload, setFileUpload] = useState<File>();
   const { theme, account } =
     useSelector((state: RootState) => state.userStore) || {};
-
   useEffect(() => {
     if (contentSlideAnimation.current) {
       hljs.highlightBlock(contentSlideAnimation.current);
@@ -246,7 +237,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         handleAddComment({
           id: nanoid(),
           isUser: false,
-          avatar: "/images/botai.png",
+          avatar: person.avatar || "/images/botai.png",
           comment: reply,
           type: typeChatting,
           time: getTime(),
@@ -271,7 +262,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
           id: nanoid(),
           isUser: false,
           type: "text",
-          avatar: "/images/botai.png",
+          avatar: person.avatar || "/images/botai.png",
           comment: err.message,
           time: getTime(),
           isSee: true,
@@ -294,7 +285,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         !isOpenChat ? "open_toggle-mobile" : "hidden_toggle-mobile"
       )}
     >
-      <ChatHeader id="chatwithbotai" />
+      <ChatHeader person={person} />
 
       <section
         ref={boxChatContentRef}

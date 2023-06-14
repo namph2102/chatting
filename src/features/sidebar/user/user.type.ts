@@ -1,5 +1,5 @@
 export interface IUserItem {
-  active: boolean;
+  status: boolean;
   fullname: string;
   contentWatting?: number;
   avata: string;

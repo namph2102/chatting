@@ -1,18 +1,16 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 import HeaderNavRight from "./HeaderNavRight";
 import { cn } from "../../servies/utils";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
 import { setIsOpenDisplayTable } from "../../redux/Slice/AccountSlice";
-// extends HTMLAttributes<HTMLDivElement>
-interface ChatHeaderProps {
-  id: string;
+import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
+interface IChatheader {
+  person: PserSonChating;
 }
 // eslint-disable-next-line react-refresh/only-export-components
-const ChatHeader: FC<ChatHeaderProps> = ({ id = "chatbot" }) => {
-  const [active] = useState<boolean>(true);
-  console.log(id);
+const ChatHeader: FC<IChatheader> = ({ person }) => {
   const dispatchRedux: AppDispatch = useDispatch();
   return (
     <section className=" px-4 py-3 min-h-[60px] flex items-center  border-main/5 border-b-[2px]  shadow relative z-20 top-0">
@@ -27,7 +25,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ id = "chatbot" }) => {
           </button>
           <div className="relative ">
             <img
-              src="/images/botai.png"
+              src={person.avatar || "/images/botai.png"}
               alt="avata"
               height={40}
               width={40}
@@ -41,22 +39,22 @@ const ChatHeader: FC<ChatHeaderProps> = ({ id = "chatbot" }) => {
               <span
                 className={cn(
                   "animate-ping absolute -left-[2px] -top-[2px] w-3 h-3  inline-flex rounded-full opacity-60",
-                  active ? " bg-status-online" : "bg-red-600"
+                  person.status ? " bg-status-online" : "bg-red-600"
                 )}
               ></span>
               <span
                 className={cn(
                   "absolute inline-flex rounded-full w-2.5 h-2.5",
-                  active ? " bg-status-online" : "bg-red-600"
+                  person.status ? " bg-status-online" : "bg-red-600"
                 )}
               ></span>
             </div>
           </div>
           <div>
             <h3 className=" capitalize sm:text-lg text-sm line-clamp-1 font-semibold drop-shadow-sm">
-              ChatGPT- Plus
+              {person.fullname}
             </h3>
-            <p className="text-[12px]">{active ? "Active" : "off"}</p>
+            <p className="text-[12px]">{person.status ? "Active" : "off"}</p>
           </div>
         </div>
 

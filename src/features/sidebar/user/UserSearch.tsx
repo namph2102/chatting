@@ -3,20 +3,32 @@ import { BsX } from "react-icons/bs";
 import { BiSearch } from "react-icons/bi";
 import { Skeleton } from "@mui/material";
 import { ToastNotify, historyChatting } from "../../../servies/utils";
-export interface UserSearchProps {
+
+export interface IUserSearch {
   _id: string;
   avatar: string;
-  title: string;
-  des: string;
+  fullname: string;
+  status: boolean;
+  relationship: string;
   isShowimage?: boolean;
 }
-// eslint-disable-next-line react-refresh/only-export-components
+interface UserSearchProps {
+  _id: string;
+  avatar: string;
+  status: boolean;
+  fullname: string;
+  relationship: string;
+  isShowimage?: boolean;
+  callback: (id: string) => void;
+}
+
 const UserSearch: FC<UserSearchProps> = ({
   _id,
-  title,
-  des,
+  fullname,
+  relationship,
   avatar = "/images/avata.jpg",
   isShowimage,
+  callback,
 }) => {
   const boxElement = useRef<HTMLElement>(null);
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,8 +40,10 @@ const UserSearch: FC<UserSearchProps> = ({
       boxElement.current?.classList.toggle("hidden");
     }
   };
+
   return (
     <article
+      onClick={() => callback(_id)}
       ref={boxElement}
       className="item_list-search flex items-center justify-between hover:bg-main/20 py-3 px-1 cursor-pointer"
     >
@@ -57,8 +71,8 @@ const UserSearch: FC<UserSearchProps> = ({
         )}
 
         <div className="text-sm">
-          <p className="font-medium capitalize">{title}</p>
-          <p className="text-xs mt-1 capitalize">{des}</p>
+          <p className="font-medium capitalize">{fullname}</p>
+          <p className="text-xs mt-1 capitalize">{relationship}</p>
         </div>
       </div>
       <button

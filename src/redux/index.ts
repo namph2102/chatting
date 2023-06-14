@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import AccountSlice from "./Slice/AccountSlice";
 import SpotifySlice from "./Slice/SpotifySlice";
+import ChatPersonSlice from "./Slice/ChatPersonSlice";
 
 export const store = configureStore({
   reducer: {
     userStore: AccountSlice,
     spotifyStore: SpotifySlice,
+    personStore: ChatPersonSlice,
   },
 });
 

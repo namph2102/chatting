@@ -94,6 +94,7 @@ export function historyChatting(nameLocal: string) {
       if (searchListSearch.length < size) {
         return searchListSearch;
       }
+
       return searchListSearch.slice(
         searchListSearch.length - size,
         searchListSearch.length

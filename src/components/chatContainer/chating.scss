@@ -5,72 +5,143 @@
   padding: 0.5em;
 }
 
-/* Styles for different types of code syntax */
-.hljs-comment,
-.hljs-quote {
-  color: #4caf50;
-  font-style: italic;
-}
+#dark-mode {
+  /* Styles for different types of code syntax */
+  .hljs-comment,
+  .hljs-quote {
+    color: #4caf50;
+    font-style: italic;
+  }
 
-.hljs-doctag,
-.hljs-keyword,
-.hljs-formula {
-  color: #c678dd;
-}
+  .hljs-doctag,
+  .hljs-keyword,
+  .hljs-formula {
+    color: #c678dd;
+  }
 
-.hljs-section,
-.hljs-name,
-.hljs-deletion,
-.hljs-subst {
-  color: #e06c75;
-}
+  .hljs-section,
+  .hljs-name,
+  .hljs-deletion,
+  .hljs-subst {
+    color: #e06c75;
+  }
 
-.hljs-literal {
-  color: #56b6c2;
-}
+  .hljs-literal {
+    color: #56b6c2;
+  }
 
-.hljs-string,
-.hljs-regexp,
-.hljs-addition,
-.hljs-attribute,
-.hljs-meta-string {
-  color: #ecd71c;
-}
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-addition,
+  .hljs-attribute,
+  .hljs-meta-string {
+    color: #ecd71c;
+  }
 
-.hljs-built_in,
-.hljs-class .hljs-title {
-  color: #e6c07b;
-}
+  .hljs-built_in,
+  .hljs-class .hljs-title {
+    color: #e6c07b;
+  }
 
-.hljs-attr,
-.hljs-variable,
-.hljs-template-variable,
-.hljs-type,
-.hljs-selector-class,
-.hljs-selector-attr,
-.hljs-selector-pseudo,
-.hljs-number {
-  color: #d19a66;
-}
+  .hljs-attr,
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-type,
+  .hljs-selector-class,
+  .hljs-selector-attr,
+  .hljs-selector-pseudo,
+  .hljs-number {
+    color: #d19a66;
+  }
 
-.hljs-symbol,
-.hljs-bullet,
-.hljs-link,
-.hljs-meta,
-.hljs-selector-id,
-.hljs-title {
-  color: #ffeb3b;
-}
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-link,
+  .hljs-meta,
+  .hljs-selector-id,
+  .hljs-title {
+    color: #ffeb3b;
+  }
 
-.hljs-emphasis {
-  font-style: italic;
-}
+  .hljs-emphasis {
+    font-style: italic;
+  }
 
-.hljs-strong {
-  font-weight: bold;
+  .hljs-strong {
+    font-weight: bold;
+  }
+  .hljs-title.function_ {
+    color: #f44336;
+  }
 }
-.hljs-title.function_ {
-  color: #f44336;
+#light-mode {
+  /* Styles for different types of code syntax */
+  .hljs-comment,
+  .hljs-quote {
+    color: #09810d;
+    font-style: italic;
+  }
+
+  .hljs-doctag,
+  .hljs-keyword,
+  .hljs-formula {
+    color: #7f04a5;
+  }
+
+  .hljs-section,
+  .hljs-name,
+  .hljs-deletion,
+  .hljs-subst {
+    color: #c51927;
+  }
+
+  .hljs-literal {
+    color: #56b6c2;
+  }
+
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-addition,
+  .hljs-attribute,
+  .hljs-meta-string {
+    color: #dd3500;
+  }
+
+  .hljs-built_in,
+  .hljs-class .hljs-title {
+    color: #493103;
+  }
+
+  .hljs-attr,
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-type,
+  .hljs-selector-class,
+  .hljs-selector-attr,
+  .hljs-selector-pseudo,
+  .hljs-number {
+    color: #5f2e00;
+  }
+
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-link,
+  .hljs-meta,
+  .hljs-selector-id,
+  .hljs-title {
+    color: #dd3500;
+  }
+
+  .hljs-emphasis {
+    font-style: italic;
+  }
+
+  .hljs-strong {
+    font-weight: bold;
+  }
+  .hljs-title.function_ {
+    color: #d61103;
+  }
 }
 
 .hidden__effect {
@@ -99,14 +170,20 @@
     transition: 0.3s ease-in;
   }
 }
-
 .box_chat-content {
   .text_copy {
     display: none;
   }
-  &:hover {
+}
+@media screen and (min-width: 600px) {
+  .box_chat-content {
     .text_copy {
-      display: flex !important;
+      display: none;
+    }
+    &:hover {
+      .text_copy {
+        display: flex !important;
+      }
     }
   }
 }
