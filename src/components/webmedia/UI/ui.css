@@ -1,0 +1,22 @@
+.effect_sidebar {
+  margin-top: 12px;
+  border-radius: 12px;
+  max-width: 360px;
+  background-color: white;
+  color: #1d1c1c;
+}
+
+.hide_effect_sidebar {
+  max-width: 0;
+  right: -360px;
+}
+
+.sidebarchat_video::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebarchat_video::-webkit-scrollbar-thumb {
+  background-color: gray;
+}
+.sidebarchat_video::-webkit-scrollbar-track {
+  background-color: rgb(255, 255, 255);
+}/*# sourceMappingURL=ui.css.map */

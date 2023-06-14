@@ -46,6 +46,7 @@ const SiderBar = () => {
     mutationFn: async (search: string) => {
       const response = await instance.post("/user/search", {
         search,
+        listUserExtended: [account._id],
       });
       return response.data;
     },
@@ -134,9 +135,10 @@ const SiderBar = () => {
     }
   };
   const handleCloseSearch = () => {
-    setIsShowSearchBox(!isShowSearchBox);
+    setIsShowSearchBox(() => false);
     resetInput();
   };
+
   return (
     <>
       <section className="mb-2 ">
@@ -181,50 +183,54 @@ const SiderBar = () => {
             </label>
           </Tooltip>
         </div>
-        {isShowSearchBox && (
-          <div
-            id={theme.darkmode}
-            className="absolute top-full left-0 right-0  shadow-2xl drop-shadow-xl"
-          >
-            <div className="flex items-center justify-between py-2 px-1">
-              <h2 className="font-bold text-base ">Gần đây</h2>
-              <p>
-                <button
-                  onClick={handleShowAllHistorySearch}
-                  className="text-sm text-primary-hover text-blue-600"
-                >
-                  Xem tất cả
-                </button>
-              </p>
-            </div>
-            {/* show list userSreach */}
-            {listSearch.length > 0 &&
-              listSearch.map((acc) => (
-                <div key={nanoid()} onClick={() => handleSearchAccount(acc)}>
-                  <UserSearch callback={handleGetInfoPersonChatting} {...acc} />
-                </div>
-              ))}
-
-            <article className=" flex items-center justify-between hover:bg-main/20 py-3 px-1 cursor-pointer">
-              <div className="flex gap-2 items-center">
-                <button
-                  type="button"
-                  className="py-2 px-2 bg-main hover:bg-main/80 btn_search--bg rounded-full text-center"
-                >
-                  <BiSearch className="text-[#cfcdcd]" />
-                </button>
-                <p className="text-main text-xs font-bold">
-                  Tìm kiếm: <span ref={SubSearch}></span>
+        {isShowSearchBox &&
+          (inputRef?.current?.value || listSearch.length > 0) && (
+            <div
+              id={theme.darkmode}
+              className="absolute top-full left-0 right-0  shadow-2xl drop-shadow-xl"
+            >
+              <div className="flex items-center justify-between py-2 px-1">
+                <h2 className="font-bold text-base ">Gần đây</h2>
+                <p>
+                  <button
+                    onClick={handleShowAllHistorySearch}
+                    className="text-sm text-primary-hover text-blue-600"
+                  >
+                    Xem tất cả
+                  </button>
                 </p>
               </div>
-            </article>
-            {mutation.isLoading && (
-              <article className="w-full py-4 flex justify-center items-center">
-                <BiLoaderCircle className="fill-main/60 inline-block text-lg animate-spin" />
+              {/* show list userSreach */}
+              {listSearch.length > 0 &&
+                listSearch.map((acc) => (
+                  <div key={nanoid()} onClick={() => handleSearchAccount(acc)}>
+                    <UserSearch
+                      callback={handleGetInfoPersonChatting}
+                      {...acc}
+                    />
+                  </div>
+                ))}
+
+              <article className=" flex items-center justify-between hover:bg-main/20 py-3 px-1 cursor-pointer">
+                <div className="flex gap-2 items-center">
+                  <button
+                    type="button"
+                    className="py-2 px-2 bg-main hover:bg-main/80 btn_search--bg rounded-full text-center"
+                  >
+                    <BiSearch className="text-[#cfcdcd]" />
+                  </button>
+                  <p className="text-main text-xs font-bold">
+                    Tìm kiếm: <span ref={SubSearch}></span>
+                  </p>
+                </div>
               </article>
-            )}
-          </div>
-        )}
+              {mutation.isLoading && (
+                <article className="w-full py-4 flex justify-center items-center">
+                  <BiLoaderCircle className="fill-main/60 inline-block text-lg animate-spin" />
+                </article>
+              )}
+            </div>
+          )}
       </section>
       <section
         id={theme.darkmode}

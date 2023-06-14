@@ -1,0 +1,77 @@
+.sunshine-effect {
+  transition: box-shadow 0.3s ease;
+}
+
+.sunshine-effect:hover {
+  box-shadow: 0 0 10px 5px gray;
+}
+
+.sunshine_call-effect {
+  animation: sunshine_call-effect 0.6s ease-in-out infinite;
+  box-shadow: 0 0 1px 1px rgb(223, 27, 27);
+}
+
+@keyframes sunshine_call-effect {
+  from {
+    box-shadow: 0 0 1px 2px rgb(175, 8, 8);
+  }
+  to {
+    box-shadow: 0 0 10px 6px rgb(230, 37, 37);
+  }
+}
+.bg-follow-darkmode.active {
+  background-color: #ea4335 !important;
+}
+
+.bg-follow-darkmode.option {
+  color: white !important;
+  background-color: #009688 !important;
+}
+
+.sound_container {
+  background-color: rgb(0, 0, 155);
+  display: flex;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  padding: 6px;
+  justify-content: space-around;
+  align-items: center;
+  border: none;
+  gap: 4px;
+}
+.sound_container .sound_container-effect {
+  width: 25%;
+  border-radius: 8px;
+  height: 4px;
+  background-color: white;
+  animation: soundEffect 1s ease infinite;
+}
+.sound_container .sound_container-effect:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+@keyframes soundEffect {
+  0% {
+    height: 4px;
+  }
+  50% {
+    height: 16px;
+  }
+  100% {
+    height: 4px;
+  }
+}
+.swiper-button-next,
+.swiper-button-prev {
+  background-color: gray !important;
+  border-radius: 8px;
+  color: white !important;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 12px !important;
+}/*# sourceMappingURL=webmedia.css.map */

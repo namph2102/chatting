@@ -11,6 +11,7 @@ import WeatherForecast from "./component/Weather";
 import SpotifyContainer from "./component/spotify/SpotifyContainer";
 import ImageChatComment from "./component/imagechatting";
 import moment from "moment";
+import { SpeakText, handleCopyText } from "./chat.utils";
 export interface ChatContentProps {
   id: string;
   isUser: boolean;
@@ -19,34 +20,9 @@ export interface ChatContentProps {
   time: string;
   type: string;
   component?: React.FC;
-  isSee?: boolean;
+  isSee: boolean;
 }
-const handleCopyText = (e: any, text: string) => {
-  if (e) {
-    const ElementCreate = document.createElement("p");
-    ElementCreate.innerHTML = text;
-    navigator.clipboard
-      .writeText(ElementCreate.textContent || "Copy thất bại!")
-      .then(() => {
-        e.target.innerHTML = "Đã sao chép!";
-      })
-      .catch(() => {
-        e.target.innerHTML = "Sao chép thất bại!";
-      });
-  }
-};
-const SpeakText = (text: string) => {
-  const ElementCreate = document.createElement("p");
-  ElementCreate.innerHTML = text;
-  const valueSpeadk = ElementCreate.textContent || "Chúng tôi không đọc được";
-  const utterance: any = new SpeechSynthesisUtterance();
-  utterance.text = valueSpeadk;
-  utterance.lang = "en-US";
-  utterance.rate = 1;
-  utterance.pitch = 1;
-  utterance.volume = 1;
-  speechSynthesis.speak(utterance);
-};
+
 const ChatContent: FC<ChatContentProps> = (props) => {
   const codeRef = useRef<HTMLElement>(null);
   const classname =

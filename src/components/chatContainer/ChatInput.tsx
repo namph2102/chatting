@@ -1,17 +1,15 @@
 import { FC, useRef, useState, useEffect, useCallback } from "react";
 
 import {
-  BiCaretRight,
+  BiGridAlt,
   BiLoaderCircle,
   BiMicrophone,
   BiMicrophoneOff,
   BiSend,
-  BiSmile,
 } from "react-icons/bi";
 import { TextareaAutosize } from "@mui/base";
 import { Tooltip } from "@mui/material";
-import data from "@emoji-mart/data";
-import Picker from "@emoji-mart/react";
+
 import { nanoid } from "nanoid";
 import { messageType } from "./chat.type";
 import { LoadingDot } from "../loading";
@@ -42,7 +40,6 @@ const ChatInput: FC<ChatInputProps> = ({
   fileCallback,
   className,
 }) => {
-  const [isOpenEmoji, setIsOpenEmoji] = useState<boolean>(false);
   const [isOpenEVoices, setIsOpenVoices] = useState<boolean>(false);
   const btnMoreRef = useRef<HTMLDivElement>(null);
   const btnMoreOpenRef = useRef<HTMLDivElement>(null);
@@ -54,12 +51,6 @@ const ChatInput: FC<ChatInputProps> = ({
     { title: string; value: string }[]
   >([]);
 
-  const handdleSelect = (emo: { native: string }) => {
-    setIsOpenEmoji(false);
-    if (chattingRef.current) {
-      chattingRef.current.value += emo.native;
-    }
-  };
   const handleSubmitMessage = () => {
     if (chattingRef.current) {
       const messages: messageType | any = {
@@ -144,7 +135,6 @@ const ChatInput: FC<ChatInputProps> = ({
 
   const handleForcusChatting = (isForcus: boolean) => {
     if (window.innerWidth < 560) {
-      setIsOpenEmoji(false);
       if (isForcus) {
         btnMoreRef.current?.classList.add("hidden__effect");
         btnMoreOpenRef.current?.classList.remove("hidden");
@@ -189,9 +179,9 @@ const ChatInput: FC<ChatInputProps> = ({
               window.innerWidth < 640 &&
                 btnMoreOpenRef.current?.classList?.toggle("hidden");
           }}
-          className="sm:hidden hidden absolute cursor-pointer"
+          className="sm:hidden hidden absolute cursor-pointer min-w-[60px]"
         >
-          <BiCaretRight />
+          <BiGridAlt className="text-2xl" />
         </div>
         <div
           ref={btnMoreRef}
@@ -205,18 +195,7 @@ const ChatInput: FC<ChatInputProps> = ({
           />
 
           {/* end Button More Chatinput */}
-          <Tooltip
-            title="Emoji"
-            componentsProps={componentsProps}
-            arrow
-            placement="top"
-          >
-            <button
-              onClick={Debounced(() => setIsOpenEmoji(!isOpenEmoji), 400)}
-            >
-              <BiSmile />
-            </button>
-          </Tooltip>
+
           <Tooltip
             key="micmobile"
             title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
@@ -225,13 +204,13 @@ const ChatInput: FC<ChatInputProps> = ({
             placement="top"
             onClick={Debounced(handleCallVoices, 100)}
           >
-            <button className="sm:hidden">
+            <button>
               {isOpenEVoices ? <BiMicrophone /> : <BiMicrophoneOff />}
             </button>
           </Tooltip>
         </div>
 
-        <div className="flex items-center ease-out duration-200  flex-1  p-2  rounded-sm">
+        <div className="flex items-center ease-out duration-200  ml-4 w-full  px-2   p-2  rounded-sm">
           {!loading ? (
             <TextareaAutosize
               ref={chattingRef}
@@ -239,7 +218,7 @@ const ChatInput: FC<ChatInputProps> = ({
               onTouchStart={() => handleForcusChatting(true)}
               onBlur={() => handleForcusChatting(false)}
               className="py-3 block min-w-[60px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
-              placeholder="Lời nhắn?"
+              placeholder="Lời nhắn..."
               defaultValue={valueDefalutSearch}
               maxRows={6}
               minRows={1}
@@ -251,23 +230,7 @@ const ChatInput: FC<ChatInputProps> = ({
           )}
         </div>
 
-        <div className=" sm:min-w-[100px]  justify-around items-center flex">
-          <Tooltip
-            title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
-            componentsProps={componentsProps}
-            arrow
-            placement="top"
-            onClick={Debounced(handleCallVoices, 100)}
-          >
-            <button className="sm:block hidden">
-              {isOpenEVoices ? (
-                <BiMicrophone fontSize={deFaultIconSize} />
-              ) : (
-                <BiMicrophoneOff fontSize={deFaultIconSize} />
-              )}
-            </button>
-          </Tooltip>
-
+        <div className="sm:px-2 justify-around items-center flex">
           <button
             onClick={() => {
               if (loading) {
@@ -289,19 +252,7 @@ const ChatInput: FC<ChatInputProps> = ({
           </button>
         </div>
       </div>
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className={cn(
-          "absolute bottom-[80px] left-1 sm:left-10",
-          isOpenEmoji ? "block" : "hidden"
-        )}
-      >
-        <Picker
-          data={data}
-          previewPossition="none"
-          onEmojiSelect={handdleSelect}
-        />
-      </div>
+
       {isOpenSubOption && (
         <SelectionOptions
           title={TitleSubOption}

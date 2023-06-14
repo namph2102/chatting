@@ -58,7 +58,7 @@ export const initState: ChatContentProps[] = [
     isSee: true,
   },
 ];
-
+export const StoreCommentChatBot: ChatContentProps[] = [...initState];
 // action
 const ADD_COMENT = "ADD_COMENT";
 // const DETELE_COMENT = "DETELE_COMENT";
@@ -76,11 +76,37 @@ export const CommentReducer = (
 ) => {
   switch (action.type) {
     case ADD_COMENT:
-      initState.push(action.payload);
+      StoreCommentChatBot.push(action.payload);
       return [...state, action.payload];
     default:
       return state;
   }
+};
+export const handleCopyText = (e: any, text: string) => {
+  if (e) {
+    const ElementCreate = document.createElement("p");
+    ElementCreate.innerHTML = text;
+    navigator.clipboard
+      .writeText(ElementCreate.textContent || "Copy thất bại!")
+      .then(() => {
+        e.target.innerHTML = "Đã sao chép!";
+      })
+      .catch(() => {
+        e.target.innerHTML = "Sao chép thất bại!";
+      });
+  }
+};
+export const SpeakText = (text: string) => {
+  const ElementCreate = document.createElement("p");
+  ElementCreate.innerHTML = text;
+  const valueSpeadk = ElementCreate.textContent || "Chúng tôi không đọc được";
+  const utterance: any = new SpeechSynthesisUtterance();
+  utterance.text = valueSpeadk;
+  utterance.lang = "en-US";
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  speechSynthesis.speak(utterance);
 };
 export const optionsImage = [
   { title: "Ảnh 512x512", value: "512" },

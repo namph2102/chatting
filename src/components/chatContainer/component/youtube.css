@@ -1,0 +1,25 @@
+@charset "UTF-8";
+/* CSS */
+.youtube-player {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* Chỉnh tỷ lệ phù hợp với video */
+}
+
+.youtube-player iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hidden__effect--youtube-modal {
+  scale: 0;
+}
+
+.fullscreen {
+  max-width: -moz-max-content !important;
+  max-width: max-content !important;
+}/*# sourceMappingURL=youtube.css.map */

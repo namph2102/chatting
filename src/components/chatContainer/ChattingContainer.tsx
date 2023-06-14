@@ -13,6 +13,7 @@ hljs.registerLanguage("xml", xml);
 import "./chating.scss";
 import {
   CommentReducer,
+  StoreCommentChatBot,
   handleAddComment,
   handleCoverComment,
   initState,
@@ -32,7 +33,10 @@ interface ChattingContainerProps {
   person: PserSonChating;
 }
 const ChattingContainer: FC<ChattingContainerProps> = ({ person }) => {
-  const [listUserComments, dispatch] = useReducer(CommentReducer, initState);
+  const [listUserComments, dispatch] = useReducer(
+    CommentReducer,
+    StoreCommentChatBot.length <= 1 ? initState : StoreCommentChatBot
+  );
   const [isLoadding, setIsLoadding] = useState<boolean>(false);
   const [valueDefalutSearch, setValueDefaultSearch] = useState<string>("");
   const boxChatContentRef = useRef<HTMLElement>(null);
@@ -273,7 +277,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       }
     },
   });
-
+  console.log("re-render");
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
   return (
     <div

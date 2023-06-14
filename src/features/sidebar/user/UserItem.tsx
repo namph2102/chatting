@@ -11,7 +11,8 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
   const dispatchRedux: AppDispatch = useDispatch();
   return (
     <div
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         dispatchRedux(updatePerson(user));
         window.innerWidth <= 1024 && dispatchRedux(setIsOpenDisplayTable(true));
       }}
