@@ -27,6 +27,7 @@ html {
 .background-primary {
   background-color: rgb(var(--primary-color)) !important;
 }
+
 .background-primary_chatting-isuser {
   background-color: rgb(var(--primary-color), 0.6) !important;
 }
@@ -43,6 +44,9 @@ html {
   .drop_menu-hover:hover {
     background-color: #383838;
     color: #8f9198;
+  }
+  .background-primary-hover:hover {
+    background-color: rgb(var(--primary-color)) !important;
   }
 }
 
@@ -80,6 +84,10 @@ html {
   .drop_menu-hover:hover {
     background-color: #e5e6e7;
     color: #484849;
+  }
+  .background-primary-hover:hover {
+    background-color: rgb(var(--primary-color)) !important;
+    color: #ffffff;
   }
 }
 .container_avatar-title {

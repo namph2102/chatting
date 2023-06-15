@@ -16,7 +16,7 @@ const Home = () => {
   );
   const dispacth: AppDispatch = useDispatch();
   useEffect(() => {
-    document.title = "Zecky - Trang chủ";
+    document.title = "Zecky - Ứng dụng nhắn tin";
   }, []);
 
   return (

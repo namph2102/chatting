@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Tooltip } from "@mui/material";
+import { Badge, Tooltip } from "@mui/material";
 
 import Profile from "./Profile";
 import { MenuItem } from "./MenuItem";
@@ -80,21 +80,25 @@ const Header = () => {
               componentsProps={componentsProps}
               arrow
             >
-              <a className="cursor-pointer">
-                <img
-                  onClick={() => {
-                    setIsOpenProfile(!isOpenProfile);
-                  }}
-                  src={account.avatar || "/images/avata.jpg"}
-                  width="30"
-                  height="30"
-                  alt="Avatar"
-                  className="rounded-full object-cover"
-                  id="avatarButton"
-                  data-dropdown-toggle="userDropdown"
-                  data-dropdown-placement="bottom-start"
-                />
-              </a>
+              <span>
+                <Badge badgeContent={4} color="primary">
+                  <a className="cursor-pointer">
+                    <img
+                      onClick={() => {
+                        setIsOpenProfile(!isOpenProfile);
+                      }}
+                      src={account.avatar || "/images/avata.jpg"}
+                      width="30"
+                      height="30"
+                      alt="Avatar"
+                      className="rounded-full object-cover "
+                      id="avatarButton"
+                      data-dropdown-toggle="userDropdown"
+                      data-dropdown-placement="bottom-start"
+                    />
+                  </a>
+                </Badge>
+              </span>
             </Tooltip>
 
             <Profile

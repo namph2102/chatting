@@ -19,7 +19,7 @@ const PersonSlice = createSlice({
   reducers: {
     updatePerson(state, action) {
       if (action.payload._id !== state.person._id) {
-        state.person = action.payload;
+        state.person = { ...state.person, ...action.payload };
       }
     },
   },

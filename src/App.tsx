@@ -7,11 +7,39 @@ import { useEffect } from "react";
 import { firstloginWebsite } from "./redux/Slice/AccountSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "./redux";
+import { socket } from "./components/ChatPerSonContainer/ChatPerSonContainer";
+import { CapitalizeString, ToastNotify } from "./servies/utils";
 
 function App() {
   const dispacth: AppDispatch = useDispatch();
   useEffect(() => {
-    localStorage.getItem("accessToken") && dispacth(firstloginWebsite());
+    localStorage.getItem("accessToken") &&
+      dispacth(firstloginWebsite()).then((acc) => {
+        const userid = acc.payload?._id;
+        if (userid) {
+          socket.emit("client-acttaced-id", userid);
+
+          socket.on("infomation-add-friend", (fullname) => {
+            ToastNotify(
+              CapitalizeString(fullname) + " đã gửi lời mời kết bạn"
+            ).info({ autoClose: 3000 });
+          });
+          socket.on(
+            "sever-send-result-add-friend",
+            ({ isAccept, fullname }) => {
+              if (isAccept) {
+                ToastNotify(
+                  CapitalizeString(fullname) + " đã chấp nhận lời mời kết bạn!"
+                ).success();
+              } else {
+                ToastNotify(
+                  CapitalizeString(fullname) + " đã từ chối lời mời kết bạn"
+                ).info();
+              }
+            }
+          );
+        }
+      });
   }, []);
   return (
     <div className="myapp">

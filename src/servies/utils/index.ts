@@ -23,7 +23,7 @@ export const ToastNotify = (message = "", icon?: string) => {
     autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
-    pauseOnHover: false,
+    pauseOnHover: true,
     draggable: true,
     progress: undefined,
     theme: "dark",
@@ -129,4 +129,13 @@ export const callbackResponse = (message: string, status: number) => {
     ToastNotify(message).success();
   }
 };
+
+export function CapitalizeString(str: string) {
+  if (str.includes(" ")) {
+    return str
+      .split(" ")
+      .map((text) => text[0].toUpperCase() + text.slice(1, text.length))
+      .join(" ");
+  } else return str.replace(/\b\w/g, (l) => l.toUpperCase());
+}
 export const deFaultIconSize = "1.5rem";

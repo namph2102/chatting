@@ -138,9 +138,11 @@ export const firstloginWebsite = createAsyncThunk(
         })
         .catch(() => {
           console.error("Tài khoản chưa đăng ký lần nào");
+          return false;
         });
     } catch (err: { message: string } | any) {
       console.error(err.message);
+      return false;
     }
   }
 );

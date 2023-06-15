@@ -3,6 +3,8 @@ import RegisterPage from "../../pages/register";
 import Home from "../../pages/home";
 import LoginPage from "../../pages/login";
 import PageNotFound from "../../pages/error/PageNotFound";
+import CrawlWebsite from "../../pages/CrawlWebsite";
+import SearchPage from "../../pages/SearchPage";
 
 const Layout = () => {
   return (
@@ -11,7 +13,10 @@ const Layout = () => {
         <Route path="/*" Component={Home}></Route>
         <Route path="dang-ky" Component={RegisterPage}></Route>
         <Route path="dang-nhap" Component={LoginPage}></Route>
-        <Route path="/*/*" element={<PageNotFound />} />
+        <Route path="blog" element={<CrawlWebsite />} />
+        <Route path="trang-khong-ton-tai" element={<PageNotFound />} />
+        <Route path="tim-kiem" element={<SearchPage />} />
+        <Route path="tim-kiem/sai-cu-phap" element={<PageNotFound />} />
       </Routes>
     </>
   );

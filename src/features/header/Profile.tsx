@@ -1,13 +1,19 @@
 import { FC } from "react";
-import { BiCog, BiLock, BiLogOutCircle, BiUserCircle } from "react-icons/bi";
-import { cn } from "../../servies/utils";
+import { BiBell, BiCog, BiLock, BiLogOutCircle } from "react-icons/bi";
+import { ToastNotify, cn } from "../../servies/utils";
 import { Link } from "react-router-dom";
+import { Badge } from "@mui/material";
 interface ProfileProps {
   username: string;
   fullname: string;
   isOpen: boolean;
 }
 const Profile: FC<ProfileProps> = ({ username, fullname, isOpen }) => {
+  const handleLogOut = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("username");
+    ToastNotify("Đăng xuất thành công!").success();
+  };
   return (
     <div
       id="userDropdown"
@@ -22,12 +28,17 @@ const Profile: FC<ProfileProps> = ({ username, fullname, isOpen }) => {
       </div>
       <ul className="py-2 text-sm " aria-labelledby="avatarButton">
         <li>
-          <a
-            href="#"
-            className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30"
+          <Link
+            to="/thong-bao"
+            className="flex justify-between w-full  px-4 py-2 text-sm hover:bg-aside/30"
           >
-            Thông tin <BiUserCircle fontSize="1rem" />
-          </a>
+            Thông Báo
+            <Badge badgeContent={4} color="primary">
+              <span>
+                <BiBell fontSize="1rem" />
+              </span>
+            </Badge>
+          </Link>
         </li>
         <li>
           <Link
@@ -47,12 +58,12 @@ const Profile: FC<ProfileProps> = ({ username, fullname, isOpen }) => {
         </li>
       </ul>
       <div className="py-1 border-t-[1px] border-primary">
-        <a
-          href="#"
+        <span
+          onClick={handleLogOut}
           className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30"
         >
           Đăng xuất <BiLogOutCircle fontSize="1rem" />
-        </a>
+        </span>
       </div>
     </div>
   );

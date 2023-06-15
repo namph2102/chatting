@@ -12,7 +12,7 @@ import ChatUserPersonItem, {
 } from "./component/ChatUserPersonItem";
 import { nanoid } from "@reduxjs/toolkit";
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
-const socket = io(domainSever, { transports: ["websocket"] });
+export const socket = io(domainSever, { transports: ["websocket"] });
 
 interface ChatPerSonContainerProps {
   person: PserSonChating;
@@ -26,23 +26,16 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     useSelector((state: RootState) => state.userStore) || {};
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
   useEffect(() => {
+    if (!person._id) return;
+    socket.emit("client-acttaced-id", person._id);
+    socket.on("person-offline", () => {
+      console.log("Người kia đã offline");
+    });
     handleRoomChat(account._id, person._id).then((res) => {
       if (res.status == 200) {
         const infoRoom = res.data;
         const idRoom = infoRoom.room._id;
-        console.log(infoRoom.listChatting);
 
-        // export interface ChatUserPersonItemProps {
-        //   idSee: boolean;
-        //   isUser: boolean;
-        //   comment: string;
-        //   updatedAt: string;
-        //   author: {
-        //     _id: string;
-        //     avatar: string;
-        //     fullname: string;
-        //   };
-        // }
         const listNewChatting: ChatUserPersonItemProps[] =
           infoRoom.listChatting.map((acc: any) => {
             acc.isUser = account._id == acc.author._id;

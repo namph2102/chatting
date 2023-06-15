@@ -2,23 +2,21 @@ import React, { FC, Suspense, useRef } from "react";
 import { BsX } from "react-icons/bs";
 import { BiSearch } from "react-icons/bi";
 import { Skeleton } from "@mui/material";
-import { ToastNotify, historyChatting } from "../../../servies/utils";
-
+import { historyChatting } from "../../../servies/utils";
+import { useNavigate } from "react-router-dom";
 export interface IUserSearch {
   _id: string;
   avatar: string;
   fullname: string;
   status: boolean;
-  relationship: string;
-  isShowimage?: boolean;
+  relationship: boolean;
 }
 interface UserSearchProps {
   _id: string;
   avatar: string;
   status: boolean;
   fullname: string;
-  relationship: string;
-  isShowimage?: boolean;
+  relationship: boolean;
   callback: (id: string) => void;
 }
 
@@ -27,28 +25,34 @@ const UserSearch: FC<UserSearchProps> = ({
   fullname,
   relationship,
   avatar = "/images/avata.jpg",
-  isShowimage,
   callback,
 }) => {
+  const navigate = useNavigate();
   const boxElement = useRef<HTMLElement>(null);
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    if (isShowimage) ToastNotify("Xóa thành công !").success();
+
     const listChattingLocal = historyChatting("searchHistory");
     listChattingLocal.delete(_id);
     if (boxElement.current) {
       boxElement.current?.classList.toggle("hidden");
     }
   };
-
+  const handleGetLayoutChatting = (_id: string) => {
+    if (relationship) {
+      callback(_id);
+    } else {
+      navigate("/tim-kiem?q=" + fullname);
+    }
+  };
   return (
     <article
-      onClick={() => callback(_id)}
+      onClick={() => handleGetLayoutChatting(_id)}
       ref={boxElement}
       className="item_list-search flex items-center justify-between hover:bg-main/20 py-3 px-1 cursor-pointer"
     >
       <div className="flex gap-2 items-center">
-        {isShowimage ? (
+        {relationship ? (
           <Suspense
             fallback={<Skeleton variant="circular" width={40} height={40} />}
           >
@@ -72,7 +76,7 @@ const UserSearch: FC<UserSearchProps> = ({
 
         <div className="text-sm">
           <p className="font-medium capitalize">{fullname}</p>
-          <p className="text-xs mt-1 capitalize">{relationship}</p>
+          <p className="text-xs mt-1 capitalize">{relationship && "bạn bè"}</p>
         </div>
       </div>
       <button
