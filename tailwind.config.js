@@ -63,6 +63,7 @@ export default {
       current: "currentColor",
       main: "#4EAC6D",
       "status-online": "#06d6a0",
+      "status-offline": "#920505",
       menu: "#2E2E2E",
     },
   },

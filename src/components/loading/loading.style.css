@@ -13,6 +13,7 @@
   height: 6px;
   border-radius: 50%;
   background-color: white;
+  border: 1px solid gray;
   animation: loadder 1s ease-in-out infinite;
 }
 

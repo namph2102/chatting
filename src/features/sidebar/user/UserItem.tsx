@@ -9,13 +9,15 @@ import { updatePerson } from "../../../redux/Slice/ChatPersonSlice";
 
 const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
   const dispatchRedux: AppDispatch = useDispatch();
+  const handleChatWithFriend = (e: any) => {
+    e.stopPropagation();
+    dispatchRedux(updatePerson(user));
+    dispatchRedux(setIsOpenDisplayTable(true));
+  };
+
   return (
     <div
-      onClick={(e) => {
-        e.stopPropagation();
-        dispatchRedux(updatePerson(user));
-        window.innerWidth <= 1024 && dispatchRedux(setIsOpenDisplayTable(true));
-      }}
+      onClick={handleChatWithFriend}
       className="flex justify-between mb-2 items-center cursor-pointer"
       title={`${user.fullname}`}
     >
@@ -32,7 +34,7 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
           <div
             className={cn(
               "absolute bottom-0 left-7  w-2.5 h-2.5 border-[#888585] border-[1px]  rounded-full",
-              user.status ? " bg-status-online" : "hidden"
+              user.status ? " bg-status-online" : "bg-status-offline"
             )}
           ></div>
         </div>

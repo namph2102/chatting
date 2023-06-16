@@ -121,11 +121,18 @@ const Register = () => {
         <article className="lg:basis-1/4 basis-full lg:text-left text-center">
           <div className="flex items-end lg:justify-start justify-center gap-3">
             <BsFillChatSquareTextFill fontSize="1.5rem" />
-            <h1 className="font-semibold text-2xl ">Zecky</h1>
+            <h1 className="font-semibold text-2xl ">
+              {" "}
+              <Link to="/">Zecky</Link>
+            </h1>
           </div>
           <div className="text-base lg:text-left lg:mb-0 mb-8 text-center mt-2 grid place-items-center">
             <div className="typing-demo min-h-[16px]">
-              Chào bạn đã đến với <b className=" font-semibold ">Zecky!</b>
+              Chào bạn đã đến với{" "}
+              <b className=" font-semibold ">
+                {" "}
+                <Link to="/">Zecky!</Link>
+              </b>
             </div>
           </div>
         </article>

@@ -16,6 +16,8 @@ import UserSearchPageItem, {
 } from "./component/UserSearchPageItem";
 import "./serachpage.scss";
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
+import { BiChevronLeft } from "react-icons/bi";
+
 export interface ISearchPage {
   address: string;
   avatar: string;
@@ -28,21 +30,25 @@ export interface ISearchPage {
 const SearchPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { account, theme } = useSelector((state: RootState) => state.userStore);
+  const { account, theme, noticeTotal } = useSelector(
+    (state: RootState) => state.userStore
+  );
   const decodedKeyword = decodeURIComponent(location.search);
+  const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
 
   let query = "";
   if (decodedKeyword.includes("=")) {
     query = decodedKeyword.split("=")[1];
+
     if (!query) {
       navigate("/tim-kiem/sai-cu-phap");
     }
-  } else {
-    navigate("/tim-kiem/sai-cu-phap");
   }
   const [listChatting, setListchatting] = useState<IUserSearchPageItem[]>([]);
   useEffect(() => {
-    if (!account._id) return;
+    if (!account._id || !query) return;
+
+    setIsOpenChat(true);
     instance
       .post("/user/page/search", {
         search: query,
@@ -51,16 +57,29 @@ const SearchPage = () => {
       })
       .then((res) => res.data)
       .then((data) => {
+        console.log(data.listUserSearchs);
+        console.log(account.friends);
+
         if (data.listUserSearchs) {
           data.listUserSearchs.forEach((user: any) => {
-            user.relationship = user.friends.includes(account._id);
-            user.totalFriends = 2;
+            const totalFriendTogether =
+              account.friends.length + user.friends.length;
+            const coutTogether = new Set([
+              ...account.friends,
+              ...user.friends.map((user: any) => user._id),
+            ]).size;
+
+            user.relationship = user.friends.some(
+              (user: any) => user._id == account._id
+            );
+            user.totalFriends = totalFriendTogether - coutTogether;
           });
         }
+
         setListchatting(data.listUserSearchs);
       });
-  }, [query, account._id]);
-
+  }, [query, account._id, noticeTotal]);
+  console.log(noticeTotal);
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
   const listChattingLocal = historyChatting("searchHistory");
   const mutation = useMutation({
@@ -118,7 +137,7 @@ const SearchPage = () => {
           <section
             id={theme.darkmode}
             className={cn(
-              "lg:min-w-[300px] min-w-full  py-6 px-2 bg-aside ",
+              "lg:min-w-[300px] min-w-full  py-6 px-2 bg-aside",
               theme.darkmode == "light-mode"
                 ? "border-r-[#d5d5d5] border-r-[1px]"
                 : ""
@@ -132,12 +151,25 @@ const SearchPage = () => {
               title="Kết quả tìm kiếm"
             />
           </section>
+
           <section
-            className="w-full pt-6 px-8"
             id={theme.darkmode}
             style={{ backgroundImage: `url(${theme.backgroundthem})` }}
+            className={cn(
+              "w-full lg:relative px-4 lg:h-screen  h-[calc(100vh-80px)] overflow-y-auto fixed inset-0 z-20 ",
+
+              isOpenChat ? "open_toggle-mobile " : "hidden_toggle-mobile"
+            )}
           >
-            <h6 className="text-xl font-medium mb-2">Mọi người</h6>
+            <h6 className="text-xl flex gap-2 font-medium mb-4 mt-2">
+              <span
+                className="cursor-pointer"
+                onClick={() => setIsOpenChat(false)}
+              >
+                <BiChevronLeft className="md:hidden text-3xl font-bold" />
+              </span>
+              <span> Mọi người</span>
+            </h6>
             {listChatting.length > 0 &&
               listChatting.map((user) => (
                 <UserSearchPageItem

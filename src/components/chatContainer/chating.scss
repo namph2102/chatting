@@ -175,10 +175,10 @@
     display: none;
   }
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 768px) {
   .box_chat-content {
     .text_copy {
-      display: none;
+      display: none !important;
     }
     &:hover {
       .text_copy {

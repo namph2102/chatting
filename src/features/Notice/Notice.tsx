@@ -38,8 +38,8 @@ const NoticePage = () => {
   }, [account._id, isShowAddFriend, noticeTotal]);
   return (
     <section>
-      <h2 className="font-bold text-xl mb-2">Thông báo</h2>
-      <ul>
+      <h2 className="font-bold text-xl mb-4">Thông báo</h2>
+      <ul className="max-h-[calc(100vh-80px)] overflow-y-auto">
         {listInfo.length > 0 &&
           listInfo.map((acc) => (
             <NoticeItem

@@ -31,7 +31,9 @@ const ChatContent: FC<ChatContentProps> = (props) => {
     <article
       className={cn(
         "flex items-end mt-3",
-        props.isUser ? "flex-row-reverse gap-2" : "flex-row gap-2"
+        props.isUser
+          ? "flex-row-reverse gap-2 box_chat-content_user "
+          : "flex-row gap-2 "
       )}
     >
       <img
@@ -60,6 +62,12 @@ const ChatContent: FC<ChatContentProps> = (props) => {
                 ref={codeRef}
               ></code>
             </p>
+          )}
+          {props.type == "chatting" && (
+            <p
+              className="font_inter-chatting font-light"
+              dangerouslySetInnerHTML={{ __html: props.comment }}
+            />
           )}
           {props.type == "translate" && (
             <p
@@ -122,7 +130,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
               <>
                 <div
                   onClick={(e) => handleCopyText(e, props.comment)}
-                  className="absolute  text_copy  cursor-pointer right-2 bottom-2  gap-2 items-center font-light text-primary  border-[rgb(var(--primary-color))] border-[1px] rounded-sm p-1"
+                  className="absolute  text_copy  cursor-pointer right-2 bottom-1  gap-2 items-center font-light text-primary  border-[rgb(var(--primary-color))] border-[1px] rounded-sm p-1"
                 >
                   <BiDetail className="text-sm" />{" "}
                   <span className="text-sm ">Sao chép văn bản</span>
@@ -134,7 +142,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
                 >
                   <div
                     onClick={() => SpeakText(props.comment)}
-                    className="top-3  text_copy right-0 absolute cursor-pointer"
+                    className="-top-2   text_copy right-0 absolute cursor-pointer"
                   >
                     <BiPlayCircle className="text-3xl text-primary " />
                   </div>

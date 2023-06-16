@@ -28,6 +28,7 @@ function App() {
           socket.on(
             "sever-send-result-add-friend",
             ({ isAccept, fullname }) => {
+              dispacth(updateNotice(0));
               if (isAccept) {
                 ToastNotify(
                   CapitalizeString(fullname) + " đã chấp nhận lời mời kết bạn!"

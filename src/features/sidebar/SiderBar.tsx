@@ -14,6 +14,7 @@ import instance from "../../config";
 import SearchSibar from "./component/SearchSidebar";
 import UserListContainer from "./user/UserListContainer";
 import { Link } from "react-router-dom";
+import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
 
 const boxID = {
   _id: "chatbot",
@@ -24,7 +25,7 @@ const boxID = {
 let listChatDefault: IUserItem[] = [];
 // eslint-disable-next-line react-refresh/only-export-components
 const SiderBar = () => {
-  const [isLoadingSidebar, setIsLoadding] = useState<boolean>(false);
+  const [_, setIsLoadding] = useState<boolean>(false);
   const [listChatting, setListchatting] =
     useState<IUserItem[]>(listChatDefault);
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
@@ -38,7 +39,19 @@ const SiderBar = () => {
     getData(account._id).then((res) => {
       if (res) {
         const listfriends = res.listfriends.friends;
-        console.log(listfriends);
+        // nếu bạn bè off line thì chuyển sang false luôn
+        account.friends.map((idFriend: string) => {
+          socket.on(`friend-chattings-${idFriend}`, (status) => {
+            setListchatting((listFriendPrev) => {
+              listFriendPrev.forEach((item) => {
+                if (item._id == idFriend) {
+                  item.status = status;
+                }
+              });
+              return [...listFriendPrev];
+            });
+          });
+        });
         listChatDefault = listfriends;
         setListchatting(listfriends);
         setIsLoadding((prev) => !prev);
@@ -84,7 +97,7 @@ const SiderBar = () => {
       setListSearch(listChattingLocal.getFollow(5));
     },
   });
-  console.log(account.friends);
+
   return (
     <>
       <SearchSibar
@@ -114,12 +127,12 @@ const SiderBar = () => {
           {!account.username && (
             <div className="flex justify-center gap-2">
               <Link to="/dang-nhap">
-                <button className="background-primary py-2 px-1  text-white rounded-full text-sm">
+                <button className="background-primary py-2 px-5  text-white rounded-full text-sm">
                   Đăng nhập
                 </button>
               </Link>
               <Link to="/dang-ky">
-                <button className="background-primary-hover py-2 px-2 rounded-full text-sm">
+                <button className="background-primary-hover py-2 px-5 rounded-full text-sm">
                   {" "}
                   Đăng ký
                 </button>

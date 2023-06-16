@@ -14,6 +14,7 @@ import ChatUserPersonItem, {
   ChatUserPersonItemProps,
 } from "./component/ChatUserPersonItem";
 import { nanoid } from "@reduxjs/toolkit";
+
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
 
@@ -30,6 +31,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log(account._id, person._id);
     if (!person._id) return;
     // lắng nghe user chat off hay on
     socket.on(`friend-chattings-${person._id}`, (status) => {
@@ -71,6 +73,20 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         socket.emit("tao-room", idRoom);
       }
     });
+
+    // client-side
+    socket.on("connect", () => {
+      console.log("client connect", socket.id); //
+    });
+
+    socket.on("disconnect", () => {
+      console.log("client disconect connect", socket.id); // undefined
+    });
+    return () => {
+      setListUserComments([]);
+    };
+  }, [account._id, person._id]);
+  useEffect(() => {
     socket.on("server-chat", (data: ChatUserPersonItemProps) => {
       data.isUser = false;
       data.author.avatar = person.avatar;
@@ -80,15 +96,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         ScroolToBottom(boxChatContentRef.current, 100);
       }
     });
-    // client-side
-    socket.on("connect", () => {
-      console.log("client connect", socket.id); //
-    });
-
-    socket.on("disconnect", () => {
-      console.log("client disconect connect", socket.id); // undefined
-    });
-  }, [person._id]);
+  }, []);
   const handleSendMessage = (
     inputElement: HTMLTextAreaElement,
     type: string
@@ -96,6 +104,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     const data: ChatUserPersonItemProps = {
       isSee: person.status,
       updatedAt: new Date().toISOString(),
+      type: "text",
       author: {
         _id: account._id,
         avatar: account.avatar,

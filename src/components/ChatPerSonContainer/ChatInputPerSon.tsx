@@ -67,6 +67,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
     setIsOpenVoices(false);
     if (str && chattingRef.current) {
       chattingRef.current.value = str;
+      chattingRef.current.focus();
     }
   }, []);
 

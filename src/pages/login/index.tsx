@@ -113,11 +113,17 @@ const LoginPage = () => {
         <article className="lg:basis-1/4 basis-full lg:text-left text-center">
           <div className="flex items-end lg:justify-start justify-center gap-3">
             <BsFillChatSquareTextFill fontSize="1.5rem" />
-            <h1 className="font-semibold text-2xl ">Zecky</h1>
+            <h1 className="font-semibold text-2xl ">
+              {" "}
+              <Link to="/">Zecky</Link>
+            </h1>
           </div>
           <div className="text-base lg:text-left lg:mb-0 mb-8 text-center mt-2 grid place-items-center">
             <div className="typing-demo min-h-[16px]">
-              Chào bạn đã đến với <b className=" font-semibold ">Zecky!</b>
+              Chào bạn đã đến với{" "}
+              <b className=" font-semibold ">
+                <Link to="/">Zecky!</Link>
+              </b>
             </div>
           </div>
         </article>
@@ -128,7 +134,11 @@ const LoginPage = () => {
           <div className="text-center mb-6">
             <h2 className="font-bold text-3xl">Đăng nhập</h2>
             <p className="text-sm mt-3 text-transparent/60">
-              Cùng trò chuyện với bạn bè nào.
+              Cùng trò chuyện với bạn bè nào{" "}
+              <Link to="/">
+                {" "}
+                <span className="text-primary font-bold">Trang chủ</span>
+              </Link>
             </p>
           </div>
 
@@ -196,7 +206,11 @@ const LoginPage = () => {
             </Link>
           </p>
           <p className="text-sm text-primay opacity-75 pt-4 px-2">
-            &copy; Zecky. Được tạo bởi <span className="text-red-600">❤️</span>{" "}
+            &copy;{" "}
+            <Link to="/">
+              <span className="cursor-pointer">Zecky</span>
+            </Link>
+            . Được tạo bởi <span className="text-red-600">❤️</span>{" "}
             <a
               href="https://www.facebook.com/namhoai2102"
               target="_blank"

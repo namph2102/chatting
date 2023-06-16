@@ -11,6 +11,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   background-image: url("/theme/stars.png");
+  overflow-x: hidden !important;
 }
 .font_inter-chatting {
   font-family: "Inter", sans-serif !important;
@@ -26,10 +27,6 @@ html {
 }
 .background-primary {
   background-color: rgb(var(--primary-color)) !important;
-}
-
-.background-primary_chatting-isuser {
-  background-color: rgb(var(--primary-color), 0.6) !important;
 }
 
 #dark-mode {
@@ -48,6 +45,13 @@ html {
   .background-primary-hover:hover {
     background-color: rgb(var(--primary-color)) !important;
   }
+  .background-primary_chatting-isuser {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    background-color: #333333;
+    font-weight: bold !important;
+    font-size: 16px !important;
+    color: rgb(235, 232, 232) !important;
+  }
 }
 
 .badge-soft-dark {
@@ -63,9 +67,17 @@ html {
 .form-control::placeholder {
   font-size: 12px;
 }
+
 #light-mode {
   background-color: #f3f0f0;
   color: #1a1919;
+  .box_chat-content {
+    color: #0e0d0d !important;
+    font-weight: 400;
+
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px,
+      rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+  }
   .bg-follow-darkmode {
     border-top: 1px solid rgb(204, 201, 201);
     background-color: #f3f2f2;
@@ -74,15 +86,25 @@ html {
     background-color: hsla(227, 4%, 58%, 0.18);
     color: #8f9198;
   }
+  .background-primary_chatting-isuser {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    background-color: rgb(248, 242, 242);
+    font-weight: bold !important;
+    font-size: 16px !important;
+    color: black !important;
+  }
   .form-control {
     appearance: none;
     background-clip: padding-box;
-    background-color: #e6e3e3;
-    border: 1px solid #b6b3b3;
+    background-color: #f1f1f1;
+    border: 1px solid #ebe7e7;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    text-shadow: 0px 0px 1px #5e5b5b;
     color: #0a0909;
   }
   .drop_menu-hover:hover {
-    background-color: #e5e6e7;
+    background-color: #eff0f1;
     color: #484849;
   }
   .background-primary-hover:hover {

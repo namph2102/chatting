@@ -1,7 +1,8 @@
 import { FC } from "react";
 import { INoticeItem } from "./Notice";
-import moment from "moment";
+
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
+import { HandleTimeDiff } from "../../servies/utils";
 interface INoticeItemProps extends INoticeItem {
   setIsShowAddfriend: (isShow: boolean) => void;
 }
@@ -29,7 +30,7 @@ const NoticeItem: FC<INoticeItemProps> = ({
     message = status ? " đã đồng ý kết bạn " : " đã từ chối kết bạn ";
   }
   return (
-    <li>
+    <li className="mb-2">
       <div className="flex gap-2 items-center">
         <img
           width={40}
@@ -44,7 +45,7 @@ const NoticeItem: FC<INoticeItemProps> = ({
             {message}
           </p>
           <time className="text-xs text-primary">
-            {moment(createdAt).fromNow()}
+            {HandleTimeDiff(createdAt)}
           </time>
         </div>
       </div>
