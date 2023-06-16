@@ -24,7 +24,7 @@ const boxID = {
 let listChatDefault: IUserItem[] = [];
 // eslint-disable-next-line react-refresh/only-export-components
 const SiderBar = () => {
-  const [isLoadingSidebar, setIsLoadding] = useState<boolean>(true);
+  const [isLoadingSidebar, setIsLoadding] = useState<boolean>(false);
   const [listChatting, setListchatting] =
     useState<IUserItem[]>(listChatDefault);
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
@@ -33,20 +33,17 @@ const SiderBar = () => {
 
   const listChattingLocal = historyChatting("searchHistory");
   useEffect(() => {
+    setIsLoadding(false);
     if (!account._id) return;
-    getData(account._id)
-      .then((res) => {
-        if (res) {
-          const listfriends = res.listfriends.friends;
-          console.log(listfriends);
-          listChatDefault = listfriends;
-          setListchatting(listfriends);
-          setIsLoadding((prev) => !prev);
-        }
-      })
-      .finally(() => {
-        setIsLoadding(false);
-      });
+    getData(account._id).then((res) => {
+      if (res) {
+        const listfriends = res.listfriends.friends;
+        console.log(listfriends);
+        listChatDefault = listfriends;
+        setListchatting(listfriends);
+        setIsLoadding((prev) => !prev);
+      }
+    });
   }, [account._id]);
   const mutation = useMutation({
     mutationFn: async (search: string) => {
@@ -102,7 +99,7 @@ const SiderBar = () => {
         id={theme.darkmode}
         className="hover:overflow-y-auto   overflow-x-hidden lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-225px)]"
       >
-        <div className={isLoadingSidebar ? "hidden" : ""}>
+        <div className={"hidden"}>
           <SkeletonLayout />
           <SkeletonLayout />
           <SkeletonLayout />
@@ -113,33 +110,31 @@ const SiderBar = () => {
           <SkeletonLayout />
         </div>
 
-        {isLoadingSidebar && (
-          <div className="px-4">
-            {!account.username && (
-              <div className="flex justify-center gap-2">
-                <Link to="/dang-nhap">
-                  <button className="background-primary py-2 px-1  text-white rounded-full text-sm">
-                    Đăng nhập
-                  </button>
-                </Link>
-                <Link to="/dang-ky">
-                  <button className="background-primary-hover py-2 px-2 rounded-full text-sm">
-                    {" "}
-                    Đăng ký
-                  </button>
-                </Link>
-              </div>
-            )}
+        <div className="px-4">
+          {!account.username && (
+            <div className="flex justify-center gap-2">
+              <Link to="/dang-nhap">
+                <button className="background-primary py-2 px-1  text-white rounded-full text-sm">
+                  Đăng nhập
+                </button>
+              </Link>
+              <Link to="/dang-ky">
+                <button className="background-primary-hover py-2 px-2 rounded-full text-sm">
+                  {" "}
+                  Đăng ký
+                </button>
+              </Link>
+            </div>
+          )}
 
-            <UserListContainer title="ChatGPT" listUser={[boxID]} />
-            {listChatting.length > 0 && (
-              <UserListContainer
-                title="danh sách bạn bè"
-                listUser={listChatting}
-              />
-            )}
-          </div>
-        )}
+          <UserListContainer title="ChatGPT" listUser={[boxID]} />
+          {listChatting.length > 0 && (
+            <UserListContainer
+              title="danh sách bạn bè"
+              listUser={listChatting}
+            />
+          )}
+        </div>
       </section>
     </>
   );
