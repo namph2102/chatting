@@ -3,17 +3,25 @@ import { BiBell, BiCog, BiLock, BiLogOutCircle } from "react-icons/bi";
 import { ToastNotify, cn } from "../../servies/utils";
 import { Link } from "react-router-dom";
 import { Badge } from "@mui/material";
+
 interface ProfileProps {
   username: string;
   fullname: string;
   isOpen: boolean;
+  noticeTotal: number;
 }
-const Profile: FC<ProfileProps> = ({ username, fullname, isOpen }) => {
+const Profile: FC<ProfileProps> = ({
+  username,
+  fullname,
+  isOpen,
+  noticeTotal,
+}) => {
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
     ToastNotify("Đăng xuất thành công!").success();
   };
+
   return (
     <div
       id="userDropdown"
@@ -33,7 +41,7 @@ const Profile: FC<ProfileProps> = ({ username, fullname, isOpen }) => {
             className="flex justify-between w-full  px-4 py-2 text-sm hover:bg-aside/30"
           >
             Thông Báo
-            <Badge badgeContent={4} color="primary">
+            <Badge badgeContent={noticeTotal} color="primary">
               <span>
                 <BiBell fontSize="1rem" />
               </span>
@@ -60,7 +68,7 @@ const Profile: FC<ProfileProps> = ({ username, fullname, isOpen }) => {
       <div className="py-1 border-t-[1px] border-primary">
         <span
           onClick={handleLogOut}
-          className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30"
+          className="flex justify-between  cursor-pointer px-4 py-2 text-sm hover:bg-aside/30"
         >
           Đăng xuất <BiLogOutCircle fontSize="1rem" />
         </span>

@@ -1,17 +1,19 @@
 import React, { FC } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 import HeaderNavRight from "./HeaderNavRight";
-import { cn } from "../../servies/utils";
+import { HandleTimeDiff, cn } from "../../servies/utils";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
 import { setIsOpenDisplayTable } from "../../redux/Slice/AccountSlice";
 import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
+
 interface IChatheader {
   person: PserSonChating;
 }
 // eslint-disable-next-line react-refresh/only-export-components
 const ChatHeader: FC<IChatheader> = ({ person }) => {
   const dispatchRedux: AppDispatch = useDispatch();
+
   return (
     <section className=" px-4 py-3 min-h-[60px] flex items-center  border-main/5 border-b-[2px]  shadow relative z-20 top-0">
       <div className="backdrop-blur-md  absolute inset-0"></div>
@@ -54,7 +56,11 @@ const ChatHeader: FC<IChatheader> = ({ person }) => {
             <h3 className=" capitalize sm:text-lg text-sm line-clamp-1 font-semibold drop-shadow-sm">
               {person.fullname}
             </h3>
-            <p className="text-[12px]">{person.status ? "Active" : "off"}</p>
+            <p className="text-[12px]">
+              {person.status
+                ? "Đang hoạt động"
+                : `Off ${HandleTimeDiff(person.updatedAt)}`}
+            </p>
           </div>
         </div>
 

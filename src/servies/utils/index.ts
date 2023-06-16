@@ -1,7 +1,7 @@
 import clsx, { ClassValue } from "clsx";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
-
+import moment from "moment";
 export function cn(...classnames: ClassValue[]) {
   return twMerge(clsx(classnames));
 }
@@ -139,3 +139,35 @@ export function CapitalizeString(str: string) {
   } else return str.replace(/\b\w/g, (l) => l.toUpperCase());
 }
 export const deFaultIconSize = "1.5rem";
+
+const timeSetTing: any = {
+  months: "tháng",
+  month: "tháng",
+  years: "năm",
+  year: "năm",
+  minute: "phút",
+  minutes: "phút",
+  day: "ngày",
+  days: "ngày",
+  hours: "giờ",
+  hour: "giờ",
+  second: "giây",
+  seconds: "giây",
+};
+export function HandleTimeDiff(timestamp: any) {
+  let result: any = moment(timestamp).fromNow();
+  if (result.includes("a few seconds ago")) return "vài giây trước";
+  if (result[1] === "n") {
+    result = result.replace("an", "1");
+  } else if (result[0] === "a") {
+    result = result.replace("a", "1");
+  }
+
+  result = result.replace("ago", "trước");
+  result = result.split(" ");
+
+  if (timeSetTing[result[1]]) {
+    result[1] = timeSetTing[result[1]];
+  }
+  return result.join(" ");
+}

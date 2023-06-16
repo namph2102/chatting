@@ -13,6 +13,8 @@ import {
 } from "../../../servies/utils";
 import { MutateOptions } from "react-query";
 import { updatePerson } from "../../../redux/Slice/ChatPersonSlice";
+import { useNavigate } from "react-router-dom";
+import { setIsOpenDisplayTable } from "../../../redux/Slice/AccountSlice";
 interface SearchSibarProps {
   title: string;
   isLoading: boolean;
@@ -35,7 +37,7 @@ const SearchSibar: FC<SearchSibarProps> = ({
   const SubSearch = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { account, theme } = useSelector((state: RootState) => state.userStore);
-
+  const navigate = useNavigate();
   let listChattingLocal = historyChatting("searchHistory");
 
   const getListUserSearch = () => {
@@ -69,6 +71,7 @@ const SearchSibar: FC<SearchSibarProps> = ({
   };
   const handleSearchAccount = (userLocal: IUserSearch) => {
     setIsShowSearchBox(true);
+    handleCloseSearch();
 
     listChattingLocal.add({ ...userLocal, isShowimage: false });
   };
@@ -85,7 +88,9 @@ const SearchSibar: FC<SearchSibarProps> = ({
 
     if (acccount) {
       dispatch(updatePerson(acccount));
+      dispatch(setIsOpenDisplayTable(true));
       handleCloseSearch();
+      navigate("/nhan-tin");
     }
   };
   const handleCloseSearch = () => {
@@ -168,6 +173,7 @@ const SearchSibar: FC<SearchSibarProps> = ({
                 <div className="flex gap-2 items-center">
                   <button
                     type="button"
+                    onClick={getListUserSearch}
                     className="py-2 px-2 bg-main hover:bg-main/80 btn_search--bg rounded-full text-center"
                   >
                     <BiSearch className="text-[#cfcdcd]" />

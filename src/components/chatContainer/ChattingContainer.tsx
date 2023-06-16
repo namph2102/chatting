@@ -1,4 +1,4 @@
-import { useState, useRef, useReducer, useEffect, FC } from "react";
+import { useState, useRef, useReducer, useEffect } from "react";
 import { useMutation } from "react-query";
 import ChatInput from "./ChatInput";
 import ChatHeader from "./ChatHeader";
@@ -25,14 +25,11 @@ import { useSelector } from "react-redux";
 import openaiStream from "../../servies/streamchatbox/openai-stream";
 import { Spotify } from "./component/spotify/spotify.contant";
 import { getLocation } from "./component/loadmap/index.util";
-import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
+import { personInit } from "../../redux/Slice/ChatPersonSlice";
 
 const controller = new AbortController();
 
-interface ChattingContainerProps {
-  person: PserSonChating;
-}
-const ChattingContainer: FC<ChattingContainerProps> = ({ person }) => {
+const ChattingContainer = () => {
   const [listUserComments, dispatch] = useReducer(
     CommentReducer,
     StoreCommentChatBot.length <= 1 ? initState : StoreCommentChatBot
@@ -241,7 +238,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         handleAddComment({
           id: nanoid(),
           isUser: false,
-          avatar: person.avatar || "/images/botai.png",
+          avatar: personInit.avatar || "/images/botai.png",
           comment: reply,
           type: typeChatting,
           time: getTime(),
@@ -266,7 +263,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
           id: nanoid(),
           isUser: false,
           type: "text",
-          avatar: person.avatar || "/images/botai.png",
+          avatar: personInit.avatar || "/images/botai.png",
           comment: err.message,
           time: getTime(),
           isSee: true,
@@ -289,7 +286,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         !isOpenChat ? "open_toggle-mobile" : "hidden_toggle-mobile"
       )}
     >
-      <ChatHeader person={person} />
+      <ChatHeader person={personInit} />
 
       <section
         ref={boxChatContentRef}

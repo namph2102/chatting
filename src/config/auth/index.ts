@@ -9,13 +9,13 @@ import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { ToastNotify } from "../../servies/utils";
 const firebaseConfig = {
-  apiKey: "AIzaSyC4a_mnRcdaY-f7pavxK-M3uHKwGwdVrHk",
-  authDomain: "zecky-389602.firebaseapp.com",
-  projectId: "zecky-389602",
-  storageBucket: "zecky-389602.appspot.com",
-  messagingSenderId: "160928656569",
-  appId: "1:160928656569:web:ce9ccd7722233b699f7f68",
-  measurementId: "G-CZ1JZJJ6BG",
+  apiKey: "AIzaSyAkuFJvNcT1PLvuSO1brsNSX1I8fvYbjj4",
+  authDomain: "zeckyonline.firebaseapp.com",
+  projectId: "zeckyonline",
+  storageBucket: "zeckyonline.appspot.com",
+  messagingSenderId: "505564513625",
+  appId: "1:505564513625:web:cf9c3d6a50fc63242db848",
+  measurementId: "G-CHZ3G6DPT3",
 };
 const app = initializeApp(firebaseConfig);
 class Authentication {

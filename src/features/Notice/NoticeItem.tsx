@@ -10,6 +10,7 @@ const NoticeItem: FC<INoticeItemProps> = ({
   status,
   createdAt,
   type,
+  fullname,
   userSend,
   setIsShowAddfriend,
 }) => {
@@ -18,6 +19,7 @@ const NoticeItem: FC<INoticeItemProps> = ({
       isAccept,
       idInfo: _id,
       fullname: userSend.fullname,
+      fullnameAccept: fullname,
       idUserSend: userSend._id,
     });
     setIsShowAddfriend(false);

@@ -103,7 +103,6 @@ const SearchPage = () => {
     },
   });
   const handleAddFriends = (id: string) => {
-    console.log(id);
     const data = {
       fullname: account.fullname,
       userSend: account._id,

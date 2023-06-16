@@ -1,8 +1,11 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
+import {
+  PserSonChating,
+  updatePersonStatus,
+} from "../../redux/Slice/ChatPersonSlice";
 import ChatHeader from "../chatContainer/ChatHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { ScroolToBottom, cn } from "../../servies/utils";
 import ChatInputPerSon from "./ChatInputPerSon";
@@ -25,33 +28,53 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const { theme, account } =
     useSelector((state: RootState) => state.userStore) || {};
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!person._id) return;
-    socket.emit("client-acttaced-id", person._id);
-    socket.on("person-offline", () => {
-      console.log("Người kia đã offline");
+    // lắng nghe user chat off hay on
+    socket.on(`friend-chattings-${person._id}`, (status) => {
+      dispatch(
+        updatePersonStatus({
+          status: status,
+          updatedAt: new Date().toISOString(),
+        })
+      );
     });
+
     handleRoomChat(account._id, person._id).then((res) => {
       if (res.status == 200) {
         const infoRoom = res.data;
         const idRoom = infoRoom.room._id;
+
+        if (infoRoom.person) {
+          console.log(infoRoom.person);
+          dispatch(
+            updatePersonStatus({
+              status: infoRoom.person.status,
+              updatedAt: infoRoom.person.updatedAt,
+            })
+          );
+        }
 
         const listNewChatting: ChatUserPersonItemProps[] =
           infoRoom.listChatting.map((acc: any) => {
             acc.isUser = account._id == acc.author._id;
             return acc;
           });
-        console.log(listNewChatting);
+
         if (listNewChatting?.length > 0) {
           setListUserComments([...listNewChatting]);
+          if (boxChatContentRef.current) {
+            ScroolToBottom(boxChatContentRef.current, 100);
+          }
         }
         socket.emit("tao-room", idRoom);
       }
     });
     socket.on("server-chat", (data: ChatUserPersonItemProps) => {
-      console.log("sever-data", data);
       data.isUser = false;
       data.author.avatar = person.avatar;
+      console.log("use gui");
       setListUserComments((pre) => [...pre, data]);
       if (boxChatContentRef.current) {
         ScroolToBottom(boxChatContentRef.current, 100);
@@ -71,7 +94,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     type: string
   ) => {
     const data: ChatUserPersonItemProps = {
-      idSee: person.status,
+      isSee: person.status,
       updatedAt: new Date().toISOString(),
       author: {
         _id: account._id,
@@ -81,14 +104,16 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       comment: inputElement.value.trim().replace(/\s{2}/g, " "),
       isUser: true,
     };
+    console.log(data);
+    setListUserComments((prev) => [...prev, data]);
 
-    setListUserComments([...listUserComments, data]);
     socket.emit("user-chat", { ...data, type });
     if (boxChatContentRef.current) {
       ScroolToBottom(boxChatContentRef.current, 100);
     }
   };
   const boxChatContentRef = useRef<HTMLElement>(null);
+
   return (
     <div
       id={theme.darkmode}

@@ -2,6 +2,6 @@ export interface IUserItem {
   status: boolean;
   fullname: string;
   contentWatting?: number;
-  avata: string;
+  avatar: string;
   _id: string | number;
 }

@@ -98,6 +98,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
               )}
             </>
           )}
+
           <small className="flex gap-1 items-end font-semibold text-[0.875em] pl-1 mt-1">
             {props.isSee && (
               <Tooltip
@@ -111,10 +112,11 @@ const ChatContent: FC<ChatContentProps> = (props) => {
                 </span>
               </Tooltip>
             )}
-            <span className="text-sm font-light mt-2 opacity-80">
+            <span className="text-xs font-light mt-1  opacity-80">
               {moment(props.time).format("HH:mm:ss DD/MM/YYYY")}
             </span>
           </small>
+
           {!props.isUser &&
             (props.type == "text" || props.type == "translate") && (
               <>

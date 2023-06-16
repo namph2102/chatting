@@ -27,7 +27,7 @@ const Home = () => {
           <LayoutSidebar />
           {userStore.isOpencallVideo && <VideoSidebar />}
           {personStore.person._id == "chatbot" ? (
-            <ChattingContainer person={personStore.person} />
+            <ChattingContainer />
           ) : (
             <ChatPerSonContainer person={personStore.person} />
           )}

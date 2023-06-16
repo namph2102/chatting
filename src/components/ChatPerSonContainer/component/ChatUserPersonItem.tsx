@@ -2,7 +2,7 @@ import { FC } from "react";
 import ChatContent from "../../chatContainer/ChatContent";
 
 export interface ChatUserPersonItemProps {
-  idSee: boolean;
+  isSee: boolean;
   isUser: boolean;
   comment: string;
   updatedAt: string;
@@ -20,7 +20,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemProps> = (account) => {
       isUser={account.isUser}
       comment={account.comment}
       id={account.author._id}
-      isSee={account.idSee}
+      isSee={account.isSee}
       avatar={account.author.avatar}
     />
   );

@@ -22,8 +22,8 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
       <div className="flex gap-5 items-center">
         <div className="relative ">
           <img
-            src={user.avata}
-            alt={user.avata}
+            src={user.avatar}
+            alt={user.avatar}
             height={30}
             width={30}
             className="rounded-full object-cover"

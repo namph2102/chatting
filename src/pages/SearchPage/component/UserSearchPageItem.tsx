@@ -1,6 +1,10 @@
 import { Avatar, AvatarGroup } from "@mui/material";
 import { FC, useState } from "react";
-
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux";
+import { updatePerson } from "../../../redux/Slice/ChatPersonSlice";
+import { useNavigate } from "react-router-dom";
+import { setIsOpenDisplayTable } from "../../../redux/Slice/AccountSlice";
 export interface IUserSearchPageItem {
   avatar: string;
   fullname: string;
@@ -19,8 +23,17 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
   _id,
   handleAddFriends,
 }) => {
+  const navigator = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
   const [isSetAddFriend, setIsSetAddFriend] = useState<boolean>(true);
   const handleaddFriendElement = (e: any) => {
+    if (relationship) {
+      console.log(fullname, _id);
+      dispatch(setIsOpenDisplayTable(true));
+      dispatch(updatePerson({ _id, avatar: avatar, fullname: fullname }));
+      navigator("/nhan-tin");
+      return;
+    }
     if (e.target) {
       e.target.textContent = "Chờ xác nhận";
       console.log(isSetAddFriend);

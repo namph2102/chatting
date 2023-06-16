@@ -14,6 +14,7 @@ const theme = {
 const AccountSlice = createSlice({
   name: "account",
   initialState: {
+    noticeTotal: 0,
     account: initialAccount,
     theme,
     accessTokenSpotify: "",
@@ -36,6 +37,9 @@ const AccountSlice = createSlice({
     updateTheme: (state, action) => {
       state.theme = { ...state.theme, ...action.payload };
     },
+    updateNotice: (state, action) => {
+      state.noticeTotal = action.payload;
+    },
   },
   extraReducers(builder) {
     builder.addCase(firstloginWebsite.fulfilled, (state, action) => {
@@ -49,6 +53,7 @@ const AccountSlice = createSlice({
 export default AccountSlice.reducer;
 export const {
   UpdateAccount,
+  updateNotice,
   setIsOpenDisplayTable,
   setIsopenCallvideo,
   updateAccesTokenSpotify,

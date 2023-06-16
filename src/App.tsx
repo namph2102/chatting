@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Layout from "./features/layout";
 import ImageLayout from "./assets/opengraph-image.png";
 import { useEffect } from "react";
-import { firstloginWebsite } from "./redux/Slice/AccountSlice";
+import { firstloginWebsite, updateNotice } from "./redux/Slice/AccountSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "./redux";
 import { socket } from "./components/ChatPerSonContainer/ChatPerSonContainer";
@@ -14,12 +14,13 @@ function App() {
   const dispacth: AppDispatch = useDispatch();
   useEffect(() => {
     localStorage.getItem("accessToken") &&
-      dispacth(firstloginWebsite()).then((acc) => {
+      dispacth(firstloginWebsite()).then((acc: any) => {
         const userid = acc.payload?._id;
         if (userid) {
           socket.emit("client-acttaced-id", userid);
 
           socket.on("infomation-add-friend", (fullname) => {
+            dispacth(updateNotice(1));
             ToastNotify(
               CapitalizeString(fullname) + " đã gửi lời mời kết bạn"
             ).info({ autoClose: 3000 });

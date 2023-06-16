@@ -15,7 +15,9 @@ import { updateTheme } from "../../redux/Slice/AccountSlice";
 
 const Header = () => {
   const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false);
-  const { account, theme } = useSelector((state: RootState) => state.userStore);
+  const { account, theme, noticeTotal } = useSelector(
+    (state: RootState) => state.userStore
+  );
   const dispacth: AppDispatch = useDispatch();
   const handleToggleTheme = (e: any) => {
     e.target.classList.toggle("active");
@@ -81,7 +83,7 @@ const Header = () => {
               arrow
             >
               <span>
-                <Badge badgeContent={4} color="primary">
+                <Badge badgeContent={noticeTotal} color="primary">
                   <a className="cursor-pointer">
                     <img
                       onClick={() => {
@@ -104,6 +106,7 @@ const Header = () => {
             <Profile
               isOpen={isOpenProfile}
               username={account.username}
+              noticeTotal={noticeTotal}
               fullname={account.fullname}
             />
           </li>

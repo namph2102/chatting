@@ -1,4 +1,4 @@
-import { FC, useRef, useState, useCallback } from "react";
+import { FC, useRef, useState, useCallback, useEffect } from "react";
 
 import {
   BiCamera,
@@ -41,7 +41,21 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
   const btnMoreRef = useRef<HTMLDivElement>(null);
   const btnMoreOpenRef = useRef<HTMLDivElement>(null);
   const chattingRef = useRef<HTMLTextAreaElement>(null);
-
+  useEffect(() => {
+    const handleChattingEnter = (e: KeyboardEvent) => {
+      if (!chattingRef.current?.value) return;
+      if (e.key === "Enter") {
+        if (loading) {
+          return;
+        }
+        handleSubmitMessage();
+      }
+    };
+    document.addEventListener("keypress", handleChattingEnter);
+    return () => {
+      document.removeEventListener("keypress", handleChattingEnter);
+    };
+  }, []);
   const handdleSelect = (emo: { native: string }) => {
     setIsOpenEmoji(false);
     if (chattingRef.current) {
@@ -62,7 +76,6 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
     }
     if (!isOpenEVoices) {
       setIsOpenVoices(true);
-
       HandleCoverSpeaktoText(callbackText);
     }
   };
@@ -79,7 +92,12 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
       }
     }
   };
-
+  const handleSubmitMessage = () => {
+    if (!chattingRef.current) return;
+    handleSendMessage(chattingRef.current, "text");
+    chattingRef.current.value = "";
+    chattingRef.current.blur();
+  };
   return (
     <section
       className={cn(
@@ -197,7 +215,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
                 return;
               }
               if (chattingRef.current) {
-                handleSendMessage(chattingRef.current, "text");
+                handleSubmitMessage();
               }
             }}
             className="btn_send-chatting hover:opacity-80 sm:py-2.5 cursor-pointer sm:px-3 py-1.5 px-2 rounded-xl"

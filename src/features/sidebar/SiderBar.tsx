@@ -13,17 +13,18 @@ import instance from "../../config";
 
 import SearchSibar from "./component/SearchSidebar";
 import UserListContainer from "./user/UserListContainer";
+import { Link } from "react-router-dom";
 
 const boxID = {
   _id: "chatbot",
-  avata: "/images/botai.png",
+  avatar: "/images/botai.png",
   fullname: "ChatGPT-Plus",
   status: true,
 };
 let listChatDefault: IUserItem[] = [];
 // eslint-disable-next-line react-refresh/only-export-components
 const SiderBar = () => {
-  const [_, setIsLoadding] = useState<boolean>(true);
+  const [isLoadingSidebar, setIsLoadding] = useState<boolean>(true);
   const [listChatting, setListchatting] =
     useState<IUserItem[]>(listChatDefault);
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
@@ -32,14 +33,21 @@ const SiderBar = () => {
 
   const listChattingLocal = historyChatting("searchHistory");
   useEffect(() => {
-    getData().then((res) => {
-      if (res) {
-        listChatDefault = res;
-        setListchatting(res);
-        setIsLoadding((prev) => !prev);
-      }
-    });
-  }, []);
+    if (!account._id) return;
+    getData(account._id)
+      .then((res) => {
+        if (res) {
+          const listfriends = res.listfriends.friends;
+          console.log(listfriends);
+          listChatDefault = listfriends;
+          setListchatting(listfriends);
+          setIsLoadding((prev) => !prev);
+        }
+      })
+      .finally(() => {
+        setIsLoadding(false);
+      });
+  }, [account._id]);
   const mutation = useMutation({
     mutationFn: async (search: string) => {
       const response = await instance.post("/user/search", {
@@ -79,7 +87,7 @@ const SiderBar = () => {
       setListSearch(listChattingLocal.getFollow(5));
     },
   });
-
+  console.log(account.friends);
   return (
     <>
       <SearchSibar
@@ -94,7 +102,7 @@ const SiderBar = () => {
         id={theme.darkmode}
         className="hover:overflow-y-auto   overflow-x-hidden lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-225px)]"
       >
-        <div className={listChatting.length > 0 ? "hidden" : ""}>
+        <div className={isLoadingSidebar ? "hidden" : ""}>
           <SkeletonLayout />
           <SkeletonLayout />
           <SkeletonLayout />
@@ -105,13 +113,31 @@ const SiderBar = () => {
           <SkeletonLayout />
         </div>
 
-        {listChatting.length > 0 && (
+        {isLoadingSidebar && (
           <div className="px-4">
+            {!account.username && (
+              <div className="flex justify-center gap-2">
+                <Link to="/dang-nhap">
+                  <button className="background-primary py-2 px-1  text-white rounded-full text-sm">
+                    Đăng nhập
+                  </button>
+                </Link>
+                <Link to="/dang-ky">
+                  <button className="background-primary-hover py-2 px-2 rounded-full text-sm">
+                    {" "}
+                    Đăng ký
+                  </button>
+                </Link>
+              </div>
+            )}
+
             <UserListContainer title="ChatGPT" listUser={[boxID]} />
-            <UserListContainer
-              title="Hiện tại chỉ có thể sử dụng chatGPT Plus"
-              listUser={listChatting}
-            />
+            {listChatting.length > 0 && (
+              <UserListContainer
+                title="danh sách bạn bè"
+                listUser={listChatting}
+              />
+            )}
           </div>
         )}
       </section>
@@ -119,43 +145,10 @@ const SiderBar = () => {
   );
 };
 
-function getData(): Promise<IUserItem[]> {
-  const listUser: IUserItem[] = [
-    {
-      _id: "8v6of181wimXsAVGg6S7B",
-      status: true,
-      avata: "/images/avata.jpg",
-      fullname: "Thư nguyễn",
-      contentWatting: 2,
-    },
-    {
-      _id: "sssssss",
-      status: false,
-      avata: "/images/avata.jpg",
-      fullname: "Hoàng Mai",
-    },
-    {
-      _id: "dsadsads",
-      status: true,
-      avata: "/images/avata.jpg",
-      fullname: "Hoài Nam",
-      contentWatting: 2,
-    },
-    {
-      _id: "Z3GUCCdydP_OAHdAHjX4q",
-      status: false,
-      avata: "/images/avata.jpg",
-      fullname: "Sơn Tùng MTP",
-    },
-  ];
-
-  const innerPromise = new Promise<IUserItem[]>((resolve) => {
-    const id = setTimeout(() => {
-      resolve(listUser);
-      clearTimeout(id);
-    }, 2000);
-  });
-  return innerPromise;
+function getData(iduser: string) {
+  return instance
+    .post("/user/listfriend", { data: iduser, method: "post" })
+    .then((res) => res.data);
 }
 export { getData };
 // eslint-disable-next-line react-refresh/only-export-components

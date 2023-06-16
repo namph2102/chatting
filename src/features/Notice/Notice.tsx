@@ -9,6 +9,7 @@ export interface INoticeItem {
   createdAt: string;
   status: boolean;
   userAccept: string;
+  fullname: string;
   userSend: {
     avatar: string;
     fullname: string;
@@ -17,7 +18,9 @@ export interface INoticeItem {
   type: number;
 }
 const NoticePage = () => {
-  const account = useSelector((state: RootState) => state.userStore.account);
+  const { account, noticeTotal } = useSelector(
+    (state: RootState) => state.userStore
+  );
   const [isShowAddFriend, setIsShowAddfriend] = useState<boolean>();
   const [listInfo, setListInfo] = useState<INoticeItem[]>([]);
   useEffect(() => {
@@ -32,7 +35,7 @@ const NoticePage = () => {
       .catch((error) => {
         console.log(error.message);
       });
-  }, [account._id, isShowAddFriend]);
+  }, [account._id, isShowAddFriend, noticeTotal]);
   return (
     <section>
       <h2 className="font-bold text-xl mb-2">Thông báo</h2>
@@ -42,6 +45,7 @@ const NoticePage = () => {
             <NoticeItem
               key={nanoid()}
               {...acc}
+              fullname={account.fullname}
               setIsShowAddfriend={setIsShowAddfriend}
             />
           ))}

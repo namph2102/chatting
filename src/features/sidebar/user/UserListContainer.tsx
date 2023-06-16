@@ -9,7 +9,9 @@ type UserListProps = {
 const UserListContainer: FC<UserListProps> = ({ title, listUser }) => {
   return (
     <div>
-      <h3 className="my-4  font-bold text-[12px] text-opacity-80">{title}</h3>
+      <h3 className="my-4  font-bold text-[12px] text-opacity-80 capitalize">
+        {title}
+      </h3>
       {listUser.length > 0 &&
         listUser.map((user) => <UserItem key={user._id} user={user} />)}
     </div>
