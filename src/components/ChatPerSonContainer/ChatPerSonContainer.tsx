@@ -7,13 +7,14 @@ import {
 import ChatHeader from "../chatContainer/ChatHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
-import { ScroolToBottom, cn } from "../../servies/utils";
+import { ScroolToBottom, ToastNotify, cn } from "../../servies/utils";
 import ChatInputPerSon from "./ChatInputPerSon";
 import { handleRoomChat } from "./util";
 import ChatUserPersonItem, {
   ChatUserPersonItemProps,
 } from "./component/ChatUserPersonItem";
 import { nanoid } from "@reduxjs/toolkit";
+import { IImageFireBase } from "./component/MyDropzone";
 
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
@@ -95,40 +96,58 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       data.author.avatar = person.avatar;
       setListUserComments((pre) => [...pre, data]);
       if (boxChatContentRef.current) {
-        ScroolToBottom(boxChatContentRef.current, 100);
+        ScroolToBottom(boxChatContentRef.current, 1000);
       }
     });
     socket.on("user-chat-message", (data) => {
       setListUserComments((prev) => [...prev, data]);
-    });
-    socket.on("get-list-chatmessage", (data) => {
-      console.log(data);
-      // setListUserComments((prev) => [...prev, data]);
+
+      if (data.isSee) {
+        if (person.status) return;
+        dispatch(
+          updatePersonStatus({
+            status: data.isSee,
+          })
+        );
+      }
     });
   }, []);
+
   const handleSendMessage = (
-    inputElement: HTMLTextAreaElement | any,
+    inputElement: HTMLTextAreaElement | any[] | any,
     type: string
   ) => {
-    console.log(inputElement);
+    let listImage: IImageFireBase[] = [];
     if (type == "image") {
-      console.log(inputElement);
-      return;
+      listImage = inputElement;
+      if (listImage.length <= 0) {
+        ToastNotify("Gửi ảnh không thành công!").info();
+        return;
+      }
     }
+
     const data: ChatUserPersonItemProps = {
       isSee: person.status,
 
       updatedAt: new Date().toISOString(),
-      type: "text",
+      type,
       author: {
         _id: account._id,
         avatar: account.avatar,
         fullname: account.fullname,
       },
-      comment: inputElement.value.trim().replace(/\s{2}/g, " "),
+      comment:
+        type == "image"
+          ? "uploadfile"
+          : inputElement.value.trim().replace(/\s{2}/g, " "),
       isUser: true,
     };
-    socket.emit("user-chat", { ...data, idPerson: person._id, type });
+    socket.emit("user-chat", {
+      ...data,
+      idPerson: person._id,
+      type,
+      file: listImage,
+    });
     if (boxChatContentRef.current) {
       ScroolToBottom(boxChatContentRef.current, 100);
     }

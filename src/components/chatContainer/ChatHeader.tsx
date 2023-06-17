@@ -59,7 +59,7 @@ const ChatHeader: FC<IChatheader> = ({ person }) => {
             <p className="text-[12px]">
               {person.status
                 ? "Đang hoạt động"
-                : `Off ${HandleTimeDiff(person.updatedAt)}`}
+                : `Hoạt động ${HandleTimeDiff(person.updatedAt)}`}
             </p>
           </div>
         </div>

@@ -31,7 +31,9 @@ html {
 .background-primary {
   background-color: rgb(var(--primary-color)) !important;
 }
-
+.text_shadown-style {
+  text-shadow: 0 0 2px #000000 !important;
+}
 #dark-mode {
   color: #bec2c5;
   background-color: #262626;

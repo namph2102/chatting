@@ -4,6 +4,7 @@ import {
   deleteObject,
   listAll,
   getMetadata,
+  getDownloadURL,
 } from "firebase/storage";
 import { storageFirebase } from "../../../config/auth";
 import { nanoid } from "@reduxjs/toolkit";
@@ -14,8 +15,15 @@ class HandleImageFireBase {
 
     const uploadTask = ref(storageFirebase, imageUrl);
     return uploadBytes(uploadTask, file)
-      .then((res) => {
-        return { url: res.metadata.fullPath, fileName };
+      .then(async (res) => {
+        const urlLink = await this.getUlrDownload(res.metadata.fullPath);
+
+        return {
+          url: urlLink,
+          fileName,
+          path: res.metadata.fullPath,
+          size: res.metadata.size,
+        };
       })
       .catch((err) => {
         console.log(err);
@@ -36,6 +44,10 @@ class HandleImageFireBase {
     return getMetadata(forestRef).then((metadata) => {
       console.log(metadata.generation);
     });
+  }
+  getUlrDownload(url: string) {
+    const imageRef = ref(storageFirebase, url);
+    return getDownloadURL(imageRef).then((url) => url);
   }
   deleteForder(nameForder: string) {
     const listImageRef = ref(storageFirebase, nameForder + "/");

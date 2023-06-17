@@ -11,6 +11,7 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
   const dispatchRedux: AppDispatch = useDispatch();
   const handleChatWithFriend = (e: any) => {
     e.stopPropagation();
+
     dispatchRedux(updatePerson(user));
     dispatchRedux(setIsOpenDisplayTable(true));
   };

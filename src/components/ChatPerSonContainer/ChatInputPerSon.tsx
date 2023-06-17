@@ -8,7 +8,6 @@ import {
   BiMicrophone,
   BiMicrophoneOff,
   BiSend,
-  BiXCircle,
   BiSmile,
 } from "react-icons/bi";
 import { TextareaAutosize } from "@mui/base";
@@ -113,13 +112,10 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
           setIsCloseModal={() => setIsOpenFile(!isOpenModuleFile)}
         >
           <div className="relative">
-            <MyDropzone handleSendMessage={handleSendMessage} />
-            <button
-              className="text-primary-hover"
-              onClick={() => setIsOpenFile(false)}
-            >
-              <BiXCircle className="text-3xl absolute -top-6 -right-6" />
-            </button>
+            <MyDropzone
+              setIsOpenFile={setIsOpenFile}
+              handleSendMessage={handleSendMessage}
+            />
           </div>
         </ModalProviderOverlay>
       )}
