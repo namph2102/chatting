@@ -6,28 +6,33 @@ import {
   FacebookAuthProvider,
 } from "firebase/auth";
 import { getAuth } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { ToastNotify } from "../../servies/utils";
-const firebaseConfig = {
-  apiKey: "AIzaSyAkuFJvNcT1PLvuSO1brsNSX1I8fvYbjj4",
-  authDomain: "zeckyonline.firebaseapp.com",
-  projectId: "zeckyonline",
-  storageBucket: "zeckyonline.appspot.com",
-  messagingSenderId: "505564513625",
-  appId: "1:505564513625:web:cf9c3d6a50fc63242db848",
-  measurementId: "G-CHZ3G6DPT3",
-};
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAcwVF4GyIPIPc1FOvK6NvColZ6HsqcCeo",
-//   authDomain: "deloyweb-390006.firebaseapp.com",
-//   projectId: "deloyweb-390006",
-//   storageBucket: "deloyweb-390006.appspot.com",
-//   messagingSenderId: "626121753176",
-//   appId: "1:626121753176:web:15ce8b2dc850344a30402d",
-//   measurementId: "G-VT2WJZ8VC8",
-// };
+import { initializeApp, getApp, getApps } from "firebase/app";
+import { getStorage } from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
 
-const app = initializeApp(firebaseConfig);
+import { ToastNotify } from "../../servies/utils";
+// const firebaseConfig = {
+//   apiKey: "AIzaSyAkuFJvNcT1PLvuSO1brsNSX1I8fvYbjj4",
+//   authDomain: "zeckyonline.firebaseapp.com",
+//   projectId: "zeckyonline",
+//   storageBucket: "zeckyonline.appspot.com",
+//   messagingSenderId: "505564513625",
+//   appId: "1:505564513625:web:cf9c3d6a50fc63242db848",
+//   measurementId: "G-CHZ3G6DPT3",
+// };
+const firebaseConfig = {
+  apiKey: "AIzaSyAcwVF4GyIPIPc1FOvK6NvColZ6HsqcCeo",
+  authDomain: "deloyweb-390006.firebaseapp.com",
+  projectId: "deloyweb-390006",
+  storageBucket: "deloyweb-390006.appspot.com",
+  messagingSenderId: "626121753176",
+  appId: "1:626121753176:web:15ce8b2dc850344a30402d",
+  measurementId: "G-VT2WJZ8VC8",
+};
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+export const dbFirebase = getFirestore();
+export const storageFirebase = getStorage(app);
 class Authentication {
   authenticationFirebase = getAuth(app);
   signFacebook(responsiveLoggin: (re: any) => void) {

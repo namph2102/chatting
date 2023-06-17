@@ -31,7 +31,8 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(account._id, person._id);
+    let idRoom = "";
+
     if (!person._id) return;
     // lắng nghe user chat off hay on
     socket.on(`friend-chattings-${person._id}`, (status) => {
@@ -46,7 +47,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     handleRoomChat(account._id, person._id).then((res) => {
       if (res.status == 200) {
         const infoRoom = res.data;
-        const idRoom = infoRoom.room._id;
+        idRoom = infoRoom.room._id;
 
         if (infoRoom.person) {
           console.log(infoRoom.person);
@@ -74,6 +75,13 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       }
     });
 
+    return () => {
+      console.log("Rồi khỏi phòng", idRoom);
+      setListUserComments([]);
+      socket.emit("leaver-room-chat-current", idRoom);
+    };
+  }, [account._id, person._id]);
+  useEffect(() => {
     // client-side
     socket.on("connect", () => {
       console.log("client connect", socket.id); //
@@ -82,27 +90,34 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     socket.on("disconnect", () => {
       console.log("client disconect connect", socket.id); // undefined
     });
-    return () => {
-      setListUserComments([]);
-    };
-  }, [account._id, person._id]);
-  useEffect(() => {
     socket.on("server-chat", (data: ChatUserPersonItemProps) => {
       data.isUser = false;
       data.author.avatar = person.avatar;
-      console.log("use gui");
       setListUserComments((pre) => [...pre, data]);
       if (boxChatContentRef.current) {
         ScroolToBottom(boxChatContentRef.current, 100);
       }
     });
+    socket.on("user-chat-message", (data) => {
+      setListUserComments((prev) => [...prev, data]);
+    });
+    socket.on("get-list-chatmessage", (data) => {
+      console.log(data);
+      // setListUserComments((prev) => [...prev, data]);
+    });
   }, []);
   const handleSendMessage = (
-    inputElement: HTMLTextAreaElement,
+    inputElement: HTMLTextAreaElement | any,
     type: string
   ) => {
+    console.log(inputElement);
+    if (type == "image") {
+      console.log(inputElement);
+      return;
+    }
     const data: ChatUserPersonItemProps = {
       isSee: person.status,
+
       updatedAt: new Date().toISOString(),
       type: "text",
       author: {
@@ -113,10 +128,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       comment: inputElement.value.trim().replace(/\s{2}/g, " "),
       isUser: true,
     };
-    console.log(data);
-    setListUserComments((prev) => [...prev, data]);
-
-    socket.emit("user-chat", { ...data, type });
+    socket.emit("user-chat", { ...data, idPerson: person._id, type });
     if (boxChatContentRef.current) {
       ScroolToBottom(boxChatContentRef.current, 100);
     }

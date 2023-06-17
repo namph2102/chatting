@@ -18,7 +18,6 @@ export interface ChatUserPersonItemProps {
   };
 }
 const ChatUserPersonItem: FC<ChatUserPersonItemProps> = (props) => {
-  console.log(props);
   const classname =
     "w-[fit-content]  box_chat-content   flex-start  flex-col sm:flex-row  rounded-lg font-medium pb-2 px-2 shadow-inner mt-3 ";
   return (
@@ -58,7 +57,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemProps> = (props) => {
               </ToltipProvider>
             )}
             <span className="text-xs font-light mt-1  opacity-80">
-              {moment(props.updatedAt).format("HH:mm:ss DD/MM/YYYY")}
+              {moment(props.updatedAt).format("HH:mm - DD/MM")}
             </span>
           </div>
         </div>

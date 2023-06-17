@@ -8,6 +8,7 @@ import {
   BiMicrophone,
   BiMicrophoneOff,
   BiSend,
+  BiXCircle,
   BiSmile,
 } from "react-icons/bi";
 import { TextareaAutosize } from "@mui/base";
@@ -24,11 +25,16 @@ import {
   deFaultIconSize,
 } from "../../servies/utils";
 import { componentsProps } from "../../styles/componentsProps";
+import MyDropzone from "./component/MyDropzone";
+import ModalProviderOverlay from "../Ui/ModalProviderOverlay";
 
 interface ChatInputPerSonProps {
   loading: boolean;
   className: string;
-  handleSendMessage: (inputElement: HTMLTextAreaElement, type: string) => void;
+  handleSendMessage: (
+    inputElement: HTMLTextAreaElement | any,
+    type: string
+  ) => void;
 }
 
 const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
@@ -99,153 +105,176 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
     chattingRef.current.value = "";
     chattingRef.current.blur();
   };
+  const [isOpenModuleFile, setIsOpenFile] = useState<boolean>(false);
   return (
-    <section
-      className={cn(
-        "absolute bg-follow-darkmode  bottom-0 left-0 right-0 sm:p-4 py-4 px-3",
-
-        className
-      )}
-    >
-      <div className="flex justify-between w-full overflow-x-hidden  sm:gap-4 gap-2 items-center h-full">
-        <div
-          ref={btnMoreOpenRef}
-          title="Mở rộng"
-          onTouchStart={() => {
-            handleForcusChatting(false),
-              window.innerWidth < 640 &&
-                btnMoreOpenRef.current?.classList?.toggle("hidden");
-          }}
-          className="sm:hidden hidden absolute cursor-pointer"
+    <>
+      {isOpenModuleFile && (
+        <ModalProviderOverlay
+          setIsCloseModal={() => setIsOpenFile(!isOpenModuleFile)}
         >
-          <BiGridAlt className="text-2xl" />
-        </div>
-        <div
-          ref={btnMoreRef}
-          className=" sm:text-2xl text-xl min-w-[auto]  ease-linear duration-300  sm:gap-3 gap-2 flex justify-between items-center"
-        >
-          <Tooltip
-            title="Camera"
-            componentsProps={componentsProps}
-            arrow
-            placement="top"
-          >
-            <span className="cursor-pointer">
-              <BiCamera />
-            </span>
-          </Tooltip>
-          <Tooltip
-            title="Ảnh"
-            componentsProps={componentsProps}
-            arrow
-            placement="top"
-          >
-            <span className="cursor-pointer">
-              <BiImages />
-            </span>
-          </Tooltip>
-
-          <Tooltip
-            title="Emoji"
-            componentsProps={componentsProps}
-            arrow
-            placement="top"
-          >
-            <span
-              className="cursor-pointer"
-              onClick={Debounced(() => setIsOpenEmoji(!isOpenEmoji), 400)}
+          <div className="relative">
+            <MyDropzone handleSendMessage={handleSendMessage} />
+            <button
+              className="text-primary-hover"
+              onClick={() => setIsOpenFile(false)}
             >
-              <BiSmile />
-            </span>
-          </Tooltip>
-
-          <Tooltip
-            key="micmobile"
-            title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
-            componentsProps={componentsProps}
-            arrow
-            placement="top"
-            onClick={Debounced(handleCallVoices, 100)}
-          >
-            <button className="sm:hidden">
-              {isOpenEVoices ? <BiMicrophone /> : <BiMicrophoneOff />}
+              <BiXCircle className="text-3xl absolute -top-6 -right-6" />
             </button>
-          </Tooltip>
-        </div>
-
-        <div className="flex items-center ease-out duration-200  w-full ml-3 sm:ml-2  p-2  rounded-sm">
-          {!loading ? (
-            <TextareaAutosize
-              ref={chattingRef}
-              onFocus={() => handleForcusChatting(true)}
-              onTouchStart={() => handleForcusChatting(true)}
-              onBlur={() => handleForcusChatting(false)}
-              className="py-3 block min-w-[60px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
-              placeholder="Nhắn tin ..."
-              maxRows={6}
-              minRows={1}
-              maxLength={600}
-              minLength={2}
-            ></TextareaAutosize>
-          ) : (
-            <LoadingDot />
-          )}
-        </div>
-
-        <div className=" sm:min-w-[100px]  justify-around items-center flex">
-          <Tooltip
-            title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
-            componentsProps={componentsProps}
-            arrow
-            placement="top"
-            onClick={Debounced(handleCallVoices, 100)}
-          >
-            <button className="sm:block hidden">
-              {isOpenEVoices ? (
-                <BiMicrophone fontSize={deFaultIconSize} />
-              ) : (
-                <BiMicrophoneOff fontSize={deFaultIconSize} />
-              )}
-            </button>
-          </Tooltip>
-
-          <span
-            onClick={() => {
-              if (loading) {
-                ToastNotify("Vui lòng chời trong ít lát ...").error();
-                return;
-              }
-              if (chattingRef.current) {
-                handleSubmitMessage();
-              }
-            }}
-            className="btn_send-chatting hover:opacity-80 sm:py-2.5 cursor-pointer sm:px-3 py-1.5 px-2 rounded-xl"
-          >
-            {loading ? (
-              <BiLoaderCircle
-                className="animate-spin"
-                fontSize={deFaultIconSize}
-              />
-            ) : (
-              <BiSend fontSize={deFaultIconSize} />
-            )}
-          </span>
-        </div>
-      </div>
-      <div
-        onClick={(e) => e.stopPropagation()}
+          </div>
+        </ModalProviderOverlay>
+      )}
+      <section
         className={cn(
-          "absolute bottom-[80px] left-1 sm:left-10",
-          isOpenEmoji ? "block" : "hidden"
+          "absolute bg-follow-darkmode  bottom-0 left-0 right-0 sm:p-4 py-4 px-3",
+
+          className
         )}
       >
-        <Picker
-          data={data}
-          previewPossition="none"
-          onEmojiSelect={handdleSelect}
-        />
-      </div>
-    </section>
+        <input id="uploadfile" type="file" hidden />
+        <div className="flex justify-between w-full overflow-x-hidden  sm:gap-4 gap-2 items-center h-full">
+          <div
+            ref={btnMoreOpenRef}
+            title="Mở rộng"
+            onTouchStart={() => {
+              handleForcusChatting(false),
+                window.innerWidth < 640 &&
+                  btnMoreOpenRef.current?.classList?.toggle("hidden");
+            }}
+            className="sm:hidden hidden absolute cursor-pointer"
+          >
+            <BiGridAlt className="text-2xl" />
+          </div>
+          <div
+            ref={btnMoreRef}
+            className=" sm:text-2xl text-xl min-w-[auto]  ease-linear duration-300  sm:gap-3 gap-2 flex justify-between items-center"
+          >
+            <Tooltip
+              title="Camera"
+              componentsProps={componentsProps}
+              arrow
+              placement="top"
+            >
+              <span className="cursor-pointer">
+                <BiCamera />
+              </span>
+            </Tooltip>
+            <Tooltip
+              title="Ảnh"
+              componentsProps={componentsProps}
+              arrow
+              placement="top"
+            >
+              <label
+                htmlFor="uploadfile"
+                onClick={() => setIsOpenFile(!isOpenModuleFile)}
+                className="cursor-pointer"
+              >
+                <BiImages />
+              </label>
+            </Tooltip>
+
+            <Tooltip
+              title="Emoji"
+              componentsProps={componentsProps}
+              arrow
+              placement="top"
+            >
+              <span
+                className="cursor-pointer"
+                onClick={Debounced(() => setIsOpenEmoji(!isOpenEmoji), 400)}
+              >
+                <BiSmile />
+              </span>
+            </Tooltip>
+
+            <Tooltip
+              key="micmobile"
+              title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
+              componentsProps={componentsProps}
+              arrow
+              placement="top"
+              onClick={Debounced(handleCallVoices, 100)}
+            >
+              <button className="sm:hidden">
+                {isOpenEVoices ? <BiMicrophone /> : <BiMicrophoneOff />}
+              </button>
+            </Tooltip>
+          </div>
+
+          <div className="flex items-center ease-out duration-200  w-full ml-3 sm:ml-2  p-2  rounded-sm">
+            {!loading ? (
+              <TextareaAutosize
+                ref={chattingRef}
+                onFocus={() => handleForcusChatting(true)}
+                onTouchStart={() => handleForcusChatting(true)}
+                onBlur={() => handleForcusChatting(false)}
+                className="py-3 block min-w-[60px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
+                placeholder="Nhắn tin ..."
+                maxRows={6}
+                minRows={1}
+                maxLength={600}
+                minLength={2}
+              ></TextareaAutosize>
+            ) : (
+              <LoadingDot />
+            )}
+          </div>
+
+          <div className=" sm:min-w-[100px]  justify-around items-center flex">
+            <Tooltip
+              title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
+              componentsProps={componentsProps}
+              arrow
+              placement="top"
+              onClick={Debounced(handleCallVoices, 100)}
+            >
+              <button className="sm:block hidden">
+                {isOpenEVoices ? (
+                  <BiMicrophone fontSize={deFaultIconSize} />
+                ) : (
+                  <BiMicrophoneOff fontSize={deFaultIconSize} />
+                )}
+              </button>
+            </Tooltip>
+
+            <span
+              onClick={() => {
+                if (loading) {
+                  ToastNotify("Vui lòng chời trong ít lát ...").error();
+                  return;
+                }
+                if (chattingRef.current) {
+                  handleSubmitMessage();
+                }
+              }}
+              className="btn_send-chatting hover:opacity-80 sm:py-2.5 cursor-pointer sm:px-3 py-1.5 px-2 rounded-xl"
+            >
+              {loading ? (
+                <BiLoaderCircle
+                  className="animate-spin"
+                  fontSize={deFaultIconSize}
+                />
+              ) : (
+                <BiSend fontSize={deFaultIconSize} />
+              )}
+            </span>
+          </div>
+        </div>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className={cn(
+            "absolute bottom-[80px] left-1 sm:left-10",
+            isOpenEmoji ? "block" : "hidden"
+          )}
+        >
+          <Picker
+            data={data}
+            previewPossition="none"
+            onEmojiSelect={handdleSelect}
+          />
+        </div>
+      </section>
+    </>
   );
 };
 

@@ -9,6 +9,9 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  width: 100%;
+  overflow: hidden;
   -webkit-text-size-adjust: 100%;
   background-image: url("/theme/stars.png");
   overflow-x: hidden !important;
