@@ -90,6 +90,9 @@ const ChatInput: FC<ChatInputProps> = ({
     document.addEventListener("keypress", handleChattingEnter);
     return () => {
       document.removeEventListener("keypress", handleChattingEnter);
+      if (chattingRef.current) {
+        chattingRef.current.value = "";
+      }
     };
   }, []);
   const callbackText = useCallback((str: string | boolean | any) => {

@@ -56,6 +56,7 @@ const MyDropzone: FC<MyDropzoneProps> = ({
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const handleChangeSelect = () => {
+    listImage = [];
     listImage.map((fileImage) =>
       handleImageFirebase.deleteImage(fileImage.path)
     );

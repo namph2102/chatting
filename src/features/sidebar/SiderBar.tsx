@@ -100,14 +100,6 @@ const SiderBar = () => {
 
   return (
     <>
-      <SearchSibar
-        mutateFC={mutation.mutate}
-        isLoading={mutation.isLoading}
-        listSearch={listSearch}
-        setListSearch={setListSearch}
-        title="Tìm kiếm"
-      />
-
       <section
         id={theme.darkmode}
         className="hover:overflow-y-auto   overflow-x-hidden lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-225px)]"
@@ -124,20 +116,31 @@ const SiderBar = () => {
         </div>
 
         <div className="px-4">
-          {!account.username && (
-            <div className="flex justify-center gap-2">
-              <Link to="/dang-nhap">
-                <button className="background-primary py-2 px-5  text-white rounded-full text-sm">
-                  Đăng nhập
-                </button>
-              </Link>
-              <Link to="/dang-ky">
-                <button className="background-primary-hover py-2 px-5 rounded-full text-sm">
-                  {" "}
-                  Đăng ký
-                </button>
-              </Link>
-            </div>
+          {!account.username ? (
+            <>
+              <div className="flex justify-center flex-wrap gap-2">
+                <h2 className="w-full text-center">Đăng ký thành viên!</h2>
+                <Link to="/dang-nhap">
+                  <button className="background-primary py-2 px-5  text-white rounded-full text-sm">
+                    Đăng nhập
+                  </button>
+                </Link>
+                <Link to="/dang-ky">
+                  <button className="background-primary-hover py-2 px-5 rounded-full text-sm">
+                    {" "}
+                    Đăng ký
+                  </button>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <SearchSibar
+              mutateFC={mutation.mutate}
+              isLoading={mutation.isLoading}
+              listSearch={listSearch}
+              setListSearch={setListSearch}
+              title="Tìm kiếm"
+            />
           )}
 
           <UserListContainer title="ChatGPT" listUser={[boxID]} />

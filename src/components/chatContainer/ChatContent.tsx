@@ -50,8 +50,8 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           className={cn(
             classname,
             props.isUser
-              ? "background-primary_chatting-isuser py-1 text-right "
-              : "form-control py-2 text-left"
+              ? "background-primary_chatting-isuser py-1 ml-8"
+              : "form-control py-2 text-left mr-8"
           )}
         >
           {props.type == "text" && (
@@ -130,7 +130,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
               <>
                 <div
                   onClick={(e) => handleCopyText(e, props.comment)}
-                  className="absolute  text_copy  cursor-pointer right-2 bottom-1  gap-2 items-center font-light text-primary  border-[rgb(var(--primary-color))] border-[1px] rounded-sm p-1"
+                  className="absolute  text_copy  cursor-pointer right-10 bottom-1  gap-2 items-center font-light text-primary  border-[rgb(var(--primary-color))] border-[1px] rounded-sm p-1"
                 >
                   <BiDetail className="text-sm" />{" "}
                   <span className="text-sm ">Sao chép văn bản</span>
@@ -142,7 +142,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
                 >
                   <div
                     onClick={() => SpeakText(props.comment)}
-                    className="-top-2   text_copy right-0 absolute cursor-pointer"
+                    className="-top-1   text_copy right-10 absolute cursor-pointer"
                   >
                     <BiPlayCircle className="text-3xl text-primary " />
                   </div>

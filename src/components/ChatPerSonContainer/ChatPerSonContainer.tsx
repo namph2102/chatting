@@ -124,6 +124,10 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         ToastNotify("Gửi ảnh không thành công!").info();
         return;
       }
+    } else if (type == "text") {
+      if (!inputElement.value) {
+        return;
+      }
     }
 
     const data: ChatUserPersonItemProps = {

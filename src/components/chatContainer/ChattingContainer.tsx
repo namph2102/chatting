@@ -48,6 +48,9 @@ const ChattingContainer = () => {
         hljs.highlightAll();
       });
     }
+    if (boxChatContentRef.current) {
+      ScroolToBottom(boxChatContentRef.current, 100);
+    }
   }, []);
 
   const mutation = useMutation({
@@ -66,7 +69,7 @@ const ChattingContainer = () => {
           setValueDefaultSearch("");
         }
       }
-      // add comment usechat
+      console.log("add-comment user-chat");
       dispatch(
         handleAddComment({
           id: nanoid(),
@@ -274,8 +277,9 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       }
     },
   });
-  console.log("re-render");
+
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
+
   return (
     <div
       id={theme.darkmode}
@@ -294,7 +298,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       >
         {listUserComments.length > 0 &&
           listUserComments.map((comment) => (
-            <ChatContent {...comment} key={comment.id} />
+            <ChatContent {...comment} key={nanoid()} />
           ))}
 
         <div className="font_inter-chatting whitespace-pre-wrap mt-4">
