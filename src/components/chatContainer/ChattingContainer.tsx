@@ -303,7 +303,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         <div className="font_inter-chatting whitespace-pre-wrap mt-4">
           <p className="rounded-xl whitespace-pre-wrap px-3">
             <code
-              className="language-javascript pb-6"
+              className="language-javascript mb-4 sm:mb-2"
               ref={contentSlideAnimation}
             ></code>
           </p>

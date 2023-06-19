@@ -218,7 +218,7 @@ const ChatInput: FC<ChatInputProps> = ({
           </Tooltip>
         </div>
 
-        <div className="flex items-center ease-out duration-200  ml-4 w-full  px-2   p-2  rounded-sm">
+        <div className="flex items-center ease-out duration-200  ml-4 w-full   sm:p-2 p-1  rounded-sm">
           {!loading ? (
             <TextareaAutosize
               ref={chattingRef}
