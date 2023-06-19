@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import {
   PserSonChating,
@@ -13,8 +13,9 @@ import { handleRoomChat } from "./util";
 import ChatUserPersonItem, {
   ChatUserPersonItemProps,
 } from "./component/ChatUserPersonItem";
-import { nanoid } from "@reduxjs/toolkit";
+
 import { IImageFireBase } from "./component/MyDropzone";
+import handleImageFirebase from "./util/handleImageFirebase";
 
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
@@ -30,6 +31,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const { theme, account } =
     useSelector((state: RootState) => state.userStore) || {};
   const { isOpenChat } = useSelector((state: RootState) => state.userStore);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     let idRoom = "";
@@ -51,7 +53,6 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         idRoom = infoRoom.room._id;
 
         if (infoRoom.person) {
-          console.log(infoRoom.person);
           dispatch(
             updatePersonStatus({
               status: infoRoom.person.status,
@@ -59,17 +60,23 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
             })
           );
         }
-
+        console.log("re-render");
         const listNewChatting: ChatUserPersonItemProps[] =
           infoRoom.listChatting.map((acc: any) => {
             acc.isUser = account._id == acc.author._id;
+            acc.isAction = acc.action.userId == acc.author._id;
+            if (acc.file?.length > 0) {
+              if (acc.author._id != account._id && acc.action.userId) {
+                acc.type = "text";
+              }
+            }
             return acc;
           });
 
         if (listNewChatting?.length > 0) {
           setListUserComments([...listNewChatting]);
           if (boxChatContentRef.current) {
-            ScroolToBottom(boxChatContentRef.current, 100);
+            ScroolToBottom(boxChatContentRef.current, 300);
           }
         }
         socket.emit("tao-room", idRoom);
@@ -77,11 +84,65 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     });
 
     return () => {
-      console.log("Rồi khỏi phòng", idRoom);
       setListUserComments([]);
       socket.emit("leaver-room-chat-current", idRoom);
     };
   }, [account._id, person._id]);
+  // lắng nghe và sẽ thực hiện thao tác thêm sữa xóa ************************
+  useEffect(() => {
+    if (!account._id) return;
+    socket.on("server-send-chatting-change", ({ action, idComment }) => {
+      setListUserComments((listUserComments: ChatUserPersonItemProps[]) => {
+        const acc: any = listUserComments.find((chat) => chat._id == idComment);
+        console.log(action);
+        console.log("****************************");
+        console.log(acc.author._id, action.userId, account._id);
+        acc.isAction = acc.author._id == action.userId;
+        console.log("isaction", acc.isAction);
+        if (!acc) return listUserComments;
+
+        acc.action = action;
+        if (acc.type == "image") {
+          if (acc.isAction && account._id == action.userId) {
+            const listFile: IImageFireBase[] = acc.file;
+            listFile.map((file) => handleImageFirebase.deleteImage(file.path));
+            acc.file = [];
+            acc.type = "text";
+          } else if (acc.isAction && account._id != action.userId) {
+            acc.type = "text";
+          } else if (!acc.isAction && account._id == action.userId) {
+            acc.type = "text";
+          } else {
+            acc.type = "image";
+          }
+        }
+        console.log(acc);
+        return [...listUserComments];
+      });
+    });
+  }, [account._id]);
+  console.log("****************************re-render******************");
+  const handleactiveOptions = (
+    idComment: string | undefined,
+    type: string,
+    typeChatting: string
+  ) => {
+    if (type == "delete") {
+      const data: any = {
+        id: idComment,
+        userId: account._id,
+        type,
+        typeChatting,
+      };
+      socket.emit(`client-send-chatting-change`, data);
+    }
+  };
+
+  const handleScrool = useCallback(() => {
+    if (boxChatContentRef.current) {
+      ScroolToBottom(boxChatContentRef.current, 200);
+    }
+  }, []);
   useEffect(() => {
     // client-side
     socket.on("connect", () => {
@@ -95,67 +156,72 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       data.isUser = false;
       data.author.avatar = person.avatar;
       setListUserComments((pre) => [...pre, data]);
-      if (boxChatContentRef.current) {
-        ScroolToBottom(boxChatContentRef.current, 1000);
-      }
+      handleScrool();
+      setIsLoading(false);
+      console.log(data.isSee);
     });
     socket.on("user-chat-message", (data) => {
       setListUserComments((prev) => [...prev, data]);
-
+      handleScrool();
+      setIsLoading(false);
       if (data.isSee) {
         if (person.status) return;
-        dispatch(
-          updatePersonStatus({
-            status: data.isSee,
-          })
-        );
+        socket.on("person-friend-online", () => {
+          dispatch(
+            updatePersonStatus({
+              status: data.isSee,
+            })
+          );
+        });
       }
     });
   }, []);
 
-  const handleSendMessage = (
-    inputElement: HTMLTextAreaElement | any[] | any,
-    type: string
-  ) => {
-    let listImage: IImageFireBase[] = [];
-    if (type == "image") {
-      listImage = inputElement;
-      if (listImage.length <= 0) {
-        ToastNotify("Gửi ảnh không thành công!").info();
-        return;
+  const handleSendMessage = useCallback(
+    (inputElement: HTMLTextAreaElement | any[] | any, type: string) => {
+      let listImage: IImageFireBase[] = [];
+      if (type == "image") {
+        listImage = inputElement;
+        if (listImage.length <= 0) {
+          ToastNotify("Gửi ảnh không thành công!").info();
+          return;
+        }
+      } else if (type == "text") {
+        if (!inputElement.value) {
+          return;
+        }
       }
-    } else if (type == "text") {
-      if (!inputElement.value) {
-        return;
-      }
-    }
 
-    const data: ChatUserPersonItemProps = {
-      isSee: person.status,
+      const data: ChatUserPersonItemProps = {
+        isSee: person.status,
 
-      updatedAt: new Date().toISOString(),
-      type,
-      author: {
-        _id: account._id,
-        avatar: account.avatar,
-        fullname: account.fullname,
-      },
-      comment:
-        type == "image"
-          ? "uploadfile"
-          : inputElement.value.trim().replace(/\s{2}/g, " "),
-      isUser: true,
-    };
-    socket.emit("user-chat", {
-      ...data,
-      idPerson: person._id,
-      type,
-      file: listImage,
-    });
-    if (boxChatContentRef.current) {
-      ScroolToBottom(boxChatContentRef.current, 100);
-    }
-  };
+        updatedAt: new Date().toISOString(),
+        type,
+        author: {
+          _id: account._id,
+          avatar: account.avatar,
+          fullname: account.fullname,
+        },
+        comment:
+          type == "image"
+            ? "uploadfile"
+            : inputElement.value.trim().replace(/\s{2}/g, " "),
+        isUser: true,
+        action: {
+          kind: "",
+          userId: "",
+        },
+      };
+      socket.emit("user-chat", {
+        ...data,
+        idPerson: person._id,
+        type,
+        file: listImage,
+      });
+      setIsLoading(true);
+    },
+    []
+  );
   const boxChatContentRef = useRef<HTMLElement>(null);
 
   return (
@@ -176,12 +242,16 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       >
         {listUserComments.length > 0 &&
           listUserComments.map((comment) => (
-            <ChatUserPersonItem key={nanoid()} {...comment} />
+            <ChatUserPersonItem
+              key={comment._id}
+              {...comment}
+              handleactiveOptions={handleactiveOptions}
+            />
           ))}
       </section>
 
       <ChatInputPerSon
-        loading={false}
+        loading={isLoading}
         handleSendMessage={handleSendMessage}
         className={!isOpenChat ? "open_toggle-mobile" : "hidden_toggle-mobile"}
       />

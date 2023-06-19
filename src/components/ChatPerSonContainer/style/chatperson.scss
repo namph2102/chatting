@@ -1,0 +1,10 @@
+.openSeemore {
+  display: none;
+}
+.bg_effect-settings {
+  &:hover {
+    .openSeemore {
+      display: block;
+    }
+  }
+}

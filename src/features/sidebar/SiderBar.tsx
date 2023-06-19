@@ -143,8 +143,8 @@ const SiderBar = () => {
             />
           )}
 
-          <UserListContainer title="ChatGPT" listUser={[boxID]} />
-          {listChatting.length > 0 && (
+          <UserListContainer title="Người hỗ trợ" listUser={[boxID]} />
+          {listChatting.length > 0 && account.username && (
             <UserListContainer
               title="danh sách bạn bè"
               listUser={listChatting}

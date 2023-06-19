@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Tooltip } from "@mui/material";
 
 import Profile from "./Profile";
@@ -31,10 +31,20 @@ const Header = () => {
     localStorage.setItem("darkmode", configTheme.darkmode);
     dispacth(updateTheme(configTheme));
   };
+  useEffect(() => {
+    document.addEventListener("click", () => {
+      setIsOpenProfile(false);
+    });
+    return () => {
+      document.removeEventListener("click", () => {
+        setIsOpenProfile(false);
+      });
+    };
+  }, []);
   return (
     <header
       className={cn(
-        "lg:w-[75px] w-full lg:h-screen bg-menu shadow lg:static fixed z-10 left-0 right-0 bottom-0 h-[75px]"
+        "lg:w-[75px] w-full lg:h-screen bg-menu shadow lg:static fixed lg:z-10 z-20 left-0 right-0 bottom-0 h-[75px]"
       )}
     >
       <nav id="nav__menu">
@@ -86,7 +96,8 @@ const Header = () => {
                 <Badge badgeContent={noticeTotal} color="primary">
                   <a className="cursor-pointer">
                     <img
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setIsOpenProfile(!isOpenProfile);
                       }}
                       src={account.avatar || "/images/avata.jpg"}
@@ -105,6 +116,7 @@ const Header = () => {
 
             <Profile
               isOpen={isOpenProfile}
+              setIsOpenProfile={setIsOpenProfile}
               username={account.username}
               noticeTotal={noticeTotal}
               fullname={account.fullname}

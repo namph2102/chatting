@@ -19,7 +19,7 @@ function App() {
         if (userid) {
           socket.emit("client-acttaced-id", userid);
 
-          socket.on("infomation-add-friend", (fullname) => {
+          socket.on(`infomation-add-friend-${userid}`, (fullname) => {
             dispacth(updateNotice(1));
             ToastNotify(
               CapitalizeString(fullname) + " đã gửi lời mời kết bạn"

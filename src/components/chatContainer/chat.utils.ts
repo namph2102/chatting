@@ -42,7 +42,7 @@ export const HandleCoverStringEntries = (str: string) => {
   if (str.includes("```")) {
     str = str.replace(/```/, " ");
   }
-  console.log(str);
+
   return str;
 };
 
@@ -77,9 +77,10 @@ export const CommentReducer = (
   switch (action.type) {
     case ADD_COMENT:
       StoreCommentChatBot.push(action.payload);
-      return [...state, action.payload];
+      return [...StoreCommentChatBot];
+
     default:
-      return state;
+      return [...state];
   }
 };
 export const handleCopyText = (e: any, text: string) => {

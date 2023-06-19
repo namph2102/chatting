@@ -79,7 +79,7 @@ const SearchPage = () => {
         setListchatting(data.listUserSearchs);
       });
   }, [query, account._id, noticeTotal]);
-  console.log(noticeTotal);
+
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
   const listChattingLocal = historyChatting("searchHistory");
   const mutation = useMutation({
@@ -121,6 +121,7 @@ const SearchPage = () => {
       setListSearch(listChattingLocal.getFollow(5));
     },
   });
+
   const handleAddFriends = (id: string) => {
     const data = {
       fullname: account.fullname,
@@ -129,6 +130,7 @@ const SearchPage = () => {
     };
     socket.emit("add-friend", data);
   };
+
   return (
     <div>
       <div className="container mx-auto relative">
@@ -166,7 +168,7 @@ const SearchPage = () => {
                 className="cursor-pointer"
                 onClick={() => setIsOpenChat(false)}
               >
-                <BiChevronLeft className="md:hidden text-3xl font-bold" />
+                <BiChevronLeft className="lg:hidden text-3xl font-bold" />
               </span>
               <span> Mọi người</span>
             </h6>

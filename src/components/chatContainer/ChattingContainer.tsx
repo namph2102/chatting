@@ -69,7 +69,6 @@ const ChattingContainer = () => {
           setValueDefaultSearch("");
         }
       }
-      console.log("add-comment user-chat");
       dispatch(
         handleAddComment({
           id: nanoid(),
@@ -98,7 +97,7 @@ const ChattingContainer = () => {
       const handleGetValueTyping = async (content: string) => {
         reply += content;
         if (contentSlideAnimation.current) {
-          contentSlideAnimation.current.innerHTML = `<span class="block mb-4">${reply}</span>`;
+          contentSlideAnimation.current.innerText = reply;
 
           if (boxChatContentRef.current) {
             reply.length % 10 == 0 &&
@@ -298,7 +297,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       >
         {listUserComments.length > 0 &&
           listUserComments.map((comment) => (
-            <ChatContent {...comment} key={nanoid()} />
+            <ChatContent {...comment} key={comment.id} />
           ))}
 
         <div className="font_inter-chatting whitespace-pre-wrap mt-4">

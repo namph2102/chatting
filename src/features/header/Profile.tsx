@@ -3,30 +3,38 @@ import { BiBell, BiCog, BiLock, BiLogOutCircle } from "react-icons/bi";
 import { ToastNotify, cn } from "../../servies/utils";
 import { Link } from "react-router-dom";
 import { Badge } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux";
+import { UpdateAccount } from "../../redux/Slice/AccountSlice";
 
 interface ProfileProps {
   username: string;
   fullname: string;
   isOpen: boolean;
   noticeTotal: number;
+  setIsOpenProfile: (isOpen: boolean) => void;
 }
 const Profile: FC<ProfileProps> = ({
   username,
   fullname,
   isOpen,
   noticeTotal,
+  setIsOpenProfile,
 }) => {
+  const dispacth: AppDispatch = useDispatch();
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
     ToastNotify("Đăng xuất thành công!").success();
+    dispacth(UpdateAccount({ usename: "" }));
+    setIsOpenProfile(false);
   };
 
   return (
     <div
       id="userDropdown"
       className={cn(
-        "z-10 absolute  ease-in duration-100  text-white -top-[250px] lg:left-0  -left-[150px] border-gray-700 border-[1px]  bg-menu  rounded-lg shadow w-48 ",
+        "z-10 absolute   ease-in duration-100  text-white -top-[250px] lg:left-0  -left-[150px] border-gray-700 border-[1px]  bg-menu  rounded-lg shadow w-48 ",
         isOpen ? "scale-1" : "scale-0"
       )}
     >
@@ -34,7 +42,11 @@ const Profile: FC<ProfileProps> = ({
         <div className="capitalize truncate">Tên: {fullname}</div>
         <div className="font-medium truncate">Tài khoản: {username}</div>
       </div>
-      <ul className="py-2 text-sm " aria-labelledby="avatarButton">
+      <ul
+        className="py-2 text-sm "
+        aria-labelledby="avatarButton"
+        onClick={() => setIsOpenProfile(false)}
+      >
         <li>
           <Link
             to="/thong-bao"

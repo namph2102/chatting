@@ -29,8 +29,8 @@ class HandleImageFireBase {
         console.log(err);
       });
   }
-  deleteImage(url: string) {
-    const desertRef = ref(storageFirebase, url);
+  deleteImage(path: string) {
+    const desertRef = ref(storageFirebase, path);
     return deleteObject(desertRef)
       .then(() => {
         console.log("Xóa thành công");
@@ -39,14 +39,14 @@ class HandleImageFireBase {
         console.log(error);
       });
   }
-  getImage(url: string) {
-    const forestRef = ref(storageFirebase, url);
+  getImage(path: string) {
+    const forestRef = ref(storageFirebase, path);
     return getMetadata(forestRef).then((metadata) => {
       console.log(metadata.generation);
     });
   }
-  getUlrDownload(url: string) {
-    const imageRef = ref(storageFirebase, url);
+  getUlrDownload(path: string) {
+    const imageRef = ref(storageFirebase, path);
     return getDownloadURL(imageRef).then((url) => url);
   }
   deleteForder(nameForder: string) {

@@ -52,17 +52,21 @@ const ChatInput: FC<ChatInputProps> = ({
   >([]);
 
   const handleSubmitMessage = () => {
+    let messages: messageType | any = {};
     if (chattingRef.current) {
-      const messages: messageType | any = {
+      messages = {
         isUserMessage: true,
         id: nanoid(),
         text: chattingRef.current.value.trim(),
       };
       // add message to api
-      if (!chattingRef.current.value.trim()) {
+      if (!messages.text) {
         return;
       }
+
       mutationQuery(messages);
+
+      messages = {};
       const text = chattingRef.current.value;
       setIsOpenSubOptions(false);
       const match = text.match(/\*\*(.*?)\*\*/);
@@ -90,6 +94,7 @@ const ChatInput: FC<ChatInputProps> = ({
     document.addEventListener("keypress", handleChattingEnter);
     return () => {
       document.removeEventListener("keypress", handleChattingEnter);
+
       if (chattingRef.current) {
         chattingRef.current.value = "";
       }

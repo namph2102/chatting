@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn } from "../../../servies/utils";
+import { CapitalizeString, cn } from "../../../servies/utils";
 
 import { BiCheckDouble, BiDotsVerticalRounded } from "react-icons/bi";
 import moment from "moment";
@@ -8,6 +8,7 @@ import { IImageFireBase } from "./MyDropzone";
 import { BsDownload } from "react-icons/bs";
 import { nanoid } from "@reduxjs/toolkit";
 import { Link } from "react-router-dom";
+import "../style/chatperson.scss";
 
 export interface ChatUserPersonItemProps {
   isSee: boolean;
@@ -21,14 +22,51 @@ export interface ChatUserPersonItemProps {
     fullname: string;
   };
   file?: IImageFireBase[];
+  _id?: string;
+  action: {
+    userId: string;
+    kind: string;
+  };
 }
-const ChatUserPersonItem: FC<ChatUserPersonItemProps> = (props) => {
+interface ChatUserPersonItemPropsMore extends ChatUserPersonItemProps {
+  handleactiveOptions: (
+    idComment: string | undefined,
+    type: string,
+    typeChatting: string
+  ) => void;
+  isAction?: boolean;
+}
+const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
   const classname =
     "w-[fit-content]  relative  box_chat-content   flex-start  flex-col sm:flex-row  rounded-lg font-medium pb-2 px-2 shadow-inner mt-3 ";
+  let message = props.comment;
+  if (props.action.kind == "delete") {
+    if (props.isAction) {
+      message = `<span class="text-sm  italic text-red-400">${
+        (props.isUser ? "Bạn" : CapitalizeString(props.author.fullname)) +
+        " đã xóa nội dung này!"
+      }</span>`;
+    } else {
+      message = !props.isUser
+        ? `<span class="text-sm  italic text-red-400">Bạn đã xóa nội dung này!</span>`
+        : message;
+    }
+  }
+  const handleActionClick = (
+    id: string | undefined,
+    type: string,
+    message: string
+  ) => {
+    console.log(message);
+    if (!id) return;
+    props.handleactiveOptions(id, type, props.type);
+  };
+
   return (
     <article
+      id={props._id || nanoid()}
       className={cn(
-        "flex items-end mt-3",
+        "flex items-end mt-3 bg_effect-settings",
         props.isUser ? "flex-row-reverse gap-2" : "flex-row gap-2"
       )}
     >
@@ -51,50 +89,68 @@ const ChatUserPersonItem: FC<ChatUserPersonItemProps> = (props) => {
               : "form-control py-2 text-left mr-20"
           )}
         >
-          <div
-            className={cn("absolute top-1/2 hidden -translate-y-1/2 w-full")}
-          >
-            <ul
-              className={cn(
-                "text-sm font-semibold  px-2 w-[100px] text-black  text-center -translate-y-1/2 absolute bg-white drop-shadow-xl top-0",
-                props.isUser ? "-left-28" : "-right-24"
-              )}
-            >
-              <li>Xóa, Gỡ</li>
-              <li>Trả lời</li>
-              <li>Ghim</li>
-            </ul>
+          <div className={cn("absolute top-1/2   -translate-y-1/2 w-full")}>
             <span
               className={cn(
-                "p-4 text-xl cursor-pointer absolute hidden -translate-y-1/2",
+                "p-4 text-xl cursor-pointer absolute openSeemore  -translate-y-1/2",
                 props.isUser ? "-left-12 " : "-right-12"
               )}
             >
-              <BiDotsVerticalRounded />
+              <span className="span__container-next relative">
+                <BiDotsVerticalRounded />
+                <ul
+                  className={cn(
+                    "text-sm font-semibold  hidden  rounded-xl  -top-full  px-2 w-[90px] text-black  text-center absolute bg-white drop-shadow-xl ",
+                    props.isUser ? "-left-16" : "-right-12"
+                  )}
+                >
+                  <li
+                    onClick={() =>
+                      handleActionClick(props._id, "delete", "xóa")
+                    }
+                  >
+                    Xóa
+                  </li>
+                  <li
+                    onClick={() =>
+                      handleActionClick(props._id, "change", "Chỉnh sửa")
+                    }
+                  >
+                    Chỉnh sửa
+                  </li>
+                  <li
+                    onClick={() => handleActionClick(props._id, "ghim", "ghim")}
+                  >
+                    Ghim
+                  </li>
+                </ul>
+              </span>
             </span>
           </div>
+
           {props.type == "text" && (
-            <p className="font_inter-chatting font-light"> {props.comment}</p>
+            <p
+              className="font_inter-chatting font-light"
+              dangerouslySetInnerHTML={{ __html: message }}
+            />
           )}
           {props.type == "image" && props.file && (
             <div className="flex flex-wrap gap-y-8 ">
               {props.file.map((file) => (
                 <div
                   key={nanoid()}
-                  className={cn(
-                    "relative lg:w-[200px] w-[150px] h-[180px]  px-2   "
-                  )}
+                  className={cn("relative lg:w-[200px] w-[150px] h-[190px]")}
                 >
                   <img
-                    className="w-[full]  object-cover h-full "
+                    className="w-full  object-cover h-full "
                     loading="lazy"
                     src={file.url}
                     alt="Ảnh bị lỗi rồi!"
                   />
-                  <div className="absolute bottom-0 left-2 w-full right-0 h-10 flex items-center text-left">
+                  <div className="absolute bg-black/60 py-2 bottom-0 left-0 w-full right-0 h-12 flex items-center text-left">
                     <img src="images/iconimage.png" className="lg:w-10 w-8" />
-                    <div className="text-sm line-clamp-1  font-normal flex flex-col  text_shadown-style">
-                      <span>{file.fileName}</span>
+                    <div className="text-sm  font-normal flex flex-col  text_shadown-style">
+                      <span className="line-clamp-1">{file.fileName}</span>
                       <span>{(file.size / 1000).toFixed(0)} kb</span>
                     </div>
                     <Link

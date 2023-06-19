@@ -61,7 +61,12 @@ export const listSwipper: TlistSwipper[] = [
 ];
 
 import { IconType } from "react-icons/lib";
-import { ToastNotify, cn, deFaultIconSize } from "../../servies/utils";
+import {
+  ToastNotify,
+  cn,
+  deFaultIconSize,
+  handleStopPropagation,
+} from "../../servies/utils";
 import { componentsProps } from "../../styles/componentsProps";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux";
@@ -75,6 +80,16 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
   handleChoseSeeting,
   fileCallback,
 }) => {
+  useEffect(() => {
+    document.addEventListener("click", () => {
+      setIsOpenMenu(false);
+    });
+    return () => {
+      document.removeEventListener("click", () => {
+        setIsOpenMenu(false);
+      });
+    };
+  }, []);
   const { theme } = useSelector((state: RootState) => state.userStore);
   const [iseOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const [isPageInSwiper, setPageinTWipper] = useState<number>(6);
@@ -144,7 +159,7 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
 
   return (
     <>
-      <div className="relative left-0">
+      <div onClick={handleStopPropagation} className="relative left-0">
         <Tooltip
           title="More"
           componentsProps={componentsProps}

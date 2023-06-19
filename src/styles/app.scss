@@ -74,7 +74,7 @@ html {
 }
 
 #light-mode {
-  background-color: #f3f0f0;
+  background-color: #f1f1f1;
   color: #1a1919;
   .box_chat-content {
     color: #0e0d0d !important;
@@ -176,4 +176,7 @@ button {
     background-color: rgba(var(--primary-color));
     color: rgb(223, 221, 221);
   }
+}
+.span__container-next:hover ul {
+  display: block !important;
 }
