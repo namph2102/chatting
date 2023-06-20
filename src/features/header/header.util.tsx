@@ -4,11 +4,12 @@ import {
   BiChat,
   BiBookHeart,
   BiPhoneCall,
-  BiBookmarks,
   BiCog,
+  BiBell,
 } from "react-icons/bi";
 
 import { SiderBar } from "../sidebar";
+import NoticePage from "../Notice";
 
 export const listMenu = [
   {
@@ -44,10 +45,10 @@ export const listMenu = [
     path: "/call",
   },
   {
-    title: "Bookmarks",
-    Icon: BiBookmarks,
-    component: SiderBar,
-    path: "/dau-an",
+    title: "Thông báo",
+    Icon: BiBell,
+    component: NoticePage,
+    path: "/thong-bao",
   },
   {
     title: "Settings",

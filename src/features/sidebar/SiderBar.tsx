@@ -40,6 +40,7 @@ const SiderBar = () => {
       if (res) {
         const listfriends = res.listfriends.friends;
         // nếu bạn bè off line thì chuyển sang false luôn
+
         account.friends.map((idFriend: string) => {
           socket.on(`friend-chattings-${idFriend}`, (status) => {
             setListchatting((listFriendPrev) => {
@@ -102,7 +103,7 @@ const SiderBar = () => {
     <>
       <section
         id={theme.darkmode}
-        className="hover:overflow-y-auto   overflow-x-hidden lg:max-h-[calc(100vh-150px)] max-h-[calc(100vh-225px)]"
+        className="hover:overflow-y-auto   overflow-x-hidden lg:max-h-[calc(100vh-150px)] lg:min-h-[95vh] min-h-[80vh] max-h-[calc(100vh-225px)]"
       >
         <div className={"hidden"}>
           <SkeletonLayout />

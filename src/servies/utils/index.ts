@@ -153,9 +153,12 @@ const timeSetTing: any = {
   second: "giây",
   seconds: "giây",
 };
-export function HandleTimeDiff(timestamp: any) {
-  let result: any = moment(timestamp).fromNow();
+export function HandleTimeDiff(timestamp: any, timeEnd = "") {
+  let result: any = !timeEnd
+    ? moment(timestamp).fromNow()
+    : moment(timestamp).from(timeEnd);
   if (result.includes("a few seconds ago")) return "vài giây trước";
+
   if (result[1] === "n") {
     result = result.replace("an", "1");
   } else if (result[0] === "a") {

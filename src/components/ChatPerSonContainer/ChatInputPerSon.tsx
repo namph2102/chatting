@@ -47,6 +47,9 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
   const btnMoreOpenRef = useRef<HTMLDivElement>(null);
   const chattingRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
+    document.addEventListener("click", () => {
+      setIsOpenEmoji(false);
+    });
     const handleChattingEnter = (e: KeyboardEvent) => {
       if (!chattingRef.current?.value) return;
       if (e.key === "Enter") {
@@ -59,6 +62,9 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
     document.addEventListener("keypress", handleChattingEnter);
     return () => {
       document.removeEventListener("keypress", handleChattingEnter);
+      document.removeEventListener("click", () => {
+        setIsOpenEmoji(false);
+      });
     };
   }, []);
   const handdleSelect = (emo: { native: string }) => {

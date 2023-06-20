@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiXCircle } from "react-icons/bi";
 import Jitsi from "react-jitsi";
 import { ToastNotify } from "../../servies/utils";
 import "./videocall.scss";
 import { LoaddingOverLay } from "../../components/loading";
-import { AppDispatch } from "../../redux";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsopenCallvideo } from "../../redux/Slice/AccountSlice";
 import ToltipProvider from "../../components/webmedia/component/ToltipProvider";
 
@@ -31,9 +31,20 @@ export default function VideoCallFull() {
     // You can perform additional actions with the Jitsi Meet API here
   };
   const handleCreateRandom = () => {
-    setRoomName(Math.random().toString(36).substring(2, 8).replace(/\s/g, ""));
-    ToastNotify("Tạo phòng thành công").success();
+    const createRoomname = Math.random()
+      .toString(36)
+      .substring(2, 6)
+      .replace(/\s/g, "");
+    setRoomName(createRoomname);
+    ToastNotify(`Mã phòng của bạn là ${createRoomname}`).success();
   };
+  const account = useSelector((state: RootState) => state.userStore.account);
+  useEffect(() => {
+    if (!account._id) return;
+    setDisplayName(account.fullname);
+    handleCreateRandom();
+    setOnCall(true);
+  }, [account, account._id, account.fullname, account.username]);
 
   return onCall ? (
     <>

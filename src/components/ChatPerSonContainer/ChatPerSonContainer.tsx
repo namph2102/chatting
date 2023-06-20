@@ -16,6 +16,9 @@ import ChatUserPersonItem, {
 
 import { IImageFireBase } from "./component/MyDropzone";
 import handleImageFirebase from "./util/handleImageFirebase";
+import ModalProviderOverlay from "../Ui/ModalProviderOverlay";
+
+import GhimContainer from "./component/GhimContainer";
 
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
@@ -65,6 +68,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
           infoRoom.listChatting.map((acc: any) => {
             acc.isUser = account._id == acc.author._id;
             acc.isAction = acc.action.userId == acc.author._id;
+
             if (acc.file?.length > 0) {
               if (acc.author._id != account._id && acc.action.userId) {
                 acc.type = "text";
@@ -94,15 +98,19 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     socket.on("server-send-chatting-change", ({ action, idComment }) => {
       setListUserComments((listUserComments: ChatUserPersonItemProps[]) => {
         const acc: any = listUserComments.find((chat) => chat._id == idComment);
-        console.log(action);
-        console.log("****************************");
-        console.log(acc.author._id, action.userId, account._id);
-        acc.isAction = acc.author._id == action.userId;
-        console.log("isaction", acc.isAction);
-        if (!acc) return listUserComments;
 
+        acc.isAction = acc.author._id == action.userId;
+
+        if (!acc) return listUserComments;
+        console.log(action);
         acc.action = action;
-        if (acc.type == "image") {
+
+        if (action.kind == "edit") {
+          acc.comment = action.newComment;
+          acc.updatedAt = new Date().toISOString();
+        }
+
+        if (acc.type == "image" && action.kind == "delete") {
           if (acc.isAction && account._id == action.userId) {
             const listFile: IImageFireBase[] = acc.file;
             listFile.map((file) => handleImageFirebase.deleteImage(file.path));
@@ -116,26 +124,24 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
             acc.type = "image";
           }
         }
-        console.log(acc);
+
         return [...listUserComments];
       });
     });
   }, [account._id]);
-  console.log("****************************re-render******************");
+
   const handleactiveOptions = (
     idComment: string | undefined,
     type: string,
     typeChatting: string
   ) => {
-    if (type == "delete") {
-      const data: any = {
-        id: idComment,
-        userId: account._id,
-        type,
-        typeChatting,
-      };
-      socket.emit(`client-send-chatting-change`, data);
-    }
+    const data: any = {
+      id: idComment,
+      userId: account._id,
+      type,
+      typeChatting,
+    };
+    socket.emit(`client-send-chatting-change`, data);
   };
 
   const handleScrool = useCallback(() => {
@@ -194,7 +200,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
 
       const data: ChatUserPersonItemProps = {
         isSee: person.status,
-
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         type,
         author: {
@@ -223,7 +229,10 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     []
   );
   const boxChatContentRef = useRef<HTMLElement>(null);
-
+  // modal ghim tin nhắn
+  const [isOpenGhim, setIsOpenGhim] = useState<boolean>(false);
+  const listGhimComment =
+    listUserComments.filter((comment) => comment.action.kind == "ghim") || [];
   return (
     <div
       id={theme.darkmode}
@@ -235,10 +244,19 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       )}
     >
       <ChatHeader person={person} />
-
+      {/* ghim con tainer */}
+      {isOpenGhim && (
+        <ModalProviderOverlay setIsCloseModal={() => setIsOpenGhim(false)}>
+          <GhimContainer
+            listCooment={listGhimComment}
+            isOpenGhim={isOpenGhim}
+            setIsOpenGhim={setIsOpenGhim}
+          />
+        </ModalProviderOverlay>
+      )}
       <section
         ref={boxChatContentRef}
-        className="chatting px-2 absolute top-0 left-0 right-0 overflow-y-auto overflow-x-hidden w-full pt-24 max-h-[calc(100vh-100px)]"
+        className="chatting px-2 absolute top-0 left-0 right-0 bottom-24 pb-4 overflow-y-auto overflow-x-hidden w-full pt-24"
       >
         {listUserComments.length > 0 &&
           listUserComments.map((comment) => (
@@ -246,6 +264,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
               key={comment._id}
               {...comment}
               handleactiveOptions={handleactiveOptions}
+              setIsOpenGhim={setIsOpenGhim}
             />
           ))}
       </section>

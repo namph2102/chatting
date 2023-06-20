@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Jitsi from "react-jitsi";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux";
 
 export default function App() {
+  const account = useSelector((state: RootState) => state.userStore.account);
   const [displayName, setDisplayName] = useState("");
   const [roomName, setRoomName] = useState("");
   const [onCall, setOnCall] = useState(false);
+  console.log(account);
+  useEffect(() => {
+    if (!account._id) return;
+
+    setDisplayName(account.fullname);
+    setRoomName(account.username);
+    setOnCall(true);
+  }, [account, account._id, account.fullname, account.username]);
   const handleAPILoad = () => {
     const idIfame: HTMLIFrameElement | null =
       document.querySelector("#react-jitsi-frame");
