@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   CapitalizeString,
   HandleTimeDiff,
@@ -63,6 +63,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
     }
   }
   const handleActionClick = (id: string | undefined, type: string) => {
+    setIsopenMore(false);
     if (
       type == "delete" &&
       props.action.kind == "delete" &&
@@ -94,13 +95,27 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
   const buttonEditRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (ElementEditRef.current) {
-      ElementEditRef.current.addEventListener("blur", function () {
-        this.contentEditable = "false";
+    document.addEventListener("click", () => {
+      setIsopenMore(false);
+    });
+    const handleEdit = () => {
+      if (ElementEditRef.current) {
+        ElementEditRef.current.contentEditable = "false";
         buttonEditRef.current?.classList.add("hidden");
         handleEditMessage();
-      });
+      }
+    };
+    if (ElementEditRef.current) {
+      ElementEditRef.current.addEventListener("blur", handleEdit);
     }
+    return () => {
+      if (ElementEditRef.current) {
+        ElementEditRef.current.addEventListener("blur", handleEdit);
+      }
+      document.removeEventListener("click", () => {
+        setIsopenMore(false);
+      });
+    };
   }, []);
   const handleEditMessage = () => {
     if (ElementEditRef.current) {
@@ -109,13 +124,15 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
         "edit",
         ElementEditRef.current.textContent || props.comment
       );
+      setIsopenMore(false);
     }
   };
+  const [isOpenMore, setIsopenMore] = useState(false);
   return (
     <article
       id={props._id || nanoid()}
       className={cn(
-        "flex items-end mt-3 bg_effect-settings",
+        "flex  items-end mt-3 bg_effect-settings",
         props.isUser ? "flex-row-reverse gap-2" : "flex-row gap-2"
       )}
     >
@@ -168,11 +185,22 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               )}
             >
               <span className="span__container-next relative">
-                <BiDotsVerticalRounded />
+                <b
+                  onClick={(e) => {
+                    e.stopPropagation(), setIsopenMore(!isOpenMore);
+                  }}
+                >
+                  <BiDotsVerticalRounded />
+                </b>
                 <ul
                   className={cn(
                     "text-sm font-medium  hidden  rounded-xl  -top-full  w-[90px] text-black  text-center absolute bg-white drop-shadow-xl ",
-                    props.isUser ? "-left-16" : "-right-12"
+                    props.isUser ? "-left-16" : "-right-12",
+                    window.innerWidth >= 1024
+                      ? ""
+                      : isOpenMore
+                      ? "block"
+                      : "hidden"
                   )}
                 >
                   <li

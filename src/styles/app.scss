@@ -177,6 +177,8 @@ button {
     color: rgb(223, 221, 221);
   }
 }
-.span__container-next:hover ul {
-  display: block !important;
+@media screen and (min-width: 1024px) {
+  .span__container-next:hover ul {
+    display: block !important;
+  }
 }
