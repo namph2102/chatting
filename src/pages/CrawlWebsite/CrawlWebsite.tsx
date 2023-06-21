@@ -1,31 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import * as cheerio from "cheerio";
 import axios from "axios";
 
 const CrawlWebsite = () => {
-  const [listcontent, setListContent] = useState<string[]>([]);
-  const [h1Tag, setH1Tag] = useState<string>("");
   useEffect(() => {
     axios
-      .get("https://nettruyen.net.vn/truyen/tuyet-the-chien-hon-7223/")
+      .get(
+        "https://thanhnien.vn/nguyen-pho-thu-tuong-chinh-phu-vu-khoan-tu-tran-185230621095721972.htm"
+      )
       .then((response) => {
         const $ = cheerio.load(response.data);
+        const title = $("title").text();
+        const image = $("meta[property='og:image']").attr("content");
+        const description = $("meta[name='description']").attr("content");
 
-        const h1text = $("h1").text();
-        const listString: string[] = [];
-        $(".container .ModuleContent .image img").each((i, el) => {
-          console.log(el, i);
-          const pElement = "https://nettruyen.net.vn/" + $(el).attr("src");
-
-          if (pElement) {
-            listString.push(pElement);
-          }
-
-          console.log("--------------------------");
-          // Duyệt qua tất cả các phần tử có class là "article"
-        });
-        setListContent([...listString]);
-        setH1Tag(h1text);
+        const reply =
+          "https://thanhnien.vn/nguyen-pho-thu-tuong-chinh-phu-vu-khoan-tu-tran-185230621095721972.htm adasdsa tori72 ơi là trời";
+        const regex = /https?:\/\/[^\s]+/g;
+        const links = [...(reply.match(regex) || [])] || [];
+        console.log(links);
+        console.log(title);
+        console.log(image);
+        console.log(description);
       })
 
       .catch((error) => {
@@ -34,16 +30,7 @@ const CrawlWebsite = () => {
   }, []);
   return (
     <div>
-      <h1>{h1Tag}</h1>
-      <section>
-        {listcontent.length > 0 &&
-          listcontent.map((p, index) => (
-            <p key={index}>
-              {" "}
-              <img src={p} alt="" />
-            </p>
-          ))}
-      </section>
+      <section>hello</section>
     </div>
   );
 };

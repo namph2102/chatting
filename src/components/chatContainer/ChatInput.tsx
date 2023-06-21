@@ -63,7 +63,6 @@ const ChatInput: FC<ChatInputProps> = ({
       if (!messages.text) {
         return;
       }
-
       mutationQuery(messages);
 
       messages = {};

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BiXCircle } from "react-icons/bi";
 import Jitsi from "react-jitsi";
-import { ToastNotify } from "../../servies/utils";
+import { CapitalizeString, ToastNotify } from "../../servies/utils";
 import "./videocall.scss";
 import { LoaddingOverLay } from "../../components/loading";
 import { AppDispatch, RootState } from "../../redux";
@@ -25,8 +25,7 @@ export default function VideoCallFull() {
     if (idIfame) {
       idIfame.style.display = "block";
 
-      const logo = document.querySelector(".toolbox-content-items");
-      console.log(logo);
+      document.querySelector(".toolbox-content-items");
     }
     // You can perform additional actions with the Jitsi Meet API here
   };
@@ -41,9 +40,8 @@ export default function VideoCallFull() {
   const account = useSelector((state: RootState) => state.userStore.account);
   useEffect(() => {
     if (!account._id) return;
-    setDisplayName(account.fullname);
+    setDisplayName(CapitalizeString(account.fullname));
     handleCreateRandom();
-    setOnCall(true);
   }, [account, account._id, account.fullname, account.username]);
 
   return onCall ? (
@@ -111,10 +109,11 @@ export default function VideoCallFull() {
           Tạo phòng ngẫu nhiên
         </button>
       </div>
-      <p className="text-[12px]">
-        Lưu ý: Nội dung cuộc cuộc gọi và tin nhắn sẽ bị xóa sau khi cuộc gọi kết
-        thúc !
-      </p>
+      <div className="text-[12px]">
+        Lưu ý: <hr className="my-2" />* Nếu mã phòng trùng nhau sẽ ở cùng phòng!{" "}
+        <br />* Nội dung cuộc cuộc gọi và tin nhắn sẽ bị xóa sau khi cuộc gọi
+        kết thúc !
+      </div>
       <button
         className="bg-green-800 rounded-full py-2 sm:py-3  hover:bg-green-600"
         onClick={() => {

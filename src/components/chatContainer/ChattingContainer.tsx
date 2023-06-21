@@ -13,6 +13,7 @@ hljs.registerLanguage("xml", xml);
 import "./chating.scss";
 import {
   CommentReducer,
+  HandleCoverStringEntries,
   StoreCommentChatBot,
   handleAddComment,
   handleCoverComment,
@@ -75,7 +76,7 @@ const ChattingContainer = () => {
           isUser: true,
           avatar: account.avatar,
           type: "text",
-          comment: message.text.trim(),
+          comment: HandleCoverStringEntries(message.text.trim()),
           time: getTime(),
           isSee: true,
         })
@@ -228,9 +229,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       if (boxChatContentRef.current) {
         ScroolToBottom(boxChatContentRef.current, 1000);
       }
-      // const regex = /https?:\/\/[^\s]+/g;
-      // const links = [...(reply.match(regex) || [])] || [];
-      // console.log(links);
+
       if (typeChatting == "text") {
         reply = hljs.highlightAuto(handleCoverComment(reply)).value || "";
       } else {

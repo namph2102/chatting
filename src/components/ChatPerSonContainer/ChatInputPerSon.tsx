@@ -1,7 +1,7 @@
 import { FC, useRef, useState, useCallback, useEffect } from "react";
 
 import {
-  BiCamera,
+  BiBookHeart,
   BiGridAlt,
   BiImages,
   BiLoaderCircle,
@@ -34,12 +34,14 @@ interface ChatInputPerSonProps {
     inputElement: HTMLTextAreaElement | any,
     type: string
   ) => void;
+  setIsOpenGhim: (isOpenGhim: any) => any;
 }
 
 const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
   loading,
   className,
   handleSendMessage,
+  setIsOpenGhim,
 }) => {
   const [isOpenEmoji, setIsOpenEmoji] = useState<boolean>(false);
   const [isOpenEVoices, setIsOpenVoices] = useState<boolean>(false);
@@ -151,13 +153,16 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
             className=" sm:text-2xl text-xl min-w-[auto]  ease-linear duration-300  sm:gap-3 gap-2 flex justify-between items-center"
           >
             <Tooltip
-              title="Camera"
+              title="Ghim"
               componentsProps={componentsProps}
               arrow
               placement="top"
             >
-              <span className="cursor-pointer">
-                <BiCamera />
+              <span
+                onClick={() => setIsOpenGhim((prev: any) => !prev)}
+                className="cursor-pointer"
+              >
+                <BiBookHeart />
               </span>
             </Tooltip>
             <Tooltip

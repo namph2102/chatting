@@ -1,22 +1,50 @@
 import { Tooltip } from "@mui/material";
 import { componentsProps } from "../../../styles/componentsProps";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { ChatUserPersonItemProps } from "./ChatUserPersonItem";
-import { CapitalizeString } from "../../../servies/utils";
+import {
+  CapitalizeString,
+  ToastNotify,
+  handleStopPropagation,
+} from "../../../servies/utils";
 import moment from "moment";
 import { nanoid } from "@reduxjs/toolkit";
+import LinkCommentItem from "./LinkCommentItem";
+import { BiDotsHorizontal } from "react-icons/bi";
+interface GhimItem extends ChatUserPersonItemProps {
+  handleactiveOptions: (
+    idComment: string | undefined,
+    type: string,
+    typeChatting: string
+  ) => void;
+}
+const GhimItem: FC<GhimItem> = (props) => {
+  const [isOpenGhim, setIsOpenGhim] = useState<boolean>(false);
+  const handleActionClick = (id: string | undefined, type: string) => {
+    if (type == "ghim") {
+      ToastNotify("Bỏ ghim thành công").success();
+    } else {
+      const itemScrool = document.getElementById(
+        `box_item_chat-id-${props._id}`
+      );
 
-const GhimItem: FC<ChatUserPersonItemProps> = (props) => {
-  console.log(props);
+      if (itemScrool) {
+        itemScrool.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+    props.handleactiveOptions(id, type, props.type);
+    setIsOpenGhim(false);
+  };
+
   return (
-    <div className="px-4 mt-2">
-      <p className="flex justify-between text-xs">
+    <div className="my-4 px-4 ">
+      <p className="flex justify-between text-xs ">
         <span className="text-bold mb-1">
           {props.isUser ? "Bạn" : CapitalizeString(props.author.fullname)}
         </span>
-        <span>{moment(props.createdAt).format("DD/MM/YYYY - HH:mm:ss")}</span>
+        <span>{moment(props.updatedAt).format("DD/MM/YYYY - HH:mm:ss")}</span>
       </p>
-      <div className="flex gap-1 items-center">
+      <div className="flex gap-1 items-center relative">
         <Tooltip
           title={CapitalizeString(props.author.fullname)}
           arrow
@@ -49,26 +77,34 @@ const GhimItem: FC<ChatUserPersonItemProps> = (props) => {
           </div>
         )}
         {props.type == "link" && (
-          <div className="sm:w-80 sm:h-48 w-40 h-20 ">
-            <h6 className="text-black bg-gray-400  py-2 px-3 rounded-t-3xl text-sm">
-              <a
-                href="https://youtube.com/watch?v=hOlo8xy3B_w&feature=share"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                https://youtube.com/watch?v=hOlo8xy3B_w&feature=share
-              </a>
-            </h6>
-            <img
-              className="w-full h-full"
-              src="https://scontent.fsgn4-1.fna.fbcdn.net/v/t1.15752-9/330644805_901798844521660_9076737345204021718_n.jpg?stp=dst-jpg_p206x206&_nc_cat=101&cb=99be929b-3346023f&ccb=1-7&_nc_sid=aee45a&_nc_ohc=t9QjW231Hd0AX9R-_aw&_nc_ht=scontent.fsgn4-1.fna&oh=03_AdTW9qiS_wsksC6ApWv4gx_8riXsZsYmJRpIii4fJIBw0A&oe=64B8775B"
-              alt=""
-            />
-            <p className="bg-gray-300 line-clamp-2">
-              bức thư của tỷ pý rocker fiter
-            </p>
+          <div className="md:max-w-[300px] max-w-[250px]">
+            <LinkCommentItem comment={props.comment} className="" />
           </div>
         )}
+        <div
+          onClick={handleStopPropagation}
+          className="text-gray-500 absolute   z-10 right-4 hover:bg-gray-300 cursor-pointer p-2 rounded-full "
+        >
+          <span onClick={() => setIsOpenGhim(!isOpenGhim)}>
+            <BiDotsHorizontal />
+          </span>
+          {isOpenGhim && (
+            <ul className="w-40  cursor-pointer rounded-lg absolute overflow-hidden right-0 px-1 py-2 bg-black/60 top-full  text-white text-sm">
+              <li
+                onClick={() => handleActionClick(props._id, "ghim")}
+                className="hover:bg-gray-500  p-1"
+              >
+                Bỏ Ghim
+              </li>
+              <li
+                onClick={() => handleActionClick(props._id, "viewitem")}
+                className="hover:bg-gray-500  p-1 "
+              >
+                Xem trong đoạn chat
+              </li>
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );

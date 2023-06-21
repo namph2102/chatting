@@ -5,3 +5,7 @@ export const handleRoomChat = (_idAccount: string, _idPerson: string) => {
     data: { accountid: _idAccount, personid: _idPerson },
   });
 };
+export const containsLink = (str: string) => {
+  const pattern = /(http|https):\/\/\S+/i;
+  return pattern.test(str);
+};

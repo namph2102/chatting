@@ -17,8 +17,10 @@ import "../style/chatperson.scss";
 import { Tooltip, capitalize } from "@mui/material";
 import { RiPencilFill } from "react-icons/ri";
 import { componentsProps } from "../../../styles/componentsProps";
+import LinkCommentItem from "./LinkCommentItem";
 
 export interface ChatUserPersonItemProps {
+  idAccount: string;
   isSee: boolean;
   isUser: boolean;
   comment: string;
@@ -128,9 +130,10 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
     }
   };
   const [isOpenMore, setIsopenMore] = useState(false);
+
   return (
     <article
-      id={props._id || nanoid()}
+      id={`box_item_chat-id-${props._id}`}
       className={cn(
         "flex  items-end mt-3 bg_effect-settings",
         props.isUser ? "flex-row-reverse gap-2" : "flex-row gap-2"
@@ -175,7 +178,9 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
           <div
             className={cn(
               "absolute top-1/2   -translate-y-1/2 w-full",
-              props.action && props.action.kind == "delete" && "hidden"
+              props.action.kind == "delete" &&
+                (props.action.userId == props.idAccount || props.isAction) &&
+                "hidden"
             )}
           >
             <span
@@ -187,7 +192,9 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               <span className="span__container-next relative">
                 <b
                   onClick={(e) => {
-                    e.stopPropagation(), setIsopenMore(!isOpenMore);
+                    if (window.innerWidth <= 1024) {
+                      e.stopPropagation(), setIsopenMore(!isOpenMore);
+                    }
                   }}
                 >
                   <BiDotsVerticalRounded />
@@ -209,25 +216,22 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                   >
                     Xóa
                   </li>
-                  {props.isUser &&
-                    props.action &&
-                    props.action.kind != "delete" && (
-                      <li
-                        className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
-                        onClick={() => handleActionClick(props._id, "edit")}
-                      >
-                        Chỉnh sửa
-                      </li>
-                    )}
-                  {props.action.kind != "delete" &&
-                    props.action.kind != "ghim" && (
-                      <li
-                        className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
-                        onClick={() => handleActionClick(props._id, "ghim")}
-                      >
-                        Ghim
-                      </li>
-                    )}
+                  {props.type != "link" && props.isUser && (
+                    <li
+                      className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
+                      onClick={() => handleActionClick(props._id, "edit")}
+                    >
+                      Chỉnh sửa
+                    </li>
+                  )}
+                  {props.action.kind != "ghim" && (
+                    <li
+                      className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
+                      onClick={() => handleActionClick(props._id, "ghim")}
+                    >
+                      Ghim
+                    </li>
+                  )}
                   {props.action.kind == "ghim" && (
                     <li
                       className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
@@ -240,7 +244,6 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               </span>
             </span>
           </div>
-
           {props.type == "text" && (
             <p
               ref={ElementEditRef}
@@ -249,6 +252,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               dangerouslySetInnerHTML={{ __html: message }}
             />
           )}
+          {props.type == "link" && <LinkCommentItem comment={props.comment} />}
           <button
             ref={buttonEditRef}
             className="absolute hover:opacity-70  py-1 hidden px-2  background-primary -top-6 rounded-full right-0 text-sm font-light "
@@ -287,7 +291,6 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               ))}
             </div>
           )}
-
           <div className="flex gap-1 items-end font-semibold text-[0.875em] pl-1 mt-1">
             {props.isSee && (
               <ToltipProvider className="" title="Đã xem">
