@@ -161,7 +161,7 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
     <>
       <div onClick={handleStopPropagation} className="relative left-0">
         <Tooltip
-          title="More"
+          title="Chức năng"
           componentsProps={componentsProps}
           arrow
           placement="top"

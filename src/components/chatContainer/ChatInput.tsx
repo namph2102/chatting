@@ -183,9 +183,7 @@ const ChatInput: FC<ChatInputProps> = ({
           ref={btnMoreOpenRef}
           title="Mở rộng"
           onTouchStart={() => {
-            handleForcusChatting(false),
-              window.innerWidth < 640 &&
-                btnMoreOpenRef.current?.classList?.toggle("hidden");
+            handleForcusChatting(false);
           }}
           className="sm:hidden hidden absolute cursor-pointer min-w-[60px]"
         >
