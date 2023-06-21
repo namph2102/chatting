@@ -62,7 +62,9 @@ const GhimContainer: FC<GhimContainerProps> = ({
           <div className="flex items-center flex-col justify-center h-full">
             <img src="/images/bg_ghim.png" className="w-[200px]" alt="" />
             <h6>Chưa ghim tin nhắn nào</h6>
-            <p>Tin nhắn đã ghim trong đoạn chat này sẽ hiển thị ở đây</p>
+            <p className="text-sm text-center px-2 mt-1">
+              Tin nhắn đã ghim trong đoạn chat này sẽ hiển thị ở đây
+            </p>
           </div>
         )}
       </section>

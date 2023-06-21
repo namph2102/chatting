@@ -177,7 +177,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
           )}
           <div
             className={cn(
-              "absolute top-1/2   -translate-y-1/2 w-full",
+              "absolute top-1/2 z-10  -translate-y-1/2 w-full",
               props.action.kind == "delete" &&
                 (props.action.userId == props.idAccount || props.isAction) &&
                 "hidden"
@@ -201,8 +201,8 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                 </b>
                 <ul
                   className={cn(
-                    "text-sm font-medium  hidden  rounded-xl  -top-full  w-[90px] text-black  text-center absolute bg-white drop-shadow-xl ",
-                    props.isUser ? "-left-16" : "-right-12",
+                    "text-sm font-medium  hidden  rounded-xl  -top-full w-[120px]  md:w-[100px] text-black  text-center absolute bg-white drop-shadow-xl ",
+                    props.isUser ? "-left-24" : "-right-20",
                     window.innerWidth >= 1024
                       ? ""
                       : isOpenMore
@@ -211,14 +211,14 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                   )}
                 >
                   <li
-                    className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
+                    className="px-2 py-2  background-primary-hover  rounded-full opacity-80"
                     onClick={() => handleActionClick(props._id, "delete")}
                   >
                     Xóa
                   </li>
                   {props.type != "link" && props.isUser && (
                     <li
-                      className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
+                      className=" py-2   background-primary-hover px-2 rounded-full opacity-80"
                       onClick={() => handleActionClick(props._id, "edit")}
                     >
                       Chỉnh sửa
@@ -226,7 +226,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                   )}
                   {props.action.kind != "ghim" && (
                     <li
-                      className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
+                      className="py-2  background-primary-hover px-2 rounded-full opacity-80"
                       onClick={() => handleActionClick(props._id, "ghim")}
                     >
                       Ghim
@@ -234,7 +234,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                   )}
                   {props.action.kind == "ghim" && (
                     <li
-                      className="p-0.5 background-primary-hover px-2 rounded-full opacity-80"
+                      className="py-2  background-primary-hover px-2 rounded-full opacity-80"
                       onClick={() => handleActionClick(props._id, "ghim")}
                     >
                       Hủy Ghim
