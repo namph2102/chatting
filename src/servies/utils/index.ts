@@ -129,13 +129,18 @@ export const callbackResponse = (message: string, status: number) => {
   }
 };
 
-export function CapitalizeString(str: string) {
+export function CapitalizeString(str: string, kind = false) {
+  let newStr = "";
   if (str.includes(" ")) {
-    return str
+    newStr = str
       .split(" ")
       .map((text) => text[0].toUpperCase() + text.slice(1, text.length))
       .join(" ");
-  } else return str.replace(/\b\w/g, (l) => l.toUpperCase());
+  } else newStr = str.replace(/\b\w/g, (l) => l.toUpperCase());
+  if (kind) {
+    return `<span class="font-bold"> ${newStr} </span>`;
+  }
+  return newStr;
 }
 export const deFaultIconSize = "1.5rem";
 

@@ -5,12 +5,15 @@ import { ChatUserPersonItemProps } from "./ChatUserPersonItem";
 import {
   CapitalizeString,
   ToastNotify,
+  cn,
   handleStopPropagation,
 } from "../../../servies/utils";
 import moment from "moment";
 import { nanoid } from "@reduxjs/toolkit";
 import LinkCommentItem from "./LinkCommentItem";
 import { BiDotsHorizontal } from "react-icons/bi";
+import { BsDownload } from "react-icons/bs";
+import { Link } from "react-router-dom";
 interface GhimItem extends ChatUserPersonItemProps {
   handleactiveOptions: (
     idComment: string | undefined,
@@ -67,12 +70,32 @@ const GhimItem: FC<GhimItem> = (props) => {
         {props.file && props.file.length > 0 && (
           <div className="flex gap-1 flex-wrap">
             {props.file.map((file) => (
-              <img
+              <div
                 key={nanoid()}
-                className="w-20 h-20 rounded-xl"
-                src={file.url}
-                alt={file.fileName}
-              />
+                className={cn("relative lg:w-[200px] w-[150px] h-[190px]")}
+              >
+                <img
+                  className="w-full  object-cover h-full "
+                  loading="lazy"
+                  src={file.url}
+                  alt="Ảnh bị lỗi rồi!"
+                />
+                <div className="absolute text-white bg-black/60 py-2 bottom-0  left-0 w-full right-0 h-12 flex items-center text-left">
+                  <img src="images/iconimage.png" className="lg:w-10 w-8" />
+                  <div className="text-sm  font-normal flex flex-col ">
+                    <span className="line-clamp-1">{file.fileName}</span>
+                    <span>{(file.size / 1000).toFixed(0)} kb</span>
+                  </div>
+                  <Link
+                    className="absolute right-4 bottom-1 animate-bounce text-base font-bold "
+                    to={file.url}
+                    target="_blank"
+                    download={file.fileName}
+                  >
+                    <BsDownload />
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         )}

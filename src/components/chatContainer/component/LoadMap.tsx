@@ -169,7 +169,7 @@ const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
               ))}
             <Marker icon={IconAdmin} position={LocaltionAdmin}>
               <Popup>
-                Vị trí của Admin Zecky
+                Đại bản doanh của Zecky.online
                 <br />
               </Popup>
             </Marker>
@@ -193,7 +193,7 @@ const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
 
               <button
                 onClick={Debounced(handleSerach, 500)}
-                className="py-2 px-4 sm:w-[100px] w-1/2 rounded-xl ml-2 mt-2 opacity-90  hover:opacity-80 background-primary text-sm  "
+                className="py-2 px-4 sm:w-[130px] w-1/2 rounded-xl ml-2 mt-2 opacity-90  hover:opacity-80 background-primary text-sm  "
               >
                 Thêm tọa độ
               </button>

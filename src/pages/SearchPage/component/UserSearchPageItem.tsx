@@ -10,6 +10,7 @@ export interface IUserSearchPageItem {
   follows: number;
   totalFriends: number;
   relationship: boolean;
+  isWating: boolean;
   _id: string;
   handleAddFriends: (id: string) => void;
 }
@@ -19,12 +20,13 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
   fullname,
   totalFriends,
   relationship,
+  isWating,
   _id,
   handleAddFriends,
 }) => {
   const navigator = useNavigate();
   const dispatch: AppDispatch = useDispatch();
-  const [isSetAddFriend, setIsSetAddFriend] = useState<boolean>(true);
+  const [_, setIsSetAddFriend] = useState<boolean>(true);
   const handleaddFriendElement = (e: any) => {
     if (relationship) {
       dispatch(setIsOpenDisplayTable(true));
@@ -34,7 +36,7 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
     }
     if (e.target) {
       e.target.textContent = "Chờ xác nhận";
-      console.log(isSetAddFriend);
+
       setIsSetAddFriend((prev) => {
         if (prev) {
           handleAddFriends(_id);
@@ -55,7 +57,9 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
           alt={fullname}
         />
         <div>
-          <h3 className="text-base font-medium capitalize">{fullname}</h3>
+          <h3 className="sm:text-base text-sm font-medium capitalize">
+            {fullname}
+          </h3>
           <p className="text-xs font-light">{follows} người theo dõi</p>
           <div className="flex gap-2 text-sm items-center mt-1">
             {/* <AvatarGroup max={4}>
@@ -80,7 +84,7 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
         }}
         className="py-2 px-4 text-xs border-[1px] border-[#dfe2e2] background-primary-hover ease-in duration-200  cursor-pointer rounded-full "
       >
-        {relationship ? "Nhắn tin" : "Thêm bạn bè"}
+        {isWating ? "Chờ xác nhận" : relationship ? "Nhắn tin" : "Thêm bạn bè"}
       </span>
     </article>
   );

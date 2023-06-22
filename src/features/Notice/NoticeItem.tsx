@@ -2,17 +2,20 @@ import { FC } from "react";
 import { INoticeItem } from "./Notice";
 
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
-import { HandleTimeDiff } from "../../servies/utils";
+import { CapitalizeString, HandleTimeDiff } from "../../servies/utils";
+
 interface INoticeItemProps extends INoticeItem {
-  setIsShowAddfriend: (isShow: boolean) => void;
+  setIsShowAddfriend: () => void;
 }
 const NoticeItem: FC<INoticeItemProps> = ({
-  _id,
   status,
-  createdAt,
   type,
-  fullname,
   userSend,
+  userAccept,
+  _id,
+  isAccepted,
+  createdAt,
+  isSended,
   setIsShowAddfriend,
 }) => {
   const handleAddFriend = (isAccept: boolean) => {
@@ -20,14 +23,35 @@ const NoticeItem: FC<INoticeItemProps> = ({
       isAccept,
       idInfo: _id,
       fullname: userSend.fullname,
-      fullnameAccept: fullname,
+      fullnameAccept: userAccept.fullname,
       idUserSend: userSend._id,
+      idUserAccept: userAccept._id,
     });
-    setIsShowAddfriend(false);
+    setIsShowAddfriend();
   };
   let message = " đã gửi lời mời kết bạn ";
-  if (type == 2) {
-    message = status ? " đã đồng ý kết bạn " : " đã từ chối kết bạn ";
+  if (type == 1) {
+    message = isSended
+      ? `Bạn đã gửi lời mời kết bạn đến  ${CapitalizeString(
+          userAccept.fullname,
+          true
+        )}`
+      : `  ${CapitalizeString(
+          userSend.fullname,
+          true
+        )}  đã gửi lời mời kết bạn`;
+  } else if (type == 2) {
+    message = `${isAccepted ? "Bạn" : CapitalizeString(userAccept.fullname)}  ${
+      status ? " đã đồng ý kết bạn " : " đã từ chối kết bạn "
+    } ${isAccepted ? CapitalizeString(userSend.fullname) : ""}`;
+  }
+  let avatashow = userAccept.avatar;
+  if (type == 1) {
+    avatashow = userSend.avatar;
+  } else if (type == 2) {
+    if (isAccepted) {
+      avatashow = userAccept.avatar;
+    }
   }
   return (
     <li className="mb-2">
@@ -36,20 +60,20 @@ const NoticeItem: FC<INoticeItemProps> = ({
           width={40}
           height={40}
           className="object-cover rounded-full"
-          src={userSend.avatar}
+          src={avatashow}
           alt=""
         />
         <div>
-          <p className="text-sm">
-            <span className="font-bold capitalize ">{userSend.fullname}</span>
-            {message}
-          </p>
+          <p
+            className="text-sm"
+            dangerouslySetInnerHTML={{ __html: message }}
+          />
           <time className="text-xs text-primary">
             {HandleTimeDiff(createdAt)}
           </time>
         </div>
       </div>
-      {type == 1 && (
+      {type == 1 && !isSended && !status && (
         <div className="flex justify-center items-center gap-3 mt-4">
           <button
             onClick={() => handleAddFriend(true)}
@@ -61,7 +85,7 @@ const NoticeItem: FC<INoticeItemProps> = ({
             onClick={() => handleAddFriend(false)}
             className="px-3 py-2 drop_menu-hover border-[1px] border-[#c0bfbf] text-sm rounded-2xl min-w-[100px]"
           >
-            Xóa
+            Từ chối
           </button>
         </div>
       )}

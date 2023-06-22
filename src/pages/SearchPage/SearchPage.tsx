@@ -57,35 +57,45 @@ const SearchPage = () => {
       })
       .then((res) => res.data)
       .then((data) => {
-        console.log(data.listUserSearchs);
-        console.log(account.friends);
+        data.listInfoSend = data.listInfoSend.map(
+          (item: any) => item.userAccept
+        );
 
         if (data.listUserSearchs) {
           data.listUserSearchs.forEach((user: any) => {
+            if (
+              data.listInfoSend.includes(user._id) &&
+              !account.friends.includes(user._id)
+            ) {
+              user.isWating = true;
+            } else {
+              user.isWating = false;
+            }
+
             const totalFriendTogether =
               account.friends.length + user.friends.length;
             const coutTogether = new Set([
               ...account.friends,
               ...user.friends.map((user: any) => user._id),
             ]).size;
-
             user.relationship = user.friends.some(
               (user: any) => user._id == account._id
             );
             user.totalFriends = totalFriendTogether - coutTogether;
           });
         }
-
         setListchatting(data.listUserSearchs);
       });
-  }, [query, account._id, noticeTotal]);
+  }, [query, account._id, noticeTotal, account.friends]);
 
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
   const listChattingLocal = historyChatting("searchHistory");
+
   const mutation = useMutation({
     mutationFn: async (search: string) => {
       const response = await instance.post("/user/search", {
         search,
+
         listUserExtended: [account._id],
       });
       const data = await response.data;
@@ -93,6 +103,7 @@ const SearchPage = () => {
     },
     onSuccess(data: any) {
       if (!data) return;
+      setIsOpenChat(true);
       if (data.listUserSearchs && data.listUserSearchs.length > 0) {
         const listAccount: IUserSearch[] = [];
         console.log(data.listUserSearchs);
@@ -128,6 +139,7 @@ const SearchPage = () => {
       userSend: account._id,
       userAccept: id,
     };
+
     socket.emit("add-friend", data);
   };
 
@@ -152,6 +164,12 @@ const SearchPage = () => {
               setListSearch={setListSearch}
               title="Kết quả tìm kiếm"
             />
+            <p className="mt-1">Lưu ý:</p>
+            <ul className="mt-2 text-xs font-medium">
+              <li>* Tìm kiếm theo họ và tên</li>
+              <li>* Tìm kiếm theo Email</li>
+              <li>* Tìm kiếm theo số điện thoại</li>
+            </ul>
           </section>
 
           <section

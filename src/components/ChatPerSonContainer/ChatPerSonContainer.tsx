@@ -211,7 +211,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     type: string
   ) => {
     let listImage: IImageFireBase[] = [];
-    let comment: string = HandleCoverStringEntries(inputElement.value.trim());
+    let comment = "";
 
     if (type == "image") {
       listImage = inputElement;
@@ -219,11 +219,13 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         ToastNotify("Gửi ảnh không thành công!").info();
         return;
       }
+
       comment = "gửi ảnh";
     } else if (type == "text") {
       if (!inputElement.value) {
         return;
       }
+      comment = HandleCoverStringEntries(inputElement.value.trim());
       const isChecked = containsLink(inputElement.value.trim());
       type = isChecked ? "link" : "text";
       if (isChecked) {

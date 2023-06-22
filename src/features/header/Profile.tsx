@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { BiBell, BiCog, BiLock, BiLogOutCircle } from "react-icons/bi";
 import { ToastNotify, cn } from "../../servies/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
@@ -21,6 +21,7 @@ const Profile: FC<ProfileProps> = ({
   noticeTotal,
   setIsOpenProfile,
 }) => {
+  const navigation = useNavigate();
   const dispacth: AppDispatch = useDispatch();
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
@@ -28,6 +29,7 @@ const Profile: FC<ProfileProps> = ({
     ToastNotify("Đăng xuất thành công!").success();
     dispacth(UpdateAccount({ usename: "" }));
     setIsOpenProfile(false);
+    navigation("/dang-nhap");
   };
 
   return (

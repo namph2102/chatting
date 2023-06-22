@@ -26,14 +26,11 @@ const LinkCommentItem: FC<LinkCommentItemProps> = ({
         />
       )}
       {title && (
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={className}
-        >
+        <div className={className}>
           <h6 className=" flex justify-center py-2 px-3 border-t-gray-300 border rounded-t-3xl text-sm opacity-80 hover:text-blue-400 font-light capitalize">
-            {title}
+            <a href={link} target="_blank" rel="noopener noreferrer">
+              {title}
+            </a>
           </h6>
 
           <div className="bg-[url(`${}`)"></div>
@@ -48,7 +45,7 @@ const LinkCommentItem: FC<LinkCommentItemProps> = ({
           <p className=" line-clamp-2 text-sm font-light indent-3.5 mt-1 ">
             {description}
           </p>
-        </a>
+        </div>
       )}
       {!title && (
         <div>

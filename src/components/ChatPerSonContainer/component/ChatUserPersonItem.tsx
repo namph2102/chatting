@@ -201,8 +201,8 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                 </b>
                 <ul
                   className={cn(
-                    "text-sm font-medium  hidden  rounded-xl  -top-full w-[120px]  md:w-[100px] text-black  text-center absolute bg-white drop-shadow-xl ",
-                    props.isUser ? "-left-24" : "-right-20",
+                    "text-sm font-medium  hidden  rounded-xl  -top-8 w-[120px]  md:w-[100px] text-black  text-center absolute bg-white drop-shadow-xl ",
+                    props.isUser ? "-left-20" : "-right-16",
                     window.innerWidth >= 1024
                       ? ""
                       : isOpenMore

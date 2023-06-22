@@ -172,7 +172,7 @@ const ChatInput: FC<ChatInputProps> = ({
   return (
     <section
       className={cn(
-        "absolute bg-follow-darkmode  bottom-0 left-0 w-full  sm:p-4 py-4 px-3",
+        "absolute bg-follow-darkmode  bottom-2 left-0 w-full  sm:p-4 py-2 px-1 pl-3",
 
         className
       )}
