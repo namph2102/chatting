@@ -1,6 +1,7 @@
 import axios from "axios";
-const domainserver =
-  import.meta.env.VITE_DOMAIN_SEVER || "https://zeckysever.onrender.com/";
+export const domainserver =
+  import.meta.env.VITE_DOMAIN_SEVER ||
+  "https://chattingsever-production.up.railway.app/";
 const instance = axios.create({
   baseURL: domainserver,
   timeout: 10 * 1000,
@@ -12,7 +13,6 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    console.log("Trước khi request");
     return config;
   },
   (err) => {
@@ -21,7 +21,6 @@ instance.interceptors.request.use(
 );
 instance.interceptors.response.use(
   (response) => {
-    console.log("sau khi response");
     return response;
   },
   (err) => {

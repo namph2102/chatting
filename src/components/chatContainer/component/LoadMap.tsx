@@ -25,8 +25,16 @@ import {
 const LocaltionAdmin = { lat: 10.8508707, lng: 106.6316102 };
 interface LoadMapProps {
   search?: string;
+  fullname?: string;
+  localtion?: string;
+  hideSerachInput?: boolean;
 }
-const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
+const LoadMap: React.FC<LoadMapProps> = ({
+  search,
+  fullname,
+  localtion,
+  hideSerachInput,
+}) => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [locationName, setLocationName] = useState<string | null>(null);
   const [localCenter, setLocalCenter] = useState<Coordinates | any>(null);
@@ -36,6 +44,30 @@ const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
   const [isZoomeWidth, setIsZoomeWidth] = useState<boolean>(true);
   const InfomationRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
+    if (localtion) {
+      try {
+        const newLocaltion: { lat: number; log: number } =
+          JSON.parse(localtion);
+        if (newLocaltion) {
+          (async () => {
+            const data = {
+              latitude: newLocaltion.lat,
+              longitude: newLocaltion.log,
+            };
+            setCoordinates(data);
+            setLocalCenter(data);
+            const nameAdress = await getLocationName(
+              newLocaltion.lat,
+              newLocaltion.log
+            );
+            setLocationName(nameAdress);
+          })();
+          return;
+        }
+      } catch {
+        ToastNotify("Không lấy được tọa độ !").warning();
+      }
+    }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position: any) => {
@@ -72,7 +104,7 @@ const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
   const getLocaltionClick = async (newMarker: IMarkerLocal) => {
     setListMarker([...listMarker, newMarker]);
   };
-  console.log(coordinates);
+
   const handleZoomWith = () => {
     setIsZoomeWidth((prev) => {
       if (!InfomationRef.current) return !prev;
@@ -121,14 +153,18 @@ const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
       });
     }
   };
+
   return (
     <div className="w-full fullscreen">
       {localCenter && coordinates && locationName ? (
         <div>
           <p className="w-full text-sm">
-            <span className="font-bold "> Tọa độ của bạn hiện tại là : </span> (
-            Vĩ độ :{coordinates.latitude} , Kinh độ : {coordinates.longitude} )
-            <span ref={InfomationRef} className="opacity-0 h-2"></span>
+            <span className="font-bold ">
+              {" "}
+              Tọa độ của {fullname || "bạn"} hiện tại là :{" "}
+            </span>{" "}
+            ( Vĩ độ :{coordinates.latitude} , Kinh độ : {coordinates.longitude}{" "}
+            )<span ref={InfomationRef} className="opacity-0 h-2"></span>
           </p>
           <p className="mb-1 text-sm mt-2">
             <span className="font-bold ">Địa chỉ:</span> {locationName}
@@ -150,7 +186,8 @@ const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
               position={[coordinates.latitude, coordinates.longitude]}
             >
               <Popup>
-                Vị trí của bạn <br />
+                Vị trí của {fullname || "bạn"}
+                <br />
               </Popup>
             </Marker>
             {listMarker.length > 0 &&
@@ -182,29 +219,31 @@ const LoadMap: React.FC<LoadMapProps> = ({ search }) => {
             />
             <ChoseLocationInMap getLocaltionClick={getLocaltionClick} />
           </MapContainer>
-          <div className="flex justify-between  items-center gap-2  mt-2 ">
-            <div className="flex sm:items-start flex-col items-center flex-1 gap-1">
-              <input
-                ref={inputSerachRef}
-                type="text"
-                className="py-2 px-2 sm:min-w-[200px] min-w-[250px] text-[12px] bg-menu rounded-full  border-[1px] outline-none"
-                placeholder="Tên địa điểm muốn tìm?"
-              />
+          {!hideSerachInput && (
+            <div className="flex justify-between  items-center gap-2  mt-2 ">
+              <div className="flex sm:items-start flex-col items-center flex-1 gap-1">
+                <input
+                  ref={inputSerachRef}
+                  type="text"
+                  className="py-2 px-2 sm:min-w-[200px] min-w-[250px] text-[12px] bg-menu rounded-full  border-[1px] outline-none"
+                  placeholder="Tên địa điểm muốn tìm?"
+                />
 
+                <button
+                  onClick={Debounced(handleSerach, 500)}
+                  className="py-2 px-4 sm:w-[130px] w-1/2 rounded-xl ml-2 mt-2 opacity-90  hover:opacity-80 background-primary text-sm  "
+                >
+                  Thêm tọa độ
+                </button>
+              </div>
               <button
-                onClick={Debounced(handleSerach, 500)}
-                className="py-2 px-4 sm:w-[130px] w-1/2 rounded-xl ml-2 mt-2 opacity-90  hover:opacity-80 background-primary text-sm  "
+                className="py-2 px-4 bg-[#4f4f73] sm:block hidden  text-xs hover:bg-[#1c1c33] rounded-3xl"
+                onClick={handleZoomWith}
               >
-                Thêm tọa độ
+                {!isZoomeWidth ? "Thu nhỏ" : "Phóng to"}
               </button>
             </div>
-            <button
-              className="py-2 px-4 bg-[#4f4f73] sm:block hidden  text-xs hover:bg-[#1c1c33] rounded-3xl"
-              onClick={handleZoomWith}
-            >
-              {!isZoomeWidth ? "Thu nhỏ" : "Phóng to"}
-            </button>
-          </div>
+          )}
         </div>
       ) : (
         <section>

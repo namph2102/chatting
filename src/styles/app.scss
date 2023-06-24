@@ -31,6 +31,10 @@ html {
 .background-primary {
   background-color: rgb(var(--primary-color)) !important;
 }
+.border-primary_style-document {
+  border-color: rgb(var(--primary-color)) !important;
+  border-width: 1px;
+}
 .text_shadown-style {
   text-shadow: 0 0 2px #000000 !important;
 }

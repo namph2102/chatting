@@ -27,6 +27,7 @@ const MyDropzone: FC<MyDropzoneProps> = ({
         .uploadimage("chats", file)
         .then((image: IImageFireBase | any) => {
           listImage.push(image);
+          console.log(image);
         });
       reader.onabort = () => console.log("file reading was aborted");
       reader.onerror = () => console.log("file reading has failed");

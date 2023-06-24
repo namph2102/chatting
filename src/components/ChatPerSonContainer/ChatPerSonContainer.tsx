@@ -86,7 +86,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
           if (listNewChatting?.length > 0) {
             setListUserComments([...listNewChatting]);
             if (boxChatContentRef.current) {
-              ScroolToBottom(boxChatContentRef.current, 300);
+              ScroolToBottom(boxChatContentRef.current, 1000);
             }
           }
           socket.emit("tao-room", idRoom);
@@ -121,7 +121,10 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
           acc.updatedAt = new Date().toISOString();
         }
         if (
-          (acc.type == "link" || acc.type == "audio") &&
+          (acc.type == "link" ||
+            acc.type == "audio" ||
+            acc.type == "document" ||
+            acc.type == "location") &&
           action.kind == "delete"
         ) {
           if (acc.isAction) {
@@ -233,9 +236,16 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         comment = await crawLinkChating(inputElement.value.trim());
       }
     } else if (type == "audio") {
-      // gửi base64 lên sever
+      // gửi base64 lên sever inputElement dang blob
       comment = inputElement;
+    } else if (type == "document") {
+      // gửi base64 lên sever inputElement dang blob
       console.log(inputElement);
+      comment = inputElement.path;
+      listImage = [inputElement];
+    } else {
+      //inputElement dạng text
+      comment = inputElement;
     }
 
     const data: ChatUserPersonItemProps = {

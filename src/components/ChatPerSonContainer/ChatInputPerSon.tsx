@@ -16,7 +16,7 @@ import { Tooltip } from "@mui/material";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 
-import { LoadingDot } from "../loading";
+import { LoaddingOverLay, LoadingDot } from "../loading";
 import { HandleCoverSpeaktoText } from "../webmedia";
 import {
   Debounced,
@@ -28,6 +28,7 @@ import { componentsProps } from "../../styles/componentsProps";
 import MyDropzone from "./component/MyDropzone";
 import ModalProviderOverlay from "../Ui/ModalProviderOverlay";
 import RecorderComponent from "./component/RecorderComponent";
+import { domainserver } from "../../config";
 
 interface ChatInputPerSonProps {
   loading: boolean;
@@ -51,9 +52,11 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
   const btnMoreOpenRef = useRef<HTMLDivElement>(null);
   const chattingRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
-    document.addEventListener("click", () => {
+    const handleTurnOffEmoji = () => {
       setIsOpenEmoji(false);
-    });
+    };
+
+    document.addEventListener("click", handleTurnOffEmoji);
     const handleChattingEnter = (e: KeyboardEvent) => {
       if (!chattingRef.current?.value) return;
       if (e.key === "Enter") {
@@ -66,9 +69,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
     document.addEventListener("keypress", handleChattingEnter);
     return () => {
       document.removeEventListener("keypress", handleChattingEnter);
-      document.removeEventListener("click", () => {
-        setIsOpenEmoji(false);
-      });
+      document.removeEventListener("click", handleTurnOffEmoji);
     };
   }, []);
   const handdleSelect = (emo: { native: string }) => {
@@ -127,8 +128,53 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
     };
   }, []);
   const [isOpenSpeakVoice, setIsOpenSpeakVoice] = useState(false);
+
+  const handleGetLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position: any) => {
+        const { latitude, longitude } = position.coords;
+        handleSendMessage(
+          JSON.stringify({ lat: latitude, log: longitude }),
+          "location"
+        );
+      });
+    } else {
+      ToastNotify("Lấy tọa độ không thành công!").error();
+    }
+  };
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const handleSubmitDocument = (e: HTMLInputElement | any) => {
+    const selectedFile = e.target.files[0];
+    setIsLoading(true);
+    if (selectedFile) {
+      const formdata = new FormData();
+      formdata.append("file", selectedFile);
+      fetch(domainserver + "upload", {
+        method: "POST",
+        body: formdata,
+      })
+        .then((res) => res.json())
+        .then((data: any) => {
+          if (data.status == 201) {
+            if (data?.fileInform?.fileName) {
+              handleSendMessage(data.fileInform, "document");
+            }
+          }
+          // File uploaded successfully
+        })
+        .catch((error: any) => {
+          console.log(error.message);
+          ToastNotify("File không hợp lệ!").error();
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+    e.target.value = null;
+  };
   return (
     <>
+      {isLoading && <LoaddingOverLay />}
       {isOpenModuleFile && (
         <ModalProviderOverlay
           setIsCloseModal={() => setIsOpenFile(!isOpenModuleFile)}
@@ -303,27 +349,40 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
             isOpenMoreChat ? "h-20" : "h-0"
           )}
         >
-          <div className="flex items-center cursor-pointer justify-center flex-col ">
-            <img width={40} src="/images/locationghim.png" alt="" />
-            <p>Vị trí</p>
-          </div>
-          <div className="flex items-center cursor-pointer justify-center flex-col">
-            <img width={40} src="/images/documentsbg.png" alt="" />
-            <p>Tài liệu</p>
-          </div>
           <div
             onClick={() => setIsOpenGhim((prev: any) => !prev)}
             className="flex items-center cursor-pointer justify-center flex-col"
           >
             <img width={40} src="/images/ghim.png" alt="" />
-            <p>Ghim</p>
-          </div>{" "}
+            <p className="mt-1">Ghim</p>
+          </div>
+          <div
+            onClick={handleGetLocation}
+            className="flex items-center cursor-pointer justify-center flex-col "
+          >
+            <img width={40} src="/images/locationghim.png" alt="" />
+            <p className="mt-1">Vị trí</p>
+          </div>
+          <label
+            htmlFor="uploaddoccument"
+            className="flex items-center cursor-pointer justify-center flex-col"
+          >
+            <img width={40} src="/images/documentsbg.png" alt="" />
+            <input
+              onChange={handleSubmitDocument}
+              type="file"
+              id="uploaddoccument"
+              className="hidden"
+            />
+            <p className="mt-1">Tài liệu</p>
+          </label>
+
           <div
             onClick={() => setIsOpenSpeakVoice(!isOpenSpeakVoice)}
             className="flex items-center cursor-pointer justify-center flex-col"
           >
             <img width={40} src="/images/microphone.png" alt="" />
-            <p>Ghi Âm</p>
+            <p className="mt-1">Ghi Âm</p>
           </div>
         </div>
         {/* isOpenSpeakVoice Openvoice upload file */}

@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { BiMicrophone, BiRevision, BiSend, BiTrash } from "react-icons/bi";
 import AudioComment from "./AudioComment";
-import { cn } from "../../../servies/utils";
+import { ToastNotify, cn } from "../../../servies/utils";
 import { Tooltip } from "@mui/material";
 import { componentsProps } from "../../../styles/componentsProps";
 import { convertToBase64 } from "../util";
@@ -51,7 +51,6 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
   const [isClickButton, setIsClickButton] = useState(false);
 
   const handleClickme = (isClickButton: boolean) => {
-    console.log(isClickButton);
     if (isClickButton) {
       handleDeleteSoundOld();
       startRecording();
@@ -64,6 +63,7 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
     if (audioURL) {
       audioURL && URL.revokeObjectURL(audioURL);
       setAudioURL("");
+      stopRecording();
     }
   };
   useEffect(() => {
@@ -72,8 +72,20 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
     };
   }, []);
   const handleGetBase64 = (base64: string) => {
-    handleSendMessage(base64, "audio");
-    setIsOpenSpeakVoice(false);
+    if (base64.includes("data:audio/webm;base64,")) {
+      const newBase64 = base64.replace("data:audio/webm;base64,", "");
+      const byteCharacters = atob(newBase64);
+      const byteLength = byteCharacters.length;
+      const kilobytes = byteLength / 1024;
+      console.log(kilobytes);
+      if (kilobytes > 2100) {
+        ToastNotify("Bạn không để kéo dài quá 6 phút").error();
+        handleDeleteSoundOld();
+      } else {
+        handleSendMessage(base64, "audio");
+        setIsOpenSpeakVoice(false);
+      }
+    }
   };
   const handleSendAudio = () => {
     if (audioBlob) {
@@ -83,15 +95,25 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
   };
   return (
     <>
-      <button
-        onClick={() => handleClickme(!isClickButton)}
+      <div
         className={cn(
-          "border rounded-full p-2 cursor-pointer text-3xl",
+          "flex justify-center flex-col items-center",
           audioURL ? "hidden" : ""
         )}
       >
-        <BiMicrophone />
-      </button>
+        <button
+          onClick={() => handleClickme(!isClickButton)}
+          className={cn(
+            "border rounded-full p-2 cursor-pointer text-3xl",
+            isClickButton ? "background-primary" : ""
+          )}
+        >
+          <BiMicrophone />
+        </button>
+        <p className="mx-2 text-sm">
+          {!isClickButton ? "Nhấn vào để nói !" : "Nhấn vào ra để dừng"}
+        </p>
+      </div>
 
       {audioURL && (
         <div className=" w-full px-4">

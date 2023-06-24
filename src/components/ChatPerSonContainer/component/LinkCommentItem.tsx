@@ -33,7 +33,6 @@ const LinkCommentItem: FC<LinkCommentItemProps> = ({
             </a>
           </h6>
 
-          <div className="bg-[url(`${}`)"></div>
           {image && (
             <img
               className="w-full h-full opacity-60"

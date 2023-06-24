@@ -19,6 +19,8 @@ import { RiPencilFill } from "react-icons/ri";
 import { componentsProps } from "../../../styles/componentsProps";
 import LinkCommentItem from "./LinkCommentItem";
 import AudioComment from "./AudioComment";
+import LoadMap from "../../chatContainer/component/LoadMap";
+import DocumentComment from "./DocumentComment";
 
 export interface ChatUserPersonItemProps {
   idAccount: string;
@@ -211,12 +213,14 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                       : "hidden"
                   )}
                 >
-                  <li
-                    className="px-2 py-2  background-primary-hover  rounded-full opacity-80"
-                    onClick={() => handleActionClick(props._id, "delete")}
-                  >
-                    Xóa
-                  </li>
+                  {props.action.kind !== "ghim" && (
+                    <li
+                      className="px-2 py-2  background-primary-hover  rounded-full opacity-80"
+                      onClick={() => handleActionClick(props._id, "delete")}
+                    >
+                      Xóa
+                    </li>
+                  )}
                   {props.type == "text" &&
                     props.idAccount == props.author._id &&
                     props.isUser && (
@@ -279,8 +283,8 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                   />
                   <div className="absolute bg-black/60 py-2 bottom-0  left-0 w-full right-0 h-12 flex items-center text-left">
                     <img src="images/iconimage.png" className="lg:w-10 w-8" />
-                    <div className="text-sm text-white  font-normal flex flex-col ">
-                      <span className="line-clamp-1">{file.fileName}</span>
+                    <div className="text-sm text-white  font-normal flex flex-col line-clamp-1  text-ellipsis">
+                      <span className="line-clamp-1">{file.fileName} </span>
                       <span>{(file.size / 1000).toFixed(0)} kb</span>
                     </div>
                     <Link
@@ -296,6 +300,18 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               ))}
             </div>
           )}
+          {props.type == "location" && (
+            <LoadMap
+              localtion={props.comment}
+              fullname={CapitalizeString(
+                props.isUser ? "Bạn" : props.author.fullname
+              )}
+            />
+          )}
+          {props.type == "document" && props.file && (
+            <DocumentComment {...props.file[0]} />
+          )}
+
           {props.type == "audio" && (
             <AudioComment
               className="w-fit"

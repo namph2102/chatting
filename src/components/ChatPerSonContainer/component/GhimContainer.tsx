@@ -22,12 +22,12 @@ const GhimContainer: FC<GhimContainerProps> = ({
 }) => {
   const ghimContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    ghimContainerRef.current && ScroolToBottom(ghimContainerRef.current, 200);
+    ghimContainerRef.current && ScroolToBottom(ghimContainerRef.current, 1000);
   }, [isOpenGhim]);
   const newlistCoomentCover =
     listCooment.sort((a: any, b: any) => {
-      const right: any = new Date(a.updatedAt);
-      const left: any = new Date(b.updatedAt);
+      const right: any = new Date(a.createdAt);
+      const left: any = new Date(b.createdAt);
 
       return right - left;
     }) || [];

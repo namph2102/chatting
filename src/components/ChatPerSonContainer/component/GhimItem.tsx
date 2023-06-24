@@ -15,6 +15,8 @@ import { BiDotsHorizontal } from "react-icons/bi";
 import { BsDownload } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import AudioComment from "./AudioComment";
+import LoadMap from "../../chatContainer/component/LoadMap";
+import DocumentComment from "./DocumentComment";
 interface GhimItem extends ChatUserPersonItemProps {
   handleactiveOptions: (
     idComment: string | undefined,
@@ -63,6 +65,9 @@ const GhimItem: FC<GhimItem> = (props) => {
             alt="Errors"
           />
         </Tooltip>
+        {props.type == "document" && props.file && (
+          <DocumentComment {...props.file[0]} />
+        )}
         {props.type == "text" && (
           <div className="text-black bg-gray-300 py-2 px-3 rounded-2xl text-sm">
             {props.comment}
@@ -75,7 +80,13 @@ const GhimItem: FC<GhimItem> = (props) => {
             }
           />
         )}
-        {props.file && props.file.length > 0 && (
+        {props.type == "location" && (
+          <LoadMap
+            hideSerachInput
+            fullname={props.isUser ? "Bạn" : props.author.fullname}
+          />
+        )}
+        {props.file && props.type !== "document" && props.file.length > 0 && (
           <div className="flex gap-1 flex-wrap">
             {props.file.map((file) => (
               <div
