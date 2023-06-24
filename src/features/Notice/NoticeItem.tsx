@@ -5,7 +5,7 @@ import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer
 import { CapitalizeString, HandleTimeDiff } from "../../servies/utils";
 
 interface INoticeItemProps extends INoticeItem {
-  setIsShowAddfriend: () => void;
+  handleUpdateStatus: (isNotice: string, isAccept: boolean) => void;
 }
 const NoticeItem: FC<INoticeItemProps> = ({
   status,
@@ -16,7 +16,7 @@ const NoticeItem: FC<INoticeItemProps> = ({
   isAccepted,
   createdAt,
   isSended,
-  setIsShowAddfriend,
+  handleUpdateStatus,
 }) => {
   const handleAddFriend = (isAccept: boolean) => {
     socket.emit("send-info-add-friend", {
@@ -27,7 +27,8 @@ const NoticeItem: FC<INoticeItemProps> = ({
       idUserSend: userSend._id,
       idUserAccept: userAccept._id,
     });
-    setIsShowAddfriend();
+
+    handleUpdateStatus(_id, isAccept);
   };
   let message = " đã gửi lời mời kết bạn ";
   if (type == 1) {

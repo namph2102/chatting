@@ -35,7 +35,7 @@ const GhimContainer: FC<GhimContainerProps> = ({
   return (
     <div
       className={cn(
-        "sm:max-w-[600px] rounded-2xl lg:max-w-[800px] overflow-y-hidden max-w-[340px] lg:min-w-[600px]  sm:min-w-[500px] min-w-[300px] bg-white  text-black",
+        "sm:max-w-[600px] rounded-2xl lg:max-w-[800px] overflow-y-hidden max-w-[98%] lg:min-w-[600px]  sm:min-w-[500px] min-w-[94%] bg-white  text-black",
         isOpenGhim ? "" : "hidden"
       )}
     >

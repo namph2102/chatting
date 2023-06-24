@@ -176,7 +176,7 @@ const SearchPage = () => {
             id={theme.darkmode}
             style={{ backgroundImage: `url(${theme.backgroundthem})` }}
             className={cn(
-              "w-full lg:relative px-4 lg:h-screen  h-[calc(100vh-80px)] overflow-y-auto fixed inset-0 z-20 ",
+              "w-full lg:relative px-4 lg:h-screen  h-[calc(100vh-80px)] overflow-y-auto fixed inset-0 z-10 ",
 
               isOpenChat ? "open_toggle-mobile " : "hidden_toggle-mobile"
             )}

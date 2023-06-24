@@ -18,6 +18,7 @@ import { Tooltip, capitalize } from "@mui/material";
 import { RiPencilFill } from "react-icons/ri";
 import { componentsProps } from "../../../styles/componentsProps";
 import LinkCommentItem from "./LinkCommentItem";
+import AudioComment from "./AudioComment";
 
 export interface ChatUserPersonItemProps {
   idAccount: string;
@@ -216,14 +217,16 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                   >
                     Xóa
                   </li>
-                  {props.type != "link" && props.isUser && (
-                    <li
-                      className=" py-2   background-primary-hover px-2 rounded-full opacity-80"
-                      onClick={() => handleActionClick(props._id, "edit")}
-                    >
-                      Chỉnh sửa
-                    </li>
-                  )}
+                  {props.type == "text" &&
+                    props.idAccount == props.author._id &&
+                    props.isUser && (
+                      <li
+                        className=" py-2   background-primary-hover px-2 rounded-full opacity-80"
+                        onClick={() => handleActionClick(props._id, "edit")}
+                      >
+                        Chỉnh sửa
+                      </li>
+                    )}
                   {props.action.kind != "ghim" && (
                     <li
                       className="py-2  background-primary-hover px-2 rounded-full opacity-80"
@@ -244,6 +247,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               </span>
             </span>
           </div>
+
           {props.type == "text" && (
             <p
               ref={ElementEditRef}
@@ -252,6 +256,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               dangerouslySetInnerHTML={{ __html: message }}
             />
           )}
+
           {props.type == "link" && <LinkCommentItem comment={props.comment} />}
           <button
             ref={buttonEditRef}
@@ -290,6 +295,15 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                 </div>
               ))}
             </div>
+          )}
+          {props.type == "audio" && (
+            <AudioComment
+              className="w-fit"
+              link={
+                "https://drive.google.com/uc?export=download&id=" +
+                props.comment
+              }
+            />
           )}
           <div className="flex gap-1 items-end font-semibold text-[0.875em] pl-1 mt-1">
             {props.isSee && (

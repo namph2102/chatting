@@ -14,6 +14,7 @@ import LinkCommentItem from "./LinkCommentItem";
 import { BiDotsHorizontal } from "react-icons/bi";
 import { BsDownload } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import AudioComment from "./AudioComment";
 interface GhimItem extends ChatUserPersonItemProps {
   handleactiveOptions: (
     idComment: string | undefined,
@@ -66,6 +67,13 @@ const GhimItem: FC<GhimItem> = (props) => {
           <div className="text-black bg-gray-300 py-2 px-3 rounded-2xl text-sm">
             {props.comment}
           </div>
+        )}
+        {props.type == "audio" && (
+          <AudioComment
+            link={
+              "https://drive.google.com/uc?export=download&id=" + props.comment
+            }
+          />
         )}
         {props.file && props.file.length > 0 && (
           <div className="flex gap-1 flex-wrap">

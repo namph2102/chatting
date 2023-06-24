@@ -159,7 +159,7 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
 
   return (
     <>
-      <div onClick={handleStopPropagation} className="relative left-0">
+      <div onClick={handleStopPropagation} className="relative left-0 top-0">
         <Tooltip
           title="Chức năng"
           componentsProps={componentsProps}
@@ -177,9 +177,10 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
         </Tooltip>
       </div>
       <section
+        onClick={handleStopPropagation}
         id={theme.darkmode}
         className={cn(
-          "absolute bottom-24 shadow-xl z-10 cursor-grab left-0 right-0 w-full  opacity-90   px-10 py-3",
+          "absolute sm:bottom-24 bottom-20  shadow-xl z-10 cursor-grab left-0 right-0 w-full  opacity-90   px-10 py-3",
           iseOpenMenu ? "" : "hidden"
         )}
       >

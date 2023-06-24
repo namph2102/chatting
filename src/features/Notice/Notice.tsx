@@ -27,10 +27,17 @@ const NoticePage = () => {
   const { account, noticeTotal } = useSelector(
     (state: RootState) => state.userStore
   );
-  const [isShowAddFriend, setIsShowAddfriend] = useState<boolean>(true);
   const [listInfo, setListInfo] = useState<INoticeItem[]>([]);
-  const handleCallbackRedLoad = () => {
-    setIsShowAddfriend((prev) => !prev);
+  const handleUpdateStatus = (idNotice: string, isAccept: boolean) => {
+    setListInfo((listInfo) => {
+      const newNotice = listInfo.find((item) => item._id == idNotice);
+      if (newNotice) {
+        newNotice.type = 2;
+        newNotice.status = isAccept;
+      }
+
+      return [...listInfo];
+    });
   };
   useEffect(() => {
     if (!account._id) return;
@@ -49,7 +56,7 @@ const NoticePage = () => {
       .catch((error) => {
         console.log(error.message);
       });
-  }, [account._id, isShowAddFriend, noticeTotal]);
+  }, [account._id, noticeTotal]);
   return (
     <section>
       <h2 className="font-bold text-xl mb-4">Thông báo</h2>
@@ -59,7 +66,7 @@ const NoticePage = () => {
             <NoticeItem
               key={acc._id}
               {...acc}
-              setIsShowAddfriend={handleCallbackRedLoad}
+              handleUpdateStatus={handleUpdateStatus}
             />
           ))}
       </ul>

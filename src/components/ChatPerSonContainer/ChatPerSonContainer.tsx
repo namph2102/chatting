@@ -23,7 +23,6 @@ import { HandleCoverStringEntries } from "../chatContainer/chat.utils";
 import { crawLinkChating } from "../../pages/CrawlWebsite/component/CrawLink";
 
 import LoadingContainer from "../loading/LoadingContainer";
-
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
 
@@ -121,15 +120,17 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
           acc.comment = action.newComment;
           acc.updatedAt = new Date().toISOString();
         }
-        if (acc.type == "link" && action.kind == "delete") {
+        if (
+          (acc.type == "link" || acc.type == "audio") &&
+          action.kind == "delete"
+        ) {
           if (acc.isAction) {
             acc.type = "text";
           } else if (account._id == action.userId) {
             acc.type = "text";
-          } else if (account._id != action.userId) {
-            acc.type = "link";
           }
         }
+
         if (acc.type == "image" && action.kind == "delete") {
           if (acc.isAction && account._id == action.userId) {
             const listFile: IImageFireBase[] = acc.file;
@@ -207,7 +208,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   }, []);
 
   const handleSendMessage = async (
-    inputElement: HTMLTextAreaElement | any[] | any,
+    inputElement: HTMLTextAreaElement | any[] | any | Blob,
     type: string
   ) => {
     let listImage: IImageFireBase[] = [];
@@ -220,7 +221,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         return;
       }
 
-      comment = "gửi ảnh";
+      comment = `<span class="text-red-400">Bạn đã xóa nội dung này</span>`;
     } else if (type == "text") {
       if (!inputElement.value) {
         return;
@@ -231,6 +232,10 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       if (isChecked) {
         comment = await crawLinkChating(inputElement.value.trim());
       }
+    } else if (type == "audio") {
+      // gửi base64 lên sever
+      comment = inputElement;
+      console.log(inputElement);
     }
 
     const data: ChatUserPersonItemProps = {

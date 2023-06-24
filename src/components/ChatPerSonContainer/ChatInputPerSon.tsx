@@ -1,7 +1,7 @@
 import { FC, useRef, useState, useCallback, useEffect } from "react";
 
 import {
-  BiBookHeart,
+  BiDotsHorizontalRounded,
   BiGridAlt,
   BiImages,
   BiLoaderCircle,
@@ -9,6 +9,7 @@ import {
   BiMicrophoneOff,
   BiSend,
   BiSmile,
+  BiX,
 } from "react-icons/bi";
 import { TextareaAutosize } from "@mui/base";
 import { Tooltip } from "@mui/material";
@@ -26,6 +27,7 @@ import {
 import { componentsProps } from "../../styles/componentsProps";
 import MyDropzone from "./component/MyDropzone";
 import ModalProviderOverlay from "../Ui/ModalProviderOverlay";
+import RecorderComponent from "./component/RecorderComponent";
 
 interface ChatInputPerSonProps {
   loading: boolean;
@@ -95,7 +97,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
   };
 
   const handleForcusChatting = (isForcus: boolean) => {
-    if (window.innerWidth < 560) {
+    if (window.innerWidth < 640) {
       setIsOpenEmoji(false);
       if (isForcus) {
         btnMoreRef.current?.classList.add("hidden__effect");
@@ -113,6 +115,18 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
     chattingRef.current.blur();
   };
   const [isOpenModuleFile, setIsOpenFile] = useState<boolean>(false);
+  const [isOpenMoreChat, setIsOpenMoreChat] = useState<boolean>(false);
+  useEffect(() => {
+    document.addEventListener("click", () => {
+      setIsOpenMoreChat(false);
+    });
+    return () => {
+      document.removeEventListener("click", () => {
+        setIsOpenMoreChat(false);
+      });
+    };
+  }, []);
+  const [isOpenSpeakVoice, setIsOpenSpeakVoice] = useState(false);
   return (
     <>
       {isOpenModuleFile && (
@@ -153,16 +167,18 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
             className=" sm:text-2xl text-xl min-w-[auto]  ease-linear duration-300  sm:gap-3 gap-2 flex justify-between items-center"
           >
             <Tooltip
-              title="Ghim"
+              title={!isOpenMoreChat ? "Mở rộng" : "Thu hẹp"}
               componentsProps={componentsProps}
               arrow
               placement="top"
             >
               <span
-                onClick={() => setIsOpenGhim((prev: any) => !prev)}
+                onClick={(e) => {
+                  setIsOpenMoreChat(!isOpenMoreChat), e.stopPropagation();
+                }}
                 className="cursor-pointer"
               >
-                <BiBookHeart />
+                <BiDotsHorizontalRounded />
               </span>
             </Tooltip>
             <Tooltip
@@ -280,6 +296,52 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
             onEmojiSelect={handdleSelect}
           />
         </div>
+        <div
+          onClick={() => setIsOpenMoreChat(false)}
+          className={cn(
+            "overflow-hidden grid sm:grid-cols-6 grid-cols-4 text-xs ease-in duration-100",
+            isOpenMoreChat ? "h-20" : "h-0"
+          )}
+        >
+          <div className="flex items-center cursor-pointer justify-center flex-col ">
+            <img width={40} src="/images/locationghim.png" alt="" />
+            <p>Vị trí</p>
+          </div>
+          <div className="flex items-center cursor-pointer justify-center flex-col">
+            <img width={40} src="/images/documentsbg.png" alt="" />
+            <p>Tài liệu</p>
+          </div>
+          <div
+            onClick={() => setIsOpenGhim((prev: any) => !prev)}
+            className="flex items-center cursor-pointer justify-center flex-col"
+          >
+            <img width={40} src="/images/ghim.png" alt="" />
+            <p>Ghim</p>
+          </div>{" "}
+          <div
+            onClick={() => setIsOpenSpeakVoice(!isOpenSpeakVoice)}
+            className="flex items-center cursor-pointer justify-center flex-col"
+          >
+            <img width={40} src="/images/microphone.png" alt="" />
+            <p>Ghi Âm</p>
+          </div>
+        </div>
+        {/* isOpenSpeakVoice Openvoice upload file */}
+        {isOpenSpeakVoice && (
+          <div className="h-32  bg-follow-darkmode absolute bottom-0 left-0 w-full z-10 flex  justify-center items-center">
+            <span
+              className="text-3xl cursor-pointer absolute right-2 top-2"
+              onClick={() => setIsOpenSpeakVoice(false)}
+            >
+              <BiX />
+            </span>
+            <RecorderComponent
+              setIsOpenSpeakVoice={setIsOpenSpeakVoice}
+              handleSendMessage={handleSendMessage}
+            />
+          </div>
+        )}
+        {/*end  isOpenSpeakVoice Openvoice upload file */}
       </section>
     </>
   );

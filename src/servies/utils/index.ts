@@ -130,13 +130,13 @@ export const callbackResponse = (message: string, status: number) => {
 };
 
 export function CapitalizeString(str: string, kind = false) {
-  let newStr = "";
+  let newStr = str.replace(/\s+/g, " ").toLowerCase();
   if (str.includes(" ")) {
-    newStr = str
+    newStr = newStr
       .split(" ")
       .map((text) => text[0].toUpperCase() + text.slice(1, text.length))
       .join(" ");
-  } else newStr = str.replace(/\b\w/g, (l) => l.toUpperCase());
+  } else newStr = newStr[0].toUpperCase() + newStr.slice(1, newStr.length);
   if (kind) {
     return `<span class="font-bold"> ${newStr} </span>`;
   }
