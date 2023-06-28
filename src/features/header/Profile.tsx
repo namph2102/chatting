@@ -5,8 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
-import { UpdateAccount, updateNotice } from "../../redux/Slice/AccountSlice";
-import { personInit, updatePerson } from "../../redux/Slice/ChatPersonSlice";
+import { updateNotice } from "../../redux/Slice/AccountSlice";
 
 interface ProfileProps {
   username: string;

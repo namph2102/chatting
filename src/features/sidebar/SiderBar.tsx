@@ -23,12 +23,6 @@ const boxID: IUserItem = {
   idRoom: "chatbot",
   typechat: "chatbot",
 };
-interface IListrooms {
-  _id: string;
-  listUser: IUserItem[];
-  type: "friend" | "group";
-  name: string;
-}
 
 // eslint-disable-next-line react-refresh/only-export-components
 const SiderBar = () => {

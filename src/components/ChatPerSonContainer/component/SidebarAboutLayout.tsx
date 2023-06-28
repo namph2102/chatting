@@ -10,7 +10,6 @@ import { handleCoverSize } from "../util";
 import moment from "moment";
 import { nanoid } from "@reduxjs/toolkit";
 import { cn } from "../../../servies/utils";
-import { IImageFireBase } from "./MyDropzone";
 
 const filePath: TlistGroupsMap<string> = {
   pdf: "pdf",

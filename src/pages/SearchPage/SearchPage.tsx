@@ -15,7 +15,6 @@ import UserSearchPageItem, {
   IUserSearchPageItem,
 } from "./component/UserSearchPageItem";
 import "./serachpage.scss";
-import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
 import { BiChevronLeft } from "react-icons/bi";
 import { handleAddFriendSocket } from "../../servies/sockets";
 

@@ -22,7 +22,7 @@ const HeaderNavRight = () => {
         <BiVideo />
       </li>
 
-      <li onClick={() => dispatchRedux(updateOpenGroup())}>
+      <li onClick={() => dispatchRedux(updateOpenGroup("nopayload"))}>
         <BiInfoCircle />
       </li>
     </ul>

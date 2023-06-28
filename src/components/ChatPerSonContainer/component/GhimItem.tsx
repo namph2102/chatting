@@ -2,12 +2,7 @@ import { Tooltip } from "@mui/material";
 import { componentsProps } from "../../../styles/componentsProps";
 import { FC, useState } from "react";
 import { ChatUserPersonItemProps } from "./ChatUserPersonItem";
-import {
-  CapitalizeString,
-  ToastNotify,
-  cn,
-  handleStopPropagation,
-} from "../../../servies/utils";
+import { CapitalizeString, ToastNotify, cn } from "../../../servies/utils";
 import moment from "moment";
 import { nanoid } from "@reduxjs/toolkit";
 import LinkCommentItem from "./LinkCommentItem";
