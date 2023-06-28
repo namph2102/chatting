@@ -1,7 +1,7 @@
 import InputElement from "../../components/form/InputElement";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
+import { Helmet } from "react-helmet";
 import { ToastNotify, customeValue } from "../../servies/utils";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -117,6 +117,10 @@ const Register = () => {
 
   return (
     <section id="register" className="overflow-y-auto relative">
+      <Helmet>
+        <title>Đăng ký thành viên tại Zecky</title>
+        <link rel="canonical" href="" />
+      </Helmet>
       <div className="py-6 container mx-auto px-2 flex flex-wrap h-screen ">
         <article className="lg:basis-1/4 basis-full lg:text-left text-center">
           <div className="flex items-end lg:justify-start justify-center gap-3">

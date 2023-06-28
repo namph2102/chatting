@@ -12,7 +12,10 @@ import {
   historyChatting,
 } from "../../../servies/utils";
 import { MutateOptions } from "react-query";
-import { updatePerson } from "../../../redux/Slice/ChatPersonSlice";
+import {
+  updatePerson,
+  updateIsOpenFormRoom,
+} from "../../../redux/Slice/ChatPersonSlice";
 import { useNavigate } from "react-router-dom";
 import { setIsOpenDisplayTable } from "../../../redux/Slice/AccountSlice";
 interface SearchSibarProps {
@@ -97,12 +100,19 @@ const SearchSibar: FC<SearchSibarProps> = ({
     setIsShowSearchBox(() => false);
     resetInput();
   };
+
+  const handleOpenFormCreateRoom = () => {
+    dispatch(updateIsOpenFormRoom(true));
+  };
   return (
     <>
       <section className="mb-2 ">
         <div className="flex justify-between">
           <h2 className="text-xl font-semibold">{title}</h2>
-          <button className="w-8 h-8 hover:bg-[var(--primary-color)]  border-[1px] border-gray-500 hover:opacity-100 bg-[var(--primary-color)]  opacity-50 hover:text-[#fff] rounded-sm">
+          <button
+            onClick={handleOpenFormCreateRoom}
+            className="w-8 h-8 hover:bg-[var(--primary-color)]  border-[1px] border-gray-500 hover:opacity-100 bg-[var(--primary-color)]  opacity-50 hover:text-[#fff] rounded-sm"
+          >
             +
           </button>
         </div>

@@ -5,6 +5,8 @@ import { AppDispatch } from "..";
 import { IAccount } from "./slice.type";
 import instance from "../../config";
 import { ToastNotify } from "../../servies/utils";
+import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
+import { getDataListFriend } from "./SidebarSlice";
 const theme = {
   backgroundthem: "/theme/theme4.png",
   darkmode: localStorage.getItem("darkmode") || "dark-mode",
@@ -20,6 +22,7 @@ const AccountSlice = createSlice({
     accessTokenSpotify: "",
     isOpenChat: true,
     isOpencallVideo: false,
+    isOpenGroup: false,
   },
   reducers: {
     UpdateAccount: (state, action) => {
@@ -38,7 +41,14 @@ const AccountSlice = createSlice({
       state.theme = { ...state.theme, ...action.payload };
     },
     updateNotice: (state, action) => {
-      state.noticeTotal = action.payload;
+      if (action.payload == 0) {
+        state.noticeTotal = 0;
+      } else state.noticeTotal += action.payload;
+    },
+    updateOpenGroup(state, action) {
+      if (action.payload == true || action.payload == false) {
+        state.isOpenGroup = action.payload;
+      } else state.isOpenGroup = !state.isOpenGroup;
     },
   },
   extraReducers(builder) {
@@ -57,6 +67,7 @@ export const {
   setIsOpenDisplayTable,
   setIsopenCallvideo,
   updateAccesTokenSpotify,
+  updateOpenGroup,
   updateTheme,
 } = AccountSlice.actions;
 
@@ -86,6 +97,7 @@ export const CreateAccount = (
         const account: IAccount = data.account;
         message = data.message || "Tạo tài khoản thành công!";
         uploadFullAccount(dispatch, account);
+        dispatch(getDataListFriend(account._id));
         return message;
       })
       .catch((error) => {
@@ -123,7 +135,13 @@ export const uploadFullAccount = (dispatch: AppDispatch, account: IAccount) => {
   if (account.username && account.accessToken) {
     acctackToken(account.accessToken);
   }
+  if (account._id) {
+    socket.emit("client-acttaced-id", account._id);
+    console.log(account);
+  }
+
   dispatch(AccountSlice.actions.UpdateAccount(account));
+  dispatch(getDataListFriend(account._id));
 };
 export const firstloginWebsite = createAsyncThunk(
   "/user/firstlogin",

@@ -49,7 +49,9 @@ interface ChatUserPersonItemPropsMore extends ChatUserPersonItemProps {
     typeChatting: string
   ) => void;
   setIsOpenGhim: (isOpenGhim: boolean) => void;
+
   isAction?: boolean;
+  typechat?: string;
 }
 const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
   const classname =
@@ -133,6 +135,20 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
     }
   };
   const [isOpenMore, setIsopenMore] = useState(false);
+  if (props.type == "info") {
+    return (
+      <div className="text-center text-sm flex justify-center items-center">
+        <p className=" bg-follow-darkmode border-[1px] border-gray-600  w-fit   py-1 px-2 rounded-full my-2 flex justify-center items-center text-sm gap-2">
+          <img
+            className="w-10 h-10 rounded-full"
+            src={props.author.avatar}
+            alt=""
+          />{" "}
+          {CapitalizeString(props.author.fullname)} {props.comment}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <article
@@ -161,6 +177,11 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               : "form-control py-2 text-left mr-20"
           )}
         >
+          {props.typechat == "group" && (
+            <p className="capitalize text-sm font-extralight opacity-80 drop-shadow-2xl mb-2">
+              {props.isUser ? "Bạn" : props.author.fullname}
+            </p>
+          )}
           {props.action.kind && props.action.kind == "ghim" && (
             <div
               onClick={() => props.setIsOpenGhim(true)}
@@ -251,7 +272,6 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               </span>
             </span>
           </div>
-
           {props.type == "text" && (
             <p
               ref={ElementEditRef}
@@ -260,7 +280,6 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               dangerouslySetInnerHTML={{ __html: message }}
             />
           )}
-
           {props.type == "link" && <LinkCommentItem comment={props.comment} />}
           <button
             ref={buttonEditRef}
@@ -270,34 +289,38 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
           </button>
           {props.type == "image" && props.file && (
             <div className="flex flex-wrap gap-y-8 ">
-              {props.file.map((file) => (
-                <div
-                  key={nanoid()}
-                  className={cn("relative lg:w-[200px] w-[150px] h-[190px]")}
-                >
-                  <img
-                    className="w-full  object-cover h-full "
-                    loading="lazy"
-                    src={file.url}
-                    alt="Ảnh bị lỗi rồi!"
-                  />
-                  <div className="absolute bg-black/60 py-2 bottom-0  left-0 w-full right-0 h-12 flex items-center text-left">
-                    <img src="images/iconimage.png" className="lg:w-10 w-8" />
-                    <div className="text-sm text-white  font-normal flex flex-col line-clamp-1  text-ellipsis">
-                      <span className="line-clamp-1">{file.fileName} </span>
-                      <span>{(file.size / 1000).toFixed(0)} kb</span>
+              {props.file.map((file) =>
+                file?.url ? (
+                  <div
+                    key={nanoid()}
+                    className={cn("relative lg:w-[200px] w-[150px] h-[190px]")}
+                  >
+                    <img
+                      className="w-full  object-cover h-full cursor-pointer "
+                      loading="lazy"
+                      src={file.url}
+                      alt="Ảnh bị lỗi rồi!"
+                    />
+                    <div className="absolute bg-black/60 py-2 bottom-0  left-0 w-full right-0 h-12 flex items-center text-left">
+                      <img src="images/iconimage.png" className="lg:w-10 w-8" />
+                      <div className="text-sm text-white  font-normal flex flex-col line-clamp-1  text-ellipsis">
+                        <span className="line-clamp-1">{file.fileName} </span>
+                        <span>{(file.size / 1000).toFixed(0)} kb</span>
+                      </div>
+                      <Link
+                        className="absolute right-4 -bottom-6 animate-bounce text-base font-bold text-primary-hover"
+                        to={file.url}
+                        target="_blank"
+                        download={file.fileName}
+                      >
+                        <BsDownload />
+                      </Link>
                     </div>
-                    <Link
-                      className="absolute right-4 -bottom-6 animate-bounce text-base font-bold text-primary-hover"
-                      to={file.url}
-                      target="_blank"
-                      download={file.fileName}
-                    >
-                      <BsDownload />
-                    </Link>
                   </div>
-                </div>
-              ))}
+                ) : (
+                  "Ảnh đang bị lỗi"
+                )
+              )}
             </div>
           )}
           {props.type == "location" && (
@@ -311,7 +334,6 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
           {props.type == "document" && props.file && (
             <DocumentComment {...props.file[0]} />
           )}
-
           {props.type == "audio" && (
             <AudioComment
               className="w-fit"

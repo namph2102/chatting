@@ -11,15 +11,14 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
   const dispatchRedux: AppDispatch = useDispatch();
   const handleChatWithFriend = (e: any) => {
     e.stopPropagation();
-
-    dispatchRedux(updatePerson(user));
+    dispatchRedux(updatePerson({ ...user }));
     dispatchRedux(setIsOpenDisplayTable(true));
   };
 
   return (
     <div
       onClick={handleChatWithFriend}
-      className="flex justify-between mb-2 items-center cursor-pointer"
+      className="flex justify-between mb-2 items-center cursor-pointer "
       title={`${user.fullname}`}
     >
       <div className="flex gap-5 items-center">
@@ -39,7 +38,7 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
             )}
           ></div>
         </div>
-        <p className="lg:max-w-[200px]  sm:max-w-full    whitespace-nowrap overflow-hidden  capitalize  text-[14px]  font-medium  text-ellipsis">
+        <p className="lg:max-w-[200px]  sm:max-w-full  capitalize  text-[14px]  font-medium  text-style__ellipsis">
           {user.fullname}
         </p>
       </div>

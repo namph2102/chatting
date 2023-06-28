@@ -1,0 +1,102 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { AppDispatch } from "..";
+import instance from "../../config";
+import {
+  IFriend,
+  IListrooms,
+  ISidebarSlice,
+  TlistGroupsMap,
+  typeMapItem,
+} from "./slice.type";
+
+const initStateSidebar: ISidebarSlice = {
+  listFriends: [],
+  listGroups: {},
+  listRoomGroups: [],
+};
+const SidebarSlice = createSlice({
+  name: "sidebar",
+  initialState: initStateSidebar,
+  reducers: {
+    updateFristSidebarLogin(state, action) {
+      if (action.payload.listFriends.length > 0) {
+        state.listFriends = action.payload.listFriends;
+      }
+      if (action.payload.listRoomGroups.length > 0) {
+        state.listGroups = action.payload.listGroups;
+        state.listRoomGroups = action.payload.listRoomGroups;
+      }
+    },
+    updateStatusSidebar(
+      state: ISidebarSlice,
+      action: { payload: { idFriend: string; status: boolean } }
+    ) {
+      const itemFindFriends = state.listFriends.find(
+        (friend) => friend._id == action.payload.idFriend
+      );
+
+      if (itemFindFriends) {
+        itemFindFriends.status = action.payload.status;
+      }
+    },
+  },
+});
+export default SidebarSlice.reducer;
+export const { updateStatusSidebar } = SidebarSlice.actions;
+export const getDataListFriend = (idUser: string) => {
+  return (dispatch: AppDispatch) => {
+    instance
+      .post("/user/listfriend", { data: idUser, method: "post" })
+      .then((res) => res.data)
+      .then((res) => {
+        if (res) {
+          // const listfriends = res.listfriends.friends;
+
+          // nếu bạn bè off line thì chuyển sang false luôn
+          const listRooms: IListrooms[] = res.listfriends.rooms;
+
+          const listChatFriends: IFriend[] = [];
+          const listChatGroups: TlistGroupsMap<typeMapItem> = {};
+          const listRoomGroups: IFriend[] = [];
+
+          listRooms.forEach((item) => {
+            if (item.type == "friend") {
+              const friend = item.listUser.filter((item) => item._id != idUser);
+
+              if (friend[0]) {
+                listChatFriends.push({
+                  ...friend[0],
+                  idRoom: item._id,
+                  typechat: item.type,
+                });
+              }
+            } else if (item.type == "group") {
+              listRoomGroups.push({
+                fullname: item.name,
+                idRoom: item._id,
+                typechat: item.type,
+                _id: item._id,
+                avatar: "/images/group.png",
+                status: true,
+              });
+              listChatGroups[item._id] = {
+                name: item.name,
+                idRoom: item._id,
+                typechat: item.type,
+                listUser: item.listUser,
+                role: item.role,
+              };
+            }
+          });
+
+          dispatch(
+            SidebarSlice.actions.updateFristSidebarLogin({
+              listFriends: listChatFriends,
+              listGroups: listChatGroups,
+              listRoomGroups,
+            })
+          );
+        }
+      });
+  };
+};

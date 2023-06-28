@@ -23,6 +23,10 @@ import { HandleCoverStringEntries } from "../chatContainer/chat.utils";
 import { crawLinkChating } from "../../pages/CrawlWebsite/component/CrawLink";
 
 import LoadingContainer from "../loading/LoadingContainer";
+import SidebarAboutLayout from "./component/SidebarAboutLayout";
+import { TlistGroupsMap } from "../../redux/Slice/slice.type";
+import ShowImage from "./slideShowImage";
+import { updateOpenGroup } from "../../redux/Slice/AccountSlice";
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
 
@@ -34,38 +38,40 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const [listUserComments, setListUserComments] = useState<
     ChatUserPersonItemProps[]
   >([]);
-  const { theme, account } =
+
+  const { theme, account, isOpenChat, isOpenGroup } =
     useSelector((state: RootState) => state.userStore) || {};
-  const { isOpenChat } = useSelector((state: RootState) => state.userStore);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingFullPage, setLoadingFullpage] = useState(false);
   const dispatch = useDispatch();
+
   useEffect(() => {
     setLoadingFullpage(true);
-    let idRoom = "";
 
+    const idRoom = person.idRoom;
+    socket.emit("tao-room", idRoom);
     if (!person._id) return;
-    // lắng nghe user chat off hay on
-    socket.on(`friend-chattings-${person._id}`, (status) => {
-      dispatch(
-        updatePersonStatus({
-          status: status,
-          updatedAt: new Date().toISOString(),
-        })
-      );
-    });
+    if (person.typechat == "friend") {
+      // lắng nghe user chat off hay on
+      socket.on(`friend-chattings-${person._id}`, (status) => {
+        dispatch(
+          updatePersonStatus({
+            status: status,
+            updatedAt: new Date().toISOString(),
+          })
+        );
+      });
+    }
 
-    handleRoomChat(account._id, person._id)
+    handleRoomChat(person.idRoom || "", account._id, person._id)
       .then((res) => {
         if (res.status == 200) {
           const infoRoom = res.data;
-          idRoom = infoRoom.room._id;
-
-          if (infoRoom.person) {
+          if (person.typechat == "friend") {
             dispatch(
               updatePersonStatus({
-                status: infoRoom.person.status,
-                updatedAt: infoRoom.person.updatedAt,
+                status: person.status,
+                updatedAt: person.updatedAt,
               })
             );
           }
@@ -75,7 +81,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
               acc.isUser = account._id == acc.author._id;
               acc.isAction = acc.action.userId == acc.author._id;
               acc.idAccount = account._id;
-              if (acc.file?.length > 0) {
+              if (acc.file?.length > 0 && acc.action.kind == "delete") {
                 if (acc.author._id != account._id && acc.action.userId) {
                   acc.type = "text";
                 }
@@ -86,10 +92,9 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
           if (listNewChatting?.length > 0) {
             setListUserComments([...listNewChatting]);
             if (boxChatContentRef.current) {
-              ScroolToBottom(boxChatContentRef.current, 1000);
+              ScroolToBottom(boxChatContentRef.current, 200);
             }
           }
-          socket.emit("tao-room", idRoom);
         }
       })
       .finally(() => {
@@ -99,15 +104,20 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     return () => {
       setListUserComments([]);
       socket.emit("leaver-room-chat-current", idRoom);
+      handleCloseGroup();
     };
-  }, [account._id, person._id]);
+  }, [account._id, person.idRoom]);
+
+  const handleCloseGroup = () => {
+    dispatch(updateOpenGroup(false));
+  };
   // lắng nghe và sẽ thực hiện thao tác thêm sữa xóa ************************
   useEffect(() => {
     if (!account._id) return;
     socket.on("server-send-chatting-change", ({ action, idComment }) => {
       setListUserComments((listUserComments: ChatUserPersonItemProps[]) => {
         const acc: any = listUserComments.find((chat) => chat._id == idComment);
-
+        acc.updatedAt = new Date().toISOString();
         acc.isAction = acc.author._id == action.userId;
 
         if (!acc) return listUserComments;
@@ -188,7 +198,6 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     });
     socket.on("server-chat", (data: ChatUserPersonItemProps) => {
       data.isUser = false;
-      data.author.avatar = person.avatar;
       setListUserComments((pre) => [...pre, data]);
       handleScrool();
       setIsLoading(false);
@@ -240,7 +249,6 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       comment = inputElement;
     } else if (type == "document") {
       // gửi base64 lên sever inputElement dang blob
-      console.log(inputElement);
       comment = inputElement.path;
       listImage = [inputElement];
     } else {
@@ -250,7 +258,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
 
     const data: ChatUserPersonItemProps = {
       idAccount: account._id,
-      isSee: person.status,
+      isSee: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       type,
@@ -269,6 +277,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     socket.emit("user-chat", {
       ...data,
       idPerson: person._id,
+      typeChating: person.typechat,
       type,
       file: listImage,
     });
@@ -277,8 +286,33 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const boxChatContentRef = useRef<HTMLElement>(null);
   // modal ghim tin nhắn
   const [isOpenGhim, setIsOpenGhim] = useState<boolean>(false);
-  const listGhimComment =
-    listUserComments.filter((comment) => comment.action.kind == "ghim") || [];
+  // const listGhimComment =
+  //   listUserComments.filter((comment) => comment.action.kind == "ghim") || [];
+  const { listGhimComment, listSidebarcomment } = listUserComments.reduce(
+    (
+      acc: {
+        listGhimComment: ChatUserPersonItemProps[];
+        listSidebarcomment: TlistGroupsMap<ChatUserPersonItemProps[]>;
+      },
+      com: ChatUserPersonItemProps
+    ) => {
+      if (com.action.kind == "ghim") {
+        acc.listGhimComment.push(com);
+      }
+      if (com.type != "text") {
+        if (acc.listSidebarcomment[com.type]) {
+          acc.listSidebarcomment[com.type].unshift(com);
+        } else {
+          acc.listSidebarcomment[com.type] = [com];
+        }
+        acc.listSidebarcomment[com.type];
+      }
+      return acc;
+    },
+    { listGhimComment: [], listSidebarcomment: {} }
+  );
+  const [isOpenShowImage, setIsOpenShowImage] = useState(false);
+  console.log(isOpenShowImage);
   return (
     <div
       id={theme.darkmode}
@@ -295,6 +329,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         <ModalProviderOverlay setIsCloseModal={() => setIsOpenGhim(false)}>
           <GhimContainer
             listCooment={listGhimComment}
+            idBGcolor={theme.darkmode}
             isOpenGhim={isOpenGhim}
             setIsOpenGhim={setIsOpenGhim}
             handleactiveOptions={handleactiveOptions}
@@ -303,13 +338,15 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       )}
       <section
         ref={boxChatContentRef}
-        className="chatting px-2 absolute top-0 left-0 right-0 bottom-24 pb-4 overflow-y-auto overflow-x-hidden w-full pt-24"
+        // absolute top-0 left-0  bottom-24 pt-24
+        className="chatting px-2 pb-4 overflow-y-auto h-[calc(100vh-160px)] overflow-x-hidden w-full "
       >
         {listUserComments.length > 0 &&
           listUserComments.map((comment) => (
             <ChatUserPersonItem
               key={comment._id}
               {...comment}
+              typechat={person.typechat}
               handleactiveOptions={handleactiveOptions}
               setIsOpenGhim={setIsOpenGhim}
             />
@@ -322,6 +359,28 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         handleSendMessage={handleSendMessage}
         className={!isOpenChat ? "open_toggle-mobile" : "hidden_toggle-mobile"}
       />
+      {/* thông tin về box chat */}
+      <div
+        id={theme.darkmode}
+        className={cn(
+          "fixed top-0 right-0  duration-300 ease-in bottom-0 md:w-[320px] w-full z-50",
+          isOpenGroup ? "" : "translate-x-[200%]"
+        )}
+      >
+        <SidebarAboutLayout
+          person={person}
+          listSidebarcomment={listSidebarcomment}
+          handleCloseGroup={handleCloseGroup}
+          setIsOpenShowImage={setIsOpenShowImage}
+        />
+      </div>
+      {listSidebarcomment["image"] && isOpenShowImage && (
+        <ShowImage
+          setIsOpenShowImage={setIsOpenShowImage}
+          fullname={person.fullname}
+          listSidebarcomment={listSidebarcomment["image"]}
+        />
+      )}
       {loadingFullPage && <LoadingContainer />}
     </div>
   );

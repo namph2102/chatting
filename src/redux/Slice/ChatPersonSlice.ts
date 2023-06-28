@@ -5,15 +5,22 @@ export interface PserSonChating {
   fullname: string;
   status: boolean;
   updatedAt?: string;
+  typechat: "friend" | "group" | "chatbot";
+  idRoom?: string;
 }
-export const personInit = {
+export const personInit: PserSonChating = {
   _id: "chatbot",
   avatar: "/images/botai.png",
   fullname: "ChatGPT-Plus",
   status: true,
+  typechat: "chatbot",
 };
-const initState: { person: PserSonChating } = {
+const initState: {
+  person: PserSonChating;
+  isOpenFormCreateRoom: boolean;
+} = {
   person: personInit,
+  isOpenFormCreateRoom: false,
 };
 const PersonSlice = createSlice({
   name: "person",
@@ -27,7 +34,11 @@ const PersonSlice = createSlice({
     updatePersonStatus(state, action) {
       state.person = { ...state.person, ...action.payload };
     },
+    updateIsOpenFormRoom(state, action) {
+      state.isOpenFormCreateRoom = action.payload;
+    },
   },
 });
 export default PersonSlice.reducer;
-export const { updatePerson, updatePersonStatus } = PersonSlice.actions;
+export const { updatePerson, updatePersonStatus, updateIsOpenFormRoom } =
+  PersonSlice.actions;

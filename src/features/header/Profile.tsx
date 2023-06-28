@@ -5,7 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
-import { UpdateAccount } from "../../redux/Slice/AccountSlice";
+import { UpdateAccount, updateNotice } from "../../redux/Slice/AccountSlice";
+import { personInit, updatePerson } from "../../redux/Slice/ChatPersonSlice";
 
 interface ProfileProps {
   username: string;
@@ -27,11 +28,12 @@ const Profile: FC<ProfileProps> = ({
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
     ToastNotify("Đăng xuất thành công!").success();
-    dispacth(UpdateAccount({ usename: "" }));
-    setIsOpenProfile(false);
     navigation("/dang-nhap");
+    window.location.reload();
   };
-
+  const handleRemoveInfo = () => {
+    dispacth(updateNotice(0));
+  };
   return (
     <div
       id="userDropdown"
@@ -49,7 +51,7 @@ const Profile: FC<ProfileProps> = ({
         aria-labelledby="avatarButton"
         onClick={() => setIsOpenProfile(false)}
       >
-        <li>
+        <li onClick={handleRemoveInfo}>
           <Link
             to="/thong-bao"
             className="flex justify-between w-full  px-4 py-2 text-sm hover:bg-aside/30"

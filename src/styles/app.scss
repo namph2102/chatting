@@ -61,6 +61,9 @@ html {
     font-size: 16px !important;
     color: rgb(235, 232, 232) !important;
   }
+  .react-select__input-container {
+    color: white !important;
+  }
 }
 
 .badge-soft-dark {
@@ -80,6 +83,9 @@ html {
 #light-mode {
   background-color: #f1f1f1;
   color: #1a1919;
+  .react-select__input-container {
+    color: #1a1919 !important;
+  }
   .box_chat-content {
     color: #0e0d0d !important;
     font-weight: 400;
@@ -113,8 +119,8 @@ html {
     color: #0a0909;
   }
   .drop_menu-hover:hover {
-    background-color: #eff0f1;
-    color: #484849;
+    background-color: #dadada;
+    color: #373738;
   }
   .background-primary-hover:hover {
     background-color: rgb(var(--primary-color)) !important;
@@ -175,6 +181,12 @@ button {
 
   padding: 8px !important;
 }
+.text-style__ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media screen and (min-width: 500px) {
   .btn_send-chatting {
     background-color: rgba(var(--primary-color));

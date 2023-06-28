@@ -44,7 +44,7 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "lg:w-[75px] w-full lg:h-screen bg-menu shadow lg:static fixed lg:z-10 z-20 left-0 right-0 bottom-0 h-[75px]"
+        "lg:w-[75px] w-full lg:h-screen bg-menu shadow lg:static fixed lg:z-10  z-20 left-0 right-0 bottom-0 h-[75px]"
       )}
     >
       <nav id="nav__menu">

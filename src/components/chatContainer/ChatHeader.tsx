@@ -15,7 +15,7 @@ const ChatHeader: FC<IChatheader> = ({ person }) => {
   const dispatchRedux: AppDispatch = useDispatch();
 
   return (
-    <section className=" px-4 py-3 min-h-[60px] flex items-center  border-main/5 border-b-[2px]  shadow relative z-20 top-0">
+    <section className=" px-4 py-3 min-h-[60px] flex items-center  border-main/5 border-b-[2px]  shadow relative z-20 lg:top-3">
       <div className="backdrop-blur-md  absolute inset-0"></div>
       <div className="flex absolute top-0 left-0 px-4 py-auto right-0 z-10 justify-between items-center w-full">
         <div className="flex sm:gap-5 py-2 items-center gap-2">

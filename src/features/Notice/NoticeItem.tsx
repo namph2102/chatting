@@ -13,24 +13,35 @@ const NoticeItem: FC<INoticeItemProps> = ({
   userSend,
   userAccept,
   _id,
+  accountID,
   isAccepted,
   createdAt,
   isSended,
+  idRoomInvited,
+  message,
   handleUpdateStatus,
 }) => {
   const handleAddFriend = (isAccept: boolean) => {
-    socket.emit("send-info-add-friend", {
-      isAccept,
-      idInfo: _id,
-      fullname: userSend.fullname,
-      fullnameAccept: userAccept.fullname,
-      idUserSend: userSend._id,
-      idUserAccept: userAccept._id,
-    });
-
+    if (type == 4) {
+      socket.emit("user-accpet-join-group", {
+        idNotice: _id,
+        idRoom: idRoomInvited,
+        status: isAccept,
+        userSendID: accountID,
+      });
+    } else if (type == 1) {
+      socket.emit("send-info-add-friend", {
+        isAccept,
+        idInfo: _id,
+        fullname: userSend.fullname,
+        fullnameAccept: userAccept.fullname,
+        idUserSend: userSend._id,
+        idUserAccept: userAccept._id,
+      });
+    }
     handleUpdateStatus(_id, isAccept);
   };
-  let message = " đã gửi lời mời kết bạn ";
+
   if (type == 1) {
     message = isSended
       ? `Bạn đã gửi lời mời kết bạn đến  ${CapitalizeString(
@@ -53,7 +64,25 @@ const NoticeItem: FC<INoticeItemProps> = ({
     if (isAccepted) {
       avatashow = userAccept.avatar;
     }
+  } else if (type == 3) {
+    avatashow = userSend.avatar;
+  } else if (type == 4) {
+    message = `${
+      isSended
+        ? `Bạn đã mời ${CapitalizeString(
+            userAccept.fullname
+          )} tham gia phòng chat`
+        : `${CapitalizeString(
+            userSend.fullname
+          )} đã mời bạn tham gia phòng chat`
+    }`;
+    avatashow = isSended ? userSend.avatar : userSend.avatar;
+  } else if (type == 5) {
+    message = `${isAccepted ? "Bạn" : CapitalizeString(userAccept.fullname)} ${
+      status ? `đồng ý tham gia nhóm chat` : "từ chối tham gia nhóm chat"
+    }`;
   }
+
   return (
     <li className="mb-2">
       <div className="flex gap-2 items-center">
@@ -74,7 +103,7 @@ const NoticeItem: FC<INoticeItemProps> = ({
           </time>
         </div>
       </div>
-      {type == 1 && !isSended && !status && (
+      {(type == 1 || type == 4) && !isSended && !status && (
         <div className="flex justify-center items-center gap-3 mt-4">
           <button
             onClick={() => handleAddFriend(true)}

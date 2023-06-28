@@ -15,3 +15,34 @@ export interface IAccount {
   phone: string;
   email: string;
 }
+export interface IUserItem {
+  status: boolean;
+  fullname: string;
+  contentWatting?: number;
+  avatar: string;
+  _id: string | number;
+}
+export interface IListrooms {
+  _id: string;
+  listUser: IUserItem[];
+  type: "friend" | "group";
+  name: string;
+  role: IUserItem;
+}
+export interface IFriend extends IUserItem {
+  typechat: "friend" | "group" | "chatbot";
+  idRoom: string;
+}
+export interface typeMapItem {
+  name: string;
+  typechat: "friend" | "group" | "chatbot";
+  idRoom: string;
+  listUser: IUserItem[];
+  role: IUserItem;
+}
+export type TlistGroupsMap<T> = Record<string, T>;
+export interface ISidebarSlice {
+  listFriends: IFriend[];
+  listGroups: TlistGroupsMap<typeMapItem>;
+  listRoomGroups: IFriend[];
+}

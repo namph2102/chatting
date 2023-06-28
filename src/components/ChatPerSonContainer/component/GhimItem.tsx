@@ -124,10 +124,10 @@ const GhimItem: FC<GhimItem> = (props) => {
           </div>
         )}
         <div
-          onClick={handleStopPropagation}
+          onClick={() => setIsOpenGhim((prev) => !prev)}
           className="text-gray-500 absolute   z-10 right-4 hover:bg-gray-300 cursor-pointer p-2 rounded-full "
         >
-          <span onClick={() => setIsOpenGhim(!isOpenGhim)}>
+          <span>
             <BiDotsHorizontal />
           </span>
           {isOpenGhim && (

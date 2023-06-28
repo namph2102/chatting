@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { IUserSearch } from "./user/UserSearch";
-
-import SkeletonLayout from "./Skeleton";
 import { IUserItem } from "./user/user.type";
 
 import { historyChatting } from "../../servies/utils";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux";
 import { useMutation } from "react-query";
 import instance from "../../config";
 
@@ -15,48 +13,38 @@ import SearchSibar from "./component/SearchSidebar";
 import UserListContainer from "./user/UserListContainer";
 import { Link } from "react-router-dom";
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
+import { updateStatusSidebar } from "../../redux/Slice/SidebarSlice";
 
-const boxID = {
+const boxID: IUserItem = {
   _id: "chatbot",
   avatar: "/images/botai.png",
   fullname: "ChatGPT-Plus",
   status: true,
+  idRoom: "chatbot",
+  typechat: "chatbot",
 };
-let listChatDefault: IUserItem[] = [];
+interface IListrooms {
+  _id: string;
+  listUser: IUserItem[];
+  type: "friend" | "group";
+  name: string;
+}
+
 // eslint-disable-next-line react-refresh/only-export-components
 const SiderBar = () => {
-  const [_, setIsLoadding] = useState<boolean>(false);
-  const [listChatting, setListchatting] =
-    useState<IUserItem[]>(listChatDefault);
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
-
   const { account, theme } = useSelector((state: RootState) => state.userStore);
-
   const listChattingLocal = historyChatting("searchHistory");
+  const { listFriends, listRoomGroups } = useSelector(
+    (state: RootState) => state.sidebarStore
+  );
+  const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
-    setIsLoadding(false);
     if (!account._id) return;
-    getData(account._id).then((res) => {
-      if (res) {
-        const listfriends = res.listfriends.friends;
-        // nếu bạn bè off line thì chuyển sang false luôn
-
-        account.friends.map((idFriend: string) => {
-          socket.on(`friend-chattings-${idFriend}`, (status) => {
-            setListchatting((listFriendPrev) => {
-              listFriendPrev.forEach((item) => {
-                if (item._id == idFriend) {
-                  item.status = status;
-                }
-              });
-              return [...listFriendPrev];
-            });
-          });
-        });
-        listChatDefault = listfriends;
-        setListchatting(listfriends);
-        setIsLoadding((prev) => !prev);
-      }
+    account.friends.map((idFriend: string) => {
+      socket.on(`friend-chattings-${idFriend}`, (status) => {
+        dispatch(updateStatusSidebar({ idFriend, status }));
+      });
     });
   }, [account._id]);
   const mutation = useMutation({
@@ -66,6 +54,7 @@ const SiderBar = () => {
         listUserExtended: [account._id],
         limit: 5,
       });
+
       return response.data;
     },
     onSuccess(data: any) {
@@ -103,19 +92,8 @@ const SiderBar = () => {
     <>
       <section
         id={theme.darkmode}
-        className="hover:overflow-y-auto   overflow-x-hidden lg:max-h-[calc(100vh-150px)] lg:min-h-[95vh] min-h-[80vh] max-h-[calc(100vh-225px)]"
+        className="overflow-x-hidden lg:max-h-[calc(100vh-150px)] lg:min-h-[95vh] min-h-[80vh] max-h-[calc(100vh-225px)]"
       >
-        <div className={"hidden"}>
-          <SkeletonLayout />
-          <SkeletonLayout />
-          <SkeletonLayout />
-          <SkeletonLayout />
-          <SkeletonLayout />
-          <SkeletonLayout />
-          <SkeletonLayout />
-          <SkeletonLayout />
-        </div>
-
         <div className="px-4">
           {!account.username ? (
             <>
@@ -140,15 +118,21 @@ const SiderBar = () => {
               isLoading={mutation.isLoading}
               listSearch={listSearch}
               setListSearch={setListSearch}
-              title="Tìm kiếm"
+              title="Tạo phòng"
             />
           )}
 
           <UserListContainer title="Người hỗ trợ" listUser={[boxID]} />
-          {listChatting && listChatting?.length > 0 && account.username && (
+          {listFriends && listFriends?.length > 0 && account.username && (
             <UserListContainer
               title="danh sách bạn bè"
-              listUser={listChatting}
+              listUser={listFriends}
+            />
+          )}
+          {listRoomGroups && listRoomGroups?.length > 0 && account.username && (
+            <UserListContainer
+              title="danh sách nhóm"
+              listUser={listRoomGroups}
             />
           )}
         </div>

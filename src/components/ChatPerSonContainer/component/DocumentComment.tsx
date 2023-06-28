@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { BiDownload, BiLinkAlt } from "react-icons/bi";
+import { handleCoverSize } from "../util";
 interface DocumentCommentProps {
   fileName: string;
   path: string;
@@ -7,10 +8,6 @@ interface DocumentCommentProps {
   url: string;
 }
 const DocumentComment: FC<DocumentCommentProps> = (props) => {
-  const coverSize =
-    props.size > 1024
-      ? (props.size / 1024).toFixed(2) + " MB"
-      : props.size.toFixed(2) + " KB";
   return (
     <div className="flex p-4 m-2 gap-2 items-center border-primary_style-document  rounded-lg">
       <a
@@ -22,8 +19,10 @@ const DocumentComment: FC<DocumentCommentProps> = (props) => {
         <BiLinkAlt />
       </a>
       <div className="text-sm">
-        <p className="text-sm line-clamp-1">{props.fileName}</p>
-        <p className="text-xs font-light">{coverSize}</p>
+        <p className="text-sm  text-style__ellipsis sm:max-w-[300px]  md:max-w-[230px] max-w-[120px]">
+          {props.fileName}
+        </p>
+        <p className="text-xs font-light">{handleCoverSize(props.size)}</p>
       </div>
       <a
         href={props.url}

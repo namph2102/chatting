@@ -2,7 +2,10 @@ import { BiInfoCircle, BiPhoneCall, BiVideo } from "react-icons/bi";
 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
-import { setIsopenCallvideo } from "../../redux/Slice/AccountSlice";
+import {
+  setIsopenCallvideo,
+  updateOpenGroup,
+} from "../../redux/Slice/AccountSlice";
 const HeaderNavRight = () => {
   const dispatchRedux: AppDispatch = useDispatch();
 
@@ -19,7 +22,7 @@ const HeaderNavRight = () => {
         <BiVideo />
       </li>
 
-      <li>
+      <li onClick={() => dispatchRedux(updateOpenGroup())}>
         <BiInfoCircle />
       </li>
     </ul>

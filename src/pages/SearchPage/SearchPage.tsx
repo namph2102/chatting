@@ -17,6 +17,7 @@ import UserSearchPageItem, {
 import "./serachpage.scss";
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
 import { BiChevronLeft } from "react-icons/bi";
+import { handleAddFriendSocket } from "../../servies/sockets";
 
 export interface ISearchPage {
   address: string;
@@ -139,8 +140,8 @@ const SearchPage = () => {
       userSend: account._id,
       userAccept: id,
     };
-
-    socket.emit("add-friend", data);
+    // add follow socket
+    handleAddFriendSocket(data);
   };
 
   return (

@@ -4,4 +4,6 @@ export interface IUserItem {
   contentWatting?: number;
   avatar: string;
   _id: string | number;
+  idRoom: string;
+  typechat: "friend" | "group" | "chatbot";
 }

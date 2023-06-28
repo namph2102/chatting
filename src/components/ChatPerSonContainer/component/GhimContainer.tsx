@@ -4,6 +4,7 @@ import { FC, useEffect, useRef } from "react";
 import { ScroolToBottom, cn } from "../../../servies/utils";
 import { ChatUserPersonItemProps } from "./ChatUserPersonItem";
 import GhimItem from "./GhimItem";
+import { sortArrayFollowKey } from "../util";
 interface GhimContainerProps {
   setIsOpenGhim: (isOpen: boolean) => void;
   isOpenGhim: boolean;
@@ -13,11 +14,13 @@ interface GhimContainerProps {
     type: string,
     typeChatting: string
   ) => void;
+  idBGcolor: string;
 }
 const GhimContainer: FC<GhimContainerProps> = ({
   setIsOpenGhim,
   isOpenGhim,
   listCooment,
+  idBGcolor,
   handleactiveOptions,
 }) => {
   const ghimContainerRef = useRef<HTMLDivElement>(null);
@@ -25,25 +28,23 @@ const GhimContainer: FC<GhimContainerProps> = ({
     ghimContainerRef.current && ScroolToBottom(ghimContainerRef.current, 1000);
   }, [isOpenGhim]);
   const newlistCoomentCover =
-    listCooment.sort((a: any, b: any) => {
-      const right: any = new Date(a.createdAt);
-      const left: any = new Date(b.createdAt);
-
-      return right - left;
-    }) || [];
+    sortArrayFollowKey(listCooment, "updatedAt") || [];
 
   return (
     <div
+      id={idBGcolor}
       className={cn(
-        "sm:max-w-[600px] rounded-2xl lg:max-w-[800px] overflow-y-hidden max-w-[98%] lg:min-w-[600px]  sm:min-w-[500px] min-w-[94%] bg-white  text-black",
+        "sm:max-w-[600px] rounded-2xl lg:max-w-[800px] overflow-y-hidden max-w-[96%] ml-[2%]  lg:min-w-[600px]  sm:min-w-[500px] min-w-[340px]",
         isOpenGhim ? "" : "hidden"
       )}
     >
       <section className="text-center relative">
-        <h6 className="text-2xl font-medium py-2">Tin nhắn đã Ghim</h6>
+        <h6 className="sm:text-2xl text-xl  font-medium py-2">
+          Tin nhắn đã Ghim
+        </h6>
         <button
           onClick={() => setIsOpenGhim(false)}
-          className="absolute text-3xl right-2 top-0 hover:text-red-600"
+          className="absolute text-4xl right-1 top-1 hover:text-red-600"
         >
           <BiXCircle />
         </button>
