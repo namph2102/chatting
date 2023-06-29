@@ -15,7 +15,8 @@ const NoticeItem: FC<INoticeItemProps> = ({
   _id,
   accountID,
   isAccepted,
-  createdAt,
+
+  updatedAt,
   isSended,
   idRoomInvited,
   message,
@@ -99,7 +100,7 @@ const NoticeItem: FC<INoticeItemProps> = ({
             dangerouslySetInnerHTML={{ __html: message }}
           />
           <time className="text-xs text-primary">
-            {HandleTimeDiff(createdAt)}
+            {HandleTimeDiff(updatedAt)}
           </time>
         </div>
       </div>

@@ -27,9 +27,13 @@ import SidebarAboutLayout from "./component/SidebarAboutLayout";
 import { TlistGroupsMap } from "../../redux/Slice/slice.type";
 import ShowImage from "./slideShowImage";
 import { updateOpenGroup } from "../../redux/Slice/AccountSlice";
+import SidebarAddMember from "./component/SidebarAddMember";
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
-
+export interface IFromSetting {
+  formadd: boolean;
+  formChangename: boolean;
+}
 interface ChatPerSonContainerProps {
   person: PserSonChating;
 }
@@ -286,8 +290,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const boxChatContentRef = useRef<HTMLElement>(null);
   // modal ghim tin nhắn
   const [isOpenGhim, setIsOpenGhim] = useState<boolean>(false);
-  // const listGhimComment =
-  //   listUserComments.filter((comment) => comment.action.kind == "ghim") || [];
+
   const { listGhimComment, listSidebarcomment } = listUserComments.reduce(
     (
       acc: {
@@ -312,7 +315,11 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     { listGhimComment: [], listSidebarcomment: {} }
   );
   const [isOpenShowImage, setIsOpenShowImage] = useState(false);
-  console.log(isOpenShowImage);
+  const [isOpenFromSetting, setIsOpenFromSetting] = useState<IFromSetting>({
+    formadd: false,
+    formChangename: false,
+  });
+
   return (
     <div
       id={theme.darkmode}
@@ -372,6 +379,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
           listSidebarcomment={listSidebarcomment}
           handleCloseGroup={handleCloseGroup}
           setIsOpenShowImage={setIsOpenShowImage}
+          setIsOpenFromSetting={setIsOpenFromSetting}
         />
       </div>
       {listSidebarcomment["image"] && isOpenShowImage && (
@@ -382,6 +390,18 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         />
       )}
       {loadingFullPage && <LoadingContainer />}
+      {person.typechat == "group" &&
+        isOpenFromSetting.formadd &&
+        account._id &&
+        account.friends.length > 0 && (
+          <SidebarAddMember
+            setIsOpenFromSetting={setIsOpenFromSetting}
+            accountID={account._id}
+            accountFullname={account.fullname}
+            person={person}
+            theme={theme}
+          />
+        )}
     </div>
   );
 };

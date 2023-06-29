@@ -22,7 +22,7 @@ const ModalStatus: FC<ModalStatusProps> = ({ callBackStatus, title }) => {
           <BsXLg fontSize={deFaultIconSize} />
         </button>
         <div className="p-6 text-center">
-          <h2 className="text-3xl font-bold">Thông Báo</h2>
+          <h2 className="text-2xl font-bold">Thông Báo</h2>
           <p className="mb-5 text-lg font-normal my-4">{title}?</p>
           <div className="flex gap-3">
             <button
@@ -39,7 +39,7 @@ const ModalStatus: FC<ModalStatusProps> = ({ callBackStatus, title }) => {
               type="button"
               className="bg-[#fff] hover:bg-[#dddddd]  text-black font-medium rounded-full text-sm  basis-5/6 px-5 py-2.5 "
             >
-              Hủy
+              Từ chối
             </button>
           </div>
         </div>

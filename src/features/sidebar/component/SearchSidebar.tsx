@@ -18,6 +18,7 @@ import {
 } from "../../../redux/Slice/ChatPersonSlice";
 import { useNavigate } from "react-router-dom";
 import { setIsOpenDisplayTable } from "../../../redux/Slice/AccountSlice";
+
 interface SearchSibarProps {
   title: string;
   isLoading: boolean;
@@ -86,10 +87,12 @@ const SearchSibar: FC<SearchSibarProps> = ({
   };
 
   const dispatch = useDispatch();
+  const listFriends = useSelector(
+    (state: RootState) => state.sidebarStore.listFriends
+  );
   const handleGetInfoPersonChatting = (_idUser: string) => {
-    const acccount: any = listSearch.find((acc) => acc._id === _idUser) || {};
-
-    if (acccount) {
+    const acccount: any = listFriends.find((acc) => acc._id === _idUser) || {};
+    if (acccount?.idRoom) {
       dispatch(updatePerson(acccount));
       dispatch(setIsOpenDisplayTable(true));
       handleCloseSearch();
@@ -104,6 +107,7 @@ const SearchSibar: FC<SearchSibarProps> = ({
   const handleOpenFormCreateRoom = () => {
     dispatch(updateIsOpenFormRoom(true));
   };
+
   return (
     <>
       <section className="mb-2 ">

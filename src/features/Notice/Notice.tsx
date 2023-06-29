@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet";
 export interface INoticeItem {
   _id: string;
   createdAt: string;
+  updatedAt: string;
   status: boolean;
   isSended: boolean;
   isAccepted: boolean;

@@ -37,6 +37,7 @@ const AppInfomation = () => {
 
   useEffect(() => {
     if (!account._id) return;
+
     socket.emit("client-acttaced-id", account._id);
     // Sever gửi thông báo cho chính mình
     socket.on("server-send-message-myself", (message) => {
@@ -55,6 +56,13 @@ const AppInfomation = () => {
         dispacth(updateNotice(1));
       }
     );
+    // khi có nguoi đã đồng ý tham gia nhóm mà bạn đã mời
+    socket.on("sever-send-update-when-user-joined", () => {
+      dispacth(updateNotice(1));
+      dispacth(getDataListFriend(account._id));
+      console.log("reload lại");
+    });
+
     // khi có người mời kết bạn
     socket.on(`infomation-add-friend-${account._id}`, (fullname) => {
       dispacth(updateNotice(1));

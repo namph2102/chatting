@@ -10,6 +10,7 @@ export interface IUserSearchPageItem {
   follows: number;
   totalFriends: number;
   relationship: boolean;
+  idRoom: string;
   isWating: boolean;
   _id: string;
   handleAddFriends: (id: string) => void;
@@ -20,6 +21,7 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
   fullname,
   totalFriends,
   relationship,
+  idRoom,
   isWating,
   _id,
   handleAddFriends,
@@ -29,8 +31,10 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
   const [_, setIsSetAddFriend] = useState<boolean>(true);
   const handleaddFriendElement = (e: any) => {
     if (relationship) {
+      dispatch(
+        updatePerson({ _id, avatar: avatar, fullname: fullname, idRoom })
+      );
       dispatch(setIsOpenDisplayTable(true));
-      dispatch(updatePerson({ _id, avatar: avatar, fullname: fullname }));
       navigator("/nhan-tin");
       return;
     }

@@ -6,24 +6,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
 import { TlistGroupsMap } from "../../../redux/Slice/slice.type";
 
-import { handleCoverSize } from "../util";
+import { filePath, handleCoverSize } from "../util";
 import moment from "moment";
 import { nanoid } from "@reduxjs/toolkit";
 import { cn } from "../../../servies/utils";
+import { RiGroupLine } from "react-icons/ri";
+import SidebarListMember from "./SidebarListMember";
+import SidebarGroupSettings from "./SidebarGroupSettings";
 
-const filePath: TlistGroupsMap<string> = {
-  pdf: "pdf",
-  mp3: "media",
-  xls: "xls",
-  png: "png",
-  jpg: "png",
-  jpeg: "gif",
-  svg: "png",
-  webp: "png",
-  txt: "txt",
-  zip: "zip",
-  rest: "document",
-};
 interface TInfoImage {
   url: string;
   key: string;
@@ -35,12 +25,14 @@ interface SidebarAboutLayoutProps {
   person: PserSonChating;
   handleCloseGroup: () => void;
   setIsOpenShowImage: (isOpen: boolean) => void;
+  setIsOpenFromSetting: (item: any) => any;
 }
 const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
   listSidebarcomment,
   person,
   handleCloseGroup,
   setIsOpenShowImage,
+  setIsOpenFromSetting,
 }) => {
   const listGroups = useSelector(
     (state: RootState) => state.sidebarStore.listGroups
@@ -90,6 +82,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
     image: false,
     document: false,
     link: false,
+    member: false,
   });
   const handleScroolIntroview = (id: string | any) => {
     if (!id) return;
@@ -117,6 +110,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
         }
       });
     });
+  const [isOpenListMember, setOpenListMember] = useState(false);
   return (
     <aside className="border-l-[1px] border-gray-700  h-screen">
       <button
@@ -147,28 +141,64 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
               </div>
             </div>
           )}
+
           {person.typechat == "friend" && (
             <img
-              src="https://firebasestorage.googleapis.com/v0/b/deloyweb-390006.appspot.com/o/chats%2FBwBK8iDef4oKW9eRtpTSA?alt=media&token=c2add4da-a1c2-49c6-880d-3bb725d946f0"
+              src={person.avatar}
               className="w-16 h-16 rounded-full border-2 border-gray-400"
-              alt=""
+              alt="ảnh lỗi"
             />
           )}
-          <p className="text-style__ellipsis max-w-[280px]">
+          <p className="text-style__ellipsis max-w-[280px] capitalize">
             {person.fullname}
           </p>
         </div>
+        <SidebarGroupSettings setIsOpenFromSetting={setIsOpenFromSetting} />
+        {person.typechat == "group" && (
+          <section className=" px-2">
+            <div className="flex justify-between">
+              <h2>Thành viên nhóm</h2>
+              <span
+                onClick={() =>
+                  setIsShowMore((prev) => ({
+                    ...prev,
+                    member: !isShowMore.member,
+                  }))
+                }
+                className="text-2xl cursor-pointer"
+              >
+                {isOpenListMember ? <BiCaretDown /> : <BiCaretRight />}
+              </span>
+            </div>
+            <div
+              className={cn(
+                "flex flex-wrap gap-1 mt-2 ease-in duration-500  overflow-hidden",
+                isShowMore.member ? "max-h-auto" : " max-h-0"
+              )}
+            >
+              <div
+                onClick={() => setOpenListMember(true)}
+                className="flex gap-2 hover:opacity-80 cursor-pointer pt-2 pb-3"
+              >
+                <span className="text-xl">
+                  <RiGroupLine />
+                </span>
+                <span>
+                  {listGroups[person._id]?.listUser?.length || 1} thành viên
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
+
         <section className=" px-2">
           <div className="flex justify-between">
-            <h2>
-              Ảnh ({listImageCover.length}
-              +)
-            </h2>{" "}
+            <h2>Ảnh ({listImageCover.length})</h2>{" "}
             <span
               onClick={() =>
                 setIsShowMore((prev) => ({ ...prev, image: !isShowMore.image }))
               }
-              className="text-2xl"
+              className="text-2xl cursor-pointer"
             >
               {isShowMore.image ? <BiCaretDown /> : <BiCaretRight />}
             </span>
@@ -209,7 +239,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
               {listSidebarcomment["document"]
                 ? listSidebarcomment["document"].length
                 : 0}
-              +)
+              )
             </h2>
             <span
               onClick={() =>
@@ -218,7 +248,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
                   document: !isShowMore.document,
                 }))
               }
-              className="text-2xl"
+              className="text-2xl cursor-pointer"
             >
               {isShowMore.document ? <BiCaretDown /> : <BiCaretRight />}
             </span>
@@ -271,7 +301,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
               {listSidebarcomment["link"]
                 ? listSidebarcomment["link"].length
                 : 0}
-              +)
+              )
             </h2>
             <span
               onClick={() =>
@@ -280,7 +310,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
                   link: !isShowMore.link,
                 }))
               }
-              className="text-2xl"
+              className="text-2xl cursor-pointer"
             >
               {isShowMore.link ? <BiCaretDown /> : <BiCaretRight />}
             </span>
@@ -320,6 +350,13 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
           </div>
         </section>
       </div>
+      {person._id && person.typechat == "group" && listGroups[person._id] && (
+        <SidebarListMember
+          setOpenListMember={setOpenListMember}
+          listMemberGroup={listGroups[person._id] || {}}
+          isOpenListMember={isOpenListMember}
+        />
+      )}
     </aside>
   );
 };

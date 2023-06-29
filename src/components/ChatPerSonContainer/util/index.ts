@@ -1,4 +1,5 @@
 import instance from "../../../config";
+import { TlistGroupsMap } from "../../../redux/Slice/slice.type";
 // nếu không có phòng thì tạo phòng còn nếu có thì lấy dữ liệu comment  trên phòng
 export const handleRoomChat = (
   roomid: string,
@@ -75,4 +76,18 @@ export const handleCoverSize = (size: number) => {
   return size > 1024
     ? (size / 1024).toFixed(2) + " MB"
     : size.toFixed(2) + " KB";
+};
+
+export const filePath: TlistGroupsMap<string> = {
+  pdf: "pdf",
+  mp3: "media",
+  xls: "xls",
+  png: "png",
+  jpg: "png",
+  jpeg: "gif",
+  svg: "png",
+  webp: "png",
+  txt: "txt",
+  zip: "zip",
+  rest: "document",
 };

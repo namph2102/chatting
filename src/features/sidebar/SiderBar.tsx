@@ -32,6 +32,7 @@ const SiderBar = () => {
   const { listFriends, listRoomGroups } = useSelector(
     (state: RootState) => state.sidebarStore
   );
+
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     if (!account._id) return;
@@ -55,7 +56,6 @@ const SiderBar = () => {
       if (!data) return;
       if (data.listUserSearchs && data.listUserSearchs.length > 0) {
         const listAccount: IUserSearch[] = [];
-
         data.listUserSearchs.map(
           (acc: {
             username: string;
@@ -63,15 +63,23 @@ const SiderBar = () => {
             fullname: string;
             avatar: string;
             status: boolean;
+            idRoom: string;
           }) => {
             const isfrend = account.friends.includes(acc._id);
-            listAccount.push({
+            const accountCover = {
               _id: acc._id,
               avatar: acc.avatar,
               status: acc.status,
               relationship: isfrend,
               fullname: acc.fullname,
-            });
+              idRoom: "",
+            };
+            if (isfrend) {
+              accountCover.idRoom =
+                listFriends.find((u) => u._id == acc._id)?.idRoom || "";
+            }
+
+            listAccount.push(accountCover);
           }
         );
         if (listAccount.length > 5) listAccount.length = 5;

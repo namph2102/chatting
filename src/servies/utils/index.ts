@@ -104,8 +104,15 @@ export function historyChatting(nameLocal: string) {
       return searchListSearch.find((item) => item._id == _id);
     },
     add: (account: any) => {
-      if (isExtended(account._id)) return;
-      searchListSearch.push(account);
+      if (isExtended(account._id)) {
+        const findItem = searchListSearch.findIndex(
+          (item) => item._id == account._id
+        );
+        if (findItem >= 0) {
+          searchListSearch.splice(findItem, 1, account);
+        }
+      } else searchListSearch.push(account);
+
       save();
     },
 

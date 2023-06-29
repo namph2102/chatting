@@ -10,6 +10,7 @@ export interface IUserSearch {
   fullname: string;
   status: boolean;
   relationship: boolean;
+  idRoom: string;
 }
 interface UserSearchProps {
   _id: string;
@@ -17,7 +18,8 @@ interface UserSearchProps {
   status: boolean;
   fullname: string;
   relationship: boolean;
-  callback: (id: string) => void;
+  idRoom: string;
+  callback: (id: string, idRoom: string) => void;
 }
 
 const UserSearch: FC<UserSearchProps> = ({
@@ -25,6 +27,7 @@ const UserSearch: FC<UserSearchProps> = ({
   fullname,
   relationship,
   avatar = "/images/avata.jpg",
+  idRoom,
   callback,
 }) => {
   const navigate = useNavigate();
@@ -38,16 +41,18 @@ const UserSearch: FC<UserSearchProps> = ({
       boxElement.current?.classList.toggle("hidden");
     }
   };
-  const handleGetLayoutChatting = (_id: string) => {
+  const handleGetLayoutChatting = (_id: string, idRoom: string) => {
     if (relationship) {
-      callback(_id);
+      callback(_id, idRoom);
     } else {
       navigate("/tim-kiem?q=" + fullname);
+      callback(_id, "");
     }
   };
+
   return (
     <article
-      onClick={() => handleGetLayoutChatting(_id)}
+      onClick={() => handleGetLayoutChatting(_id, idRoom)}
       ref={boxElement}
       className="item_list-search flex items-center justify-between hover:bg-main/20 py-3 px-1 cursor-pointer"
     >

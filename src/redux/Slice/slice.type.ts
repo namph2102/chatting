@@ -20,7 +20,7 @@ export interface IUserItem {
   fullname: string;
   contentWatting?: number;
   avatar: string;
-  _id: string | number;
+  _id: any | string;
 }
 export interface IListrooms {
   _id: string;

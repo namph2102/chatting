@@ -3,14 +3,12 @@ import Header from "../../features/header";
 import { RootState } from "../../redux";
 import { cn, historyChatting } from "../../servies/utils";
 import SearchSibar from "../../features/sidebar/component/SearchSidebar";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { IUserSearch } from "../../features/sidebar/user/UserSearch";
 import instance from "../../config";
 import { useMutation } from "react-query";
-
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import UserSearchPageItem, {
   IUserSearchPageItem,
 } from "./component/UserSearchPageItem";
@@ -27,12 +25,16 @@ export interface ISearchPage {
   username: string;
   _id_: string;
 }
-const SearchPage = () => {
+const SearchPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { account, theme, noticeTotal } = useSelector(
     (state: RootState) => state.userStore
   );
+  const listFriend = useSelector(
+    (state: RootState) => state.sidebarStore.listFriends
+  );
+
   const decodedKeyword = decodeURIComponent(location.search);
   const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
 
@@ -47,7 +49,6 @@ const SearchPage = () => {
   const [listChatting, setListchatting] = useState<IUserSearchPageItem[]>([]);
   useEffect(() => {
     if (!account._id || !query) return;
-
     setIsOpenChat(true);
     instance
       .post("/user/page/search", {
@@ -78,9 +79,15 @@ const SearchPage = () => {
               ...account.friends,
               ...user.friends.map((user: any) => user._id),
             ]).size;
+            user.isRoom = "";
             user.relationship = user.friends.some(
               (user: any) => user._id == account._id
             );
+            if (user.relationship) {
+              user.isRoom =
+                listFriend.find((f) => f._id == account._id)?.idRoom || "";
+            }
+
             user.totalFriends = totalFriendTogether - coutTogether;
           });
         }
@@ -103,10 +110,9 @@ const SearchPage = () => {
     },
     onSuccess(data: any) {
       if (!data) return;
-      setIsOpenChat(true);
       if (data.listUserSearchs && data.listUserSearchs.length > 0) {
         const listAccount: IUserSearch[] = [];
-        console.log(data.listUserSearchs);
+
         data.listUserSearchs.map(
           (acc: {
             username: string;
@@ -116,13 +122,19 @@ const SearchPage = () => {
             status: boolean;
           }) => {
             const isfrend = account.friends.includes(acc._id);
-            listAccount.push({
+            const dataIteam = {
               _id: acc._id,
               avatar: acc.avatar,
               status: acc.status,
               relationship: isfrend,
               fullname: acc.fullname,
-            });
+              idRoom: "",
+            };
+            if (isfrend) {
+              dataIteam.idRoom =
+                listFriend.find((item) => item._id == acc._id)?.idRoom || "";
+            }
+            listAccount.push(dataIteam);
           }
         );
         if (listAccount.length > 5) listAccount.length = 5;

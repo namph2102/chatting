@@ -20,7 +20,7 @@ const AccountSlice = createSlice({
     account: initialAccount,
     theme,
     accessTokenSpotify: "",
-    isOpenChat: true,
+    isOpenChat: false,
     isOpencallVideo: false,
     isOpenGroup: false,
   },
@@ -137,7 +137,6 @@ export const uploadFullAccount = (dispatch: AppDispatch, account: IAccount) => {
   }
   if (account._id) {
     socket.emit("client-acttaced-id", account._id);
-    console.log(account);
   }
 
   dispatch(AccountSlice.actions.UpdateAccount(account));

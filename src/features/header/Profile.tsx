@@ -28,7 +28,6 @@ const Profile: FC<ProfileProps> = ({
     localStorage.removeItem("username");
     ToastNotify("Đăng xuất thành công!").success();
     navigation("/dang-nhap");
-    window.location.reload();
   };
   const handleRemoveInfo = () => {
     dispacth(updateNotice(0));
