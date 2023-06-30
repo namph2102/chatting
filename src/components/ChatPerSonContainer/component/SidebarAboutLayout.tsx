@@ -154,6 +154,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
           </p>
         </div>
         <SidebarGroupSettings setIsOpenFromSetting={setIsOpenFromSetting} />
+
         {person.typechat == "group" && (
           <section className=" px-2">
             <div className="flex justify-between">
@@ -226,12 +227,14 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
             )}
           </div>
         </section>
-        <button
-          onClick={() => setIsOpenShowImage(true)}
-          className="text-center w-full bg-follow-darkmode  drop_menu-hover py-2 my-4 px-2 rounded-full cursor-pointer"
-        >
-          Xem tất cả
-        </button>
+        {listImageCover.length > 0 && (
+          <button
+            onClick={() => setIsOpenShowImage(true)}
+            className="text-center w-full bg-follow-darkmode  drop_menu-hover py-2 my-4 px-2 rounded-full cursor-pointer"
+          >
+            Xem tất cả
+          </button>
+        )}
         <section className=" px-2 mt-4">
           <div className="flex justify-between">
             <h2>

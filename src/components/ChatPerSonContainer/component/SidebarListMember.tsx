@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiChevronLeft, BiSearchAlt } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
@@ -48,6 +48,9 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
         listMemberGroup.listUser?.length > 0 &&
         listMemberGroup.listUser) ||
       [];
+  useEffect(() => {
+    setSearch("");
+  }, []);
   return (
     <section
       id={theme.darkmode}

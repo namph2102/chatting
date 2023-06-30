@@ -35,7 +35,9 @@ const PersonSlice = createSlice({
       state.person = { ...state.person, ...action.payload };
     },
     updateIsOpenFormRoom(state, action) {
-      state.isOpenFormCreateRoom = action.payload;
+      if (action) {
+        state.isOpenFormCreateRoom = !state.isOpenFormCreateRoom;
+      }
     },
   },
 });

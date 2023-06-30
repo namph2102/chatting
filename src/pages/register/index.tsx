@@ -38,7 +38,6 @@ const Register = () => {
         uid: string;
       };
     }) => {
-      console.log(response.user);
       if (!response?.user) return;
 
       if (response.user.email) {

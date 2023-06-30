@@ -8,6 +8,7 @@ import {
   TlistGroupsMap,
   typeMapItem,
 } from "./slice.type";
+import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
 
 const initStateSidebar: ISidebarSlice = {
   listFriends: [],
@@ -71,12 +72,17 @@ export const getDataListFriend = (idUser: string) => {
                 });
               }
             } else if (item.type == "group") {
+              if (item._id) {
+                socket.emit("join-in-group-all", item._id);
+              }
+
               listRoomGroups.push({
                 fullname: item.name,
                 idRoom: item._id,
                 typechat: item.type,
                 _id: item._id,
-                avatar: "/images/group.png",
+                avatar: item?.avatar?.url || "/images/group.png",
+                des: item?.des || "",
                 status: true,
               });
               listChatGroups[item._id] = {
@@ -85,6 +91,7 @@ export const getDataListFriend = (idUser: string) => {
                 typechat: item.type,
                 listUser: item.listUser,
                 role: item.role,
+                des: item?.des || "",
               };
             }
           });

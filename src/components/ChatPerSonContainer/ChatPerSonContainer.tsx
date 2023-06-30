@@ -28,6 +28,7 @@ import { TlistGroupsMap } from "../../redux/Slice/slice.type";
 import ShowImage from "./slideShowImage";
 import { updateOpenGroup } from "../../redux/Slice/AccountSlice";
 import SidebarAddMember from "./component/SidebarAddMember";
+import SidebarChangeInfoGroup from "./component/SidebarChangeInfoGroup";
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
 export interface IFromSetting {
@@ -110,7 +111,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       socket.emit("leaver-room-chat-current", idRoom);
       handleCloseGroup();
     };
-  }, [account._id, person.idRoom]);
+  }, [account._id, person.idRoom, person.fullname]);
 
   const handleCloseGroup = () => {
     dispatch(updateOpenGroup(false));
@@ -402,6 +403,14 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
             theme={theme}
           />
         )}
+      {person.typechat == "group" && isOpenFromSetting.formChangename && (
+        <SidebarChangeInfoGroup
+          theme={theme}
+          person={person}
+          idAccount={account._id}
+          setIsOpenFromSetting={setIsOpenFromSetting}
+        />
+      )}
     </div>
   );
 };

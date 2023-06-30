@@ -2,7 +2,7 @@ import { BiSearch, BiX } from "react-icons/bi";
 import ModalProviderOverlay from "../../Ui/ModalProviderOverlay";
 
 import { IFriend } from "../../../redux/Slice/slice.type";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
 
@@ -18,7 +18,7 @@ interface IlistCheckboxed {
 import { PserSonChating } from "../../../redux/Slice/ChatPersonSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import { socket } from "../ChatPerSonContainer";
-import { ToastNotify } from "../../../servies/utils";
+import { Debounced, ToastNotify } from "../../../servies/utils";
 interface SidebarAddMemberProps {
   person: PserSonChating;
   accountID: string;
@@ -38,7 +38,7 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
   setIsOpenFromSetting,
 }) => {
   const handleClose = () => {
-    console.log("off");
+    setIsOpenFromSetting((prev: any) => ({ ...prev, formadd: false }));
   };
   const { listFriends, listGroups } = useSelector(
     (state: RootState) => state.sidebarStore
@@ -56,6 +56,7 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
   >({});
 
   const listCheckboxesCover: Record<string, IlistCheckboxed> = {};
+  const [search, setSearch] = useState<string>("");
   useEffect(() => {
     const coverListFriend: Record<string, ISearchMember[]> = {};
     listFriends.forEach((user) => {
@@ -81,6 +82,9 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
     });
     setListFriendCover(coverListFriend);
     setListCheckBox(listCheckboxesCover);
+    return () => {
+      setSearch("");
+    };
   }, []);
 
   const handleChecked = (status: boolean, id: string) => {
@@ -109,7 +113,7 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
 
           socket.emit("invite-to-join-group", dataSoccetAccpept);
           ToastNotify("Gửi lời mời thành thông").success();
-          setIsOpenFromSetting((prev: any) => ({ ...prev, formadd: false }));
+          handleClose();
         }
       } catch (err) {
         console.log(err);
@@ -121,10 +125,19 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
             item.isCheckbox = false;
           }
         });
+
         return { ...prev };
       });
     }
   };
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleDebound = () => {
+    if (inputRef.current?.value) {
+      setSearch(inputRef.current.value);
+    }
+  };
+
   return (
     <ModalProviderOverlay setIsCloseModal={handleClose}>
       <div
@@ -133,12 +146,7 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
       >
         <section className="flex justify-between px-2 items-center">
           <h5 className="text-xl my-2">Thêm thành viên</h5>
-          <button
-            onClick={() =>
-              setIsOpenFromSetting((prev: any) => ({ ...prev, formadd: false }))
-            }
-            className="text-3xl"
-          >
+          <button onClick={handleClose} className="text-3xl">
             <BiX />
           </button>
         </section>
@@ -147,8 +155,10 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
             <BiSearch />
             <input
               type="text"
+              ref={inputRef}
+              onChange={Debounced(handleDebound, 300)}
               className="flex-1 border-none outline-0 bg-transparent text-sm"
-              placeholder="Tìm kiếm theo tên, số điện thoại, email"
+              placeholder="Tìm kiếm trong danh sách bạn bè.."
             />
           </div>
         </section>
@@ -161,42 +171,45 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
                 <div key={nanoid()}>
                   <h6 className="text-bold text-sm mt-2 capitalize">{key}</h6>
                   <ul className="w-ful text-sm font-medium">
-                    {listAccount.map((accocunt) => (
-                      <li key={nanoid()} className="w-full cursor-pointer">
-                        <div className="flex gap-2 items-center pl-3 cursor-pointer">
-                          <input
-                            id={accocunt._id + "-checkbox"}
-                            type="checkbox"
-                            onChange={(e) =>
-                              handleChecked(e.target.checked, accocunt._id)
-                            }
-                            checked={listCheckbox[accocunt._id].isCheckbox}
-                            disabled={listCheckbox[accocunt._id].isJoined}
-                            className="w-4 h-4 text-blue-600 "
-                          />
-                          <label
-                            htmlFor={accocunt._id + "-checkbox"}
-                            className="w-full flex items-center gap-1  py-3 cursor-pointer "
-                          >
-                            <img
-                              src={accocunt.avatar}
-                              className="w-12 h-12 rounded-full"
-                              alt="ảnh lỗi"
-                            />
-                            <div>
-                              <p className="font-bold text-sm capitalize">
-                                {accocunt.fullname}
-                              </p>
-                              {accocunt.isJoined && (
-                                <p className="font-normal text-xs">
-                                  đã tham gia
-                                </p>
-                              )}
+                    {listAccount.map(
+                      (accocunt) =>
+                        accocunt.fullname.includes(search) && (
+                          <li key={nanoid()} className="w-full cursor-pointer">
+                            <div className="flex gap-2 items-center pl-3 cursor-pointer">
+                              <input
+                                id={accocunt._id + "-checkbox"}
+                                type="checkbox"
+                                onChange={(e) =>
+                                  handleChecked(e.target.checked, accocunt._id)
+                                }
+                                checked={listCheckbox[accocunt._id].isCheckbox}
+                                disabled={listCheckbox[accocunt._id].isJoined}
+                                className="w-4 h-4 text-blue-600 "
+                              />
+                              <label
+                                htmlFor={accocunt._id + "-checkbox"}
+                                className="w-full flex items-center gap-1  py-3 cursor-pointer "
+                              >
+                                <img
+                                  src={accocunt.avatar}
+                                  className="w-12 h-12 rounded-full"
+                                  alt="ảnh lỗi"
+                                />
+                                <div>
+                                  <p className="font-bold text-sm capitalize">
+                                    {accocunt.fullname}
+                                  </p>
+                                  {accocunt.isJoined && (
+                                    <p className="font-normal text-xs">
+                                      đã tham gia
+                                    </p>
+                                  )}
+                                </div>
+                              </label>
                             </div>
-                          </label>
-                        </div>
-                      </li>
-                    ))}
+                          </li>
+                        )
+                    )}
                   </ul>
                 </div>
               )

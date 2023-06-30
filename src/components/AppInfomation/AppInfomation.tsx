@@ -12,6 +12,7 @@ import { CapitalizeString, ToastNotify } from "../../servies/utils";
 import { ModalStatus } from "../Ui";
 import AddFriend from "../Ui/AddFriend";
 import { getDataListFriend } from "../../redux/Slice/SidebarSlice";
+import { updatePersonStatus } from "../../redux/Slice/ChatPersonSlice";
 
 export interface optionsPropsSelect {
   value: string;
@@ -25,6 +26,7 @@ const AppInfomation = () => {
   }>({ idNotice: "", idRoom: "" });
 
   const { theme, account } = useSelector((state: RootState) => state.userStore);
+
   useEffect(() => {
     localStorage.getItem("accessToken") &&
       dispacth(firstloginWebsite()).then((acc: any) => {
@@ -57,9 +59,15 @@ const AppInfomation = () => {
       }
     );
     // khi có nguoi đã đồng ý tham gia nhóm mà bạn đã mời
-    socket.on("sever-send-update-when-user-joined", () => {
+    socket.on("sever-send-update-when-user-joined", (data) => {
       dispacth(updateNotice(1));
       dispacth(getDataListFriend(account._id));
+      if (data && data?.fullname) {
+        dispacth(
+          updatePersonStatus({ fullname: data.fullname, avatar: data.url })
+        );
+      }
+
       console.log("reload lại");
     });
 

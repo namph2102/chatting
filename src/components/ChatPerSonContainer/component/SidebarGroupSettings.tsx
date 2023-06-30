@@ -21,7 +21,7 @@ const SidebarGroupSettings: FC<SidebarGroupSettingsPrps> = ({
           <span className="text-2xl">
             <BiEditAlt />
           </span>
-          <span className="text-[9px]">Đổi tên Nhóm</span>
+          <span className="text-[10px]">Thay đổi nhóm</span>
         </div>
         <div
           onClick={() =>
@@ -32,7 +32,7 @@ const SidebarGroupSettings: FC<SidebarGroupSettingsPrps> = ({
           <span className="text-2xl">
             <BiUserPlus />
           </span>
-          <span className="text-[9px]">Thêm thành viên</span>
+          <span className="text-[10px]">Thêm thành viên</span>
         </div>
       </div>
     </>

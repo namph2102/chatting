@@ -28,10 +28,13 @@ export interface IListrooms {
   type: "friend" | "group";
   name: string;
   role: IUserItem;
+  avatar: { path: string; url: string };
+  des: string;
 }
 export interface IFriend extends IUserItem {
   typechat: "friend" | "group" | "chatbot";
   idRoom: string;
+  des?: string;
 }
 export interface typeMapItem {
   name: string;
@@ -39,6 +42,7 @@ export interface typeMapItem {
   idRoom: string;
   listUser: IUserItem[];
   role: IUserItem;
+  des?: string;
 }
 export type TlistGroupsMap<T> = Record<string, T>;
 export interface ISidebarSlice {

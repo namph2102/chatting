@@ -54,17 +54,17 @@ export function handleStopPropagation<T extends React.MouseEvent>(
 ): unknown {
   return e.stopPropagation();
 }
-export function Debounced(callback: () => void, delay: number) {
+export function Debounced(callback: any, delay: number) {
   delay = delay || 0;
   let timeId: number | undefined | any;
 
-  return () => {
+  return (...args: any) => {
     if (timeId) {
       clearTimeout(timeId);
       timeId = undefined;
     }
     timeId = setTimeout(() => {
-      callback();
+      callback(args);
 
       clearTimeout(timeId);
     }, delay);

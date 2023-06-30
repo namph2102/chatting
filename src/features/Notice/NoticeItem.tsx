@@ -82,6 +82,11 @@ const NoticeItem: FC<INoticeItemProps> = ({
     message = `${isAccepted ? "Bạn" : CapitalizeString(userAccept.fullname)} ${
       status ? `đồng ý tham gia nhóm chat` : "từ chối tham gia nhóm chat"
     }`;
+  } else if (type == 6) {
+    avatashow = userSend.avatar;
+    message = `${
+      isSended ? "Bạn " : ` ${CapitalizeString(userSend.fullname)} `
+    } ${message}`;
   }
 
   return (
