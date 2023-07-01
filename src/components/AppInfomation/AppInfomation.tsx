@@ -12,7 +12,10 @@ import { CapitalizeString, ToastNotify } from "../../servies/utils";
 import { ModalStatus } from "../Ui";
 import AddFriend from "../Ui/AddFriend";
 import { getDataListFriend } from "../../redux/Slice/SidebarSlice";
-import { updatePersonStatus } from "../../redux/Slice/ChatPersonSlice";
+import {
+  personInit,
+  updatePersonStatus,
+} from "../../redux/Slice/ChatPersonSlice";
 
 export interface optionsPropsSelect {
   value: string;
@@ -41,6 +44,7 @@ const AppInfomation = () => {
     if (!account._id) return;
 
     socket.emit("client-acttaced-id", account._id);
+
     // Sever gửi thông báo cho chính mình
     socket.on("server-send-message-myself", (message) => {
       ToastNotify(message).success();
@@ -67,8 +71,6 @@ const AppInfomation = () => {
           updatePersonStatus({ fullname: data.fullname, avatar: data.url })
         );
       }
-
-      console.log("reload lại");
     });
 
     // khi có người mời kết bạn
@@ -95,7 +97,15 @@ const AppInfomation = () => {
     });
   }, [account._id]);
   // room will join;
-
+  useEffect(() => {
+    if (!account._id) return;
+    socket.on("client-chat-with-bot", (roomid) => {
+      if (account.rooms.includes(roomid)) {
+        dispacth(firstloginWebsite());
+      }
+      dispacth(updatePersonStatus(personInit));
+    });
+  }, [account._id]);
   const handleGetInfoCreateRoom = async (
     nameRoom: string,
     listAdd: optionsPropsSelect[]
@@ -124,6 +134,7 @@ const AppInfomation = () => {
   const isOpenFormCreateRoom = useSelector(
     (state: RootState) => state.personStore.isOpenFormCreateRoom
   );
+
   return (
     <div>
       {messageModalStatus && (

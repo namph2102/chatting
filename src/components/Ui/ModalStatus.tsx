@@ -5,8 +5,13 @@ import { deFaultIconSize, handleStopPropagation } from "../../servies/utils";
 interface ModalStatusProps {
   callBackStatus: (isSucess: boolean) => void;
   title: string;
+  kind?: string;
 }
-const ModalStatus: FC<ModalStatusProps> = ({ callBackStatus, title }) => {
+const ModalStatus: FC<ModalStatusProps> = ({
+  callBackStatus,
+  title,
+  kind = 1,
+}) => {
   return (
     <ModelProvider>
       <article
@@ -39,7 +44,7 @@ const ModalStatus: FC<ModalStatusProps> = ({ callBackStatus, title }) => {
               type="button"
               className="bg-[#fff] hover:bg-[#dddddd]  text-black font-medium rounded-full text-sm  basis-5/6 px-5 py-2.5 "
             >
-              Từ chối
+              {kind == 2 ? "Hủy" : "Từ chối"}
             </button>
           </div>
         </div>

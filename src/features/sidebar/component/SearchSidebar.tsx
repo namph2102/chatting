@@ -42,7 +42,7 @@ const SearchSibar: FC<SearchSibarProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const { account, theme } = useSelector((state: RootState) => state.userStore);
   const navigate = useNavigate();
-  let listChattingLocal = historyChatting("searchHistory");
+  const listChattingLocal = historyChatting("searchHistory");
 
   const getListUserSearch = () => {
     setIsShowSearchBox(true);
@@ -79,10 +79,9 @@ const SearchSibar: FC<SearchSibarProps> = ({
 
     listChattingLocal.add({ ...userLocal, isShowimage: false });
   };
+  const navigator = useNavigate();
   const handleShowAllHistorySearch = () => {
-    listChattingLocal = historyChatting("searchHistory");
-    if (listChattingLocal.getAll().length <= 0) return [];
-    setListSearch(listChattingLocal.getAll().reverse());
+    navigator("/tim-kiem?q=getall");
     setIsShowSearchBox(true);
   };
 

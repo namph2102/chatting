@@ -50,6 +50,13 @@ const AccountSlice = createSlice({
         state.isOpenGroup = action.payload;
       } else state.isOpenGroup = !state.isOpenGroup;
     },
+    updateFieldAccount(state, action) {
+      state.account = { ...state.account, ...action.payload };
+    },
+    updateRoomsAccount(state, action) {
+      if (state.account.rooms?.length != action.payload?.length)
+        state.account.rooms = action.payload || [];
+    },
   },
   extraReducers(builder) {
     builder.addCase(firstloginWebsite.fulfilled, (state, action) => {
@@ -66,9 +73,11 @@ export const {
   updateNotice,
   setIsOpenDisplayTable,
   setIsopenCallvideo,
+  updateFieldAccount,
   updateAccesTokenSpotify,
   updateOpenGroup,
   updateTheme,
+  updateRoomsAccount,
 } = AccountSlice.actions;
 
 type PayloadCreateAccount = Pick<

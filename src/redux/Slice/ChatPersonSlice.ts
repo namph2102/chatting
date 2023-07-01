@@ -14,6 +14,7 @@ export const personInit: PserSonChating = {
   fullname: "ChatGPT-Plus",
   status: true,
   typechat: "chatbot",
+  idRoom: "",
 };
 const initState: {
   person: PserSonChating;

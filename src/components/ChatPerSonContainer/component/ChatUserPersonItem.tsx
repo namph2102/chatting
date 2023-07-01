@@ -144,7 +144,8 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
             src={props.author.avatar}
             alt=""
           />{" "}
-          {CapitalizeString(props.author.fullname)} {props.comment}
+          {CapitalizeString(props.isUser ? "Bạn" : props.author.fullname)}{" "}
+          {props.comment}
         </p>
       </div>
     );

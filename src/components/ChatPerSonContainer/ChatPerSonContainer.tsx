@@ -7,7 +7,12 @@ import {
 import ChatHeader from "../chatContainer/ChatHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux";
-import { ScroolToBottom, ToastNotify, cn } from "../../servies/utils";
+import {
+  CapitalizeString,
+  ScroolToBottom,
+  ToastNotify,
+  cn,
+} from "../../servies/utils";
 import ChatInputPerSon from "./ChatInputPerSon";
 import { containsLink, handleRoomChat } from "./util";
 import ChatUserPersonItem, {
@@ -29,11 +34,14 @@ import ShowImage from "./slideShowImage";
 import { updateOpenGroup } from "../../redux/Slice/AccountSlice";
 import SidebarAddMember from "./component/SidebarAddMember";
 import SidebarChangeInfoGroup from "./component/SidebarChangeInfoGroup";
+import { ModalStatus } from "../Ui";
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
 export interface IFromSetting {
   formadd: boolean;
   formChangename: boolean;
+  leaveRoom: boolean;
+  clickUserLeaveRoom: boolean;
 }
 interface ChatPerSonContainerProps {
   person: PserSonChating;
@@ -202,6 +210,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       console.log("client disconect connect", socket.id); // undefined
     });
     socket.on("server-chat", (data: ChatUserPersonItemProps) => {
+      console.log(data);
       data.isUser = false;
       setListUserComments((pre) => [...pre, data]);
       handleScrool();
@@ -247,7 +256,13 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       const isChecked = containsLink(inputElement.value.trim());
       type = isChecked ? "link" : "text";
       if (isChecked) {
-        comment = await crawLinkChating(inputElement.value.trim());
+        const commentLink = await crawLinkChating(inputElement.value.trim());
+        if (comment == commentLink) {
+          type = "text";
+        } else {
+          type == "link";
+        }
+        comment = commentLink;
       }
     } else if (type == "audio") {
       // gửi base64 lên sever inputElement dang blob
@@ -319,8 +334,45 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const [isOpenFromSetting, setIsOpenFromSetting] = useState<IFromSetting>({
     formadd: false,
     formChangename: false,
+    leaveRoom: false,
+    clickUserLeaveRoom: false,
   });
-
+  const [messageLeavelRoom, setMessageLeavelRoom] = useState<{
+    message: string;
+    id: string;
+    fullname: string;
+  }>({ message: "Bạn muốn lời khỏi phòng?", id: "", fullname: "" });
+  const handleLeaveRoom = (isLeave: boolean) => {
+    if (isLeave) {
+      const idLeaveRoom = messageLeavelRoom.id
+        ? messageLeavelRoom.id
+        : account._id;
+      socket.emit("user-leave-in-group", {
+        roomid: person.idRoom,
+        idAccount: idLeaveRoom,
+        message:
+          idLeaveRoom == account._id
+            ? " đã rời khỏi phòng"
+            : ` bị ${CapitalizeString(account.fullname)} kích ra khỏi phòng`,
+      });
+    }
+    setIsOpenFromSetting((prev) => ({ ...prev, leaveRoom: false }));
+    messageLeavelRoom.id &&
+      setMessageLeavelRoom(() => ({
+        fullname: "",
+        id: "",
+        message: "Bạn muốn lời khỏi phòng?",
+      }));
+    handleCloseGroup();
+  };
+  const handleClickLeaveRoom = (idAccount: string, fullname: string) => {
+    setMessageLeavelRoom(() => ({
+      id: idAccount,
+      fullname: fullname,
+      message: `Bạn muốn kích ${CapitalizeString(fullname)} ra khỏi phòng?`,
+    }));
+    setIsOpenFromSetting((prev) => ({ ...prev, leaveRoom: true }));
+  };
   return (
     <div
       id={theme.darkmode}
@@ -381,6 +433,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
           handleCloseGroup={handleCloseGroup}
           setIsOpenShowImage={setIsOpenShowImage}
           setIsOpenFromSetting={setIsOpenFromSetting}
+          callBackStatus={handleClickLeaveRoom}
         />
       </div>
       {listSidebarcomment["image"] && isOpenShowImage && (
@@ -409,6 +462,12 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
           person={person}
           idAccount={account._id}
           setIsOpenFromSetting={setIsOpenFromSetting}
+        />
+      )}
+      {person.typechat == "group" && isOpenFromSetting.leaveRoom && (
+        <ModalStatus
+          callBackStatus={handleLeaveRoom}
+          title={messageLeavelRoom.message}
         />
       )}
     </div>

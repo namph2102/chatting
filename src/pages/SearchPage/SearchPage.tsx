@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { IUserSearch } from "../../features/sidebar/user/UserSearch";
 import instance from "../../config";
 import { useMutation } from "react-query";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import UserSearchPageItem, {
   IUserSearchPageItem,
 } from "./component/UserSearchPageItem";
@@ -27,7 +27,6 @@ export interface ISearchPage {
 }
 const SearchPage: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { account, theme, noticeTotal } = useSelector(
     (state: RootState) => state.userStore
   );
@@ -38,13 +37,9 @@ const SearchPage: React.FC = () => {
   const decodedKeyword = decodeURIComponent(location.search);
   const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
 
-  let query = "";
+  let query = "getall";
   if (decodedKeyword.includes("=")) {
-    query = decodedKeyword.split("=")[1];
-
-    if (!query) {
-      navigate("/tim-kiem/sai-cu-phap");
-    }
+    query = decodedKeyword.split("=")[1] || "getall";
   }
   const [listChatting, setListchatting] = useState<IUserSearchPageItem[]>([]);
   useEffect(() => {
@@ -79,18 +74,19 @@ const SearchPage: React.FC = () => {
               ...account.friends,
               ...user.friends.map((user: any) => user._id),
             ]).size;
-            user.isRoom = "";
+            user.idRoom = "";
             user.relationship = user.friends.some(
-              (user: any) => user._id == account._id
+              (user: any) => account._id == user._id
             );
             if (user.relationship) {
-              user.isRoom =
-                listFriend.find((f) => f._id == account._id)?.idRoom || "";
+              user.idRoom =
+                listFriend.find((f) => f._id == user._id)?.idRoom || "";
             }
 
             user.totalFriends = totalFriendTogether - coutTogether;
           });
         }
+
         setListchatting(data.listUserSearchs);
       });
   }, [query, account._id, noticeTotal, account.friends]);

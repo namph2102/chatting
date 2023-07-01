@@ -14,11 +14,13 @@ interface SidebarListMemberProps {
   listMemberGroup: typeMapItem;
   setOpenListMember: (isOpenlistMember: boolean) => void;
   isOpenListMember: boolean;
+  callBackStatus: (idAccount: string, fullname: string) => void;
 }
 const SidebarListMember: React.FC<SidebarListMemberProps> = ({
   listMemberGroup,
   setOpenListMember,
   isOpenListMember,
+  callBackStatus,
 }) => {
   const { theme, account } = useSelector((state: RootState) => state.userStore);
   const { data } = useQuery({
@@ -51,6 +53,7 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
   useEffect(() => {
     setSearch("");
   }, []);
+
   return (
     <section
       id={theme.darkmode}
@@ -87,7 +90,7 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
           listUserShowSearch.map((friend) => (
             <article
               key={nanoid()}
-              className="flex gap-2 justify-between items-center px-4 cursor-pointer "
+              className="flex gap-2 justify-between items-center px-1 cursor-pointer "
             >
               <div className="flex gap-2 items-center ">
                 <img
@@ -95,8 +98,8 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
                   className="w-10 h-10 rounded-full object-cover"
                   alt="ảnh lỗi"
                 />
-                <p className="font-semibold text-sm capitalize flex flex-col ">
-                  <span className="text-primary-hover text-style__ellipsis">
+                <p className="font-semibold text-sm capitalize flex flex-wrap flex-col ">
+                  <span className="text-primary-hover line-clamp-2 md:max-w-[120px]">
                     {friend.fullname}
                   </span>
                   {friend._id == listMemberGroup.role._id && (
@@ -121,11 +124,21 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
                     Kết bạn
                   </button>
                 )}
+              {listMemberGroup.typechat == "group" &&
+                friend._id != account._id &&
+                account._id == listMemberGroup.role._id && (
+                  <button
+                    onClick={() => callBackStatus(friend._id, friend.fullname)}
+                    className="text-primary-hover  border-red-500 drop_menu-hover rounded-2xl text-xs"
+                  >
+                    Kích
+                  </button>
+                )}
             </article>
           ))}
       </section>
     </section>
   );
 };
-
+// listMemberGroup?.role?._id == accountId
 export default SidebarListMember;

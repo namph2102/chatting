@@ -6,6 +6,7 @@ import NoticeItem from "./NoticeItem";
 import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useQuery } from "react-query";
 export interface INoticeItem {
   _id: string;
   createdAt: string;
@@ -29,10 +30,10 @@ export interface INoticeItem {
   type: number;
 }
 const NoticePage = () => {
+  const [listInfo, setListInfo] = useState<INoticeItem[]>([]);
   const { account, noticeTotal } = useSelector(
     (state: RootState) => state.userStore
   );
-  const [listInfo, setListInfo] = useState<INoticeItem[]>([]);
   const handleUpdateStatus = (idNotice: string, isAccept: boolean) => {
     setListInfo((listInfo) => {
       const newNotice = listInfo.find((item) => item._id == idNotice);
@@ -44,27 +45,32 @@ const NoticePage = () => {
       return [...listInfo];
     });
   };
-  useEffect(() => {
-    if (!account._id) return;
-    instance
-      .post("info/notice", { idUser: account._id })
-      .then((response) => response.data)
-      .then((data) => {
-        const listInfosCover = data.listInfo.map((info: INoticeItem) => {
-          info.isSended = info.userSend._id == account._id;
-          info.isAccepted = info.userAccept._id == account._id;
-          info.accountID = account._id;
-          if (info.type == 4) info.idRoomInvited = info.message;
-          return info;
-        });
 
-        setListInfo(listInfosCover);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  }, [account._id, noticeTotal]);
+  const { data } = useQuery({
+    queryKey: ["info/notice", noticeTotal, account._id],
+    queryFn: async () => {
+      if (account._id) {
+        const res = await instance.post("info/notice", { idUser: account._id });
+        const data = res.data.listInfo || [];
+        return data;
+      }
+    },
+  });
+  const listInfoCover = data ? data : [];
+
+  useEffect(() => {
+    if (listInfoCover.length <= 0) return;
+    const NewlistInfoCover = listInfoCover.map((info: INoticeItem) => {
+      info.isSended = info.userSend._id == account._id;
+      info.isAccepted = info.userAccept._id == account._id;
+      info.accountID = account._id;
+      if (info.type == 4) info.idRoomInvited = info.message;
+      return info;
+    });
+    setListInfo(NewlistInfoCover);
+  }, [account._id, noticeTotal, listInfoCover.length]);
   const navigation = useNavigate();
+
   return (
     <section>
       <Helmet>
@@ -81,7 +87,7 @@ const NoticePage = () => {
         Thông báo
       </h2>
       <ul className="max-h-[calc(100vh-80px)] overflow-y-auto">
-        {listInfo.length > 0 &&
+        {listInfoCover.length > 0 &&
           listInfo.map((acc) => (
             <NoticeItem
               key={acc._id}
@@ -90,7 +96,7 @@ const NoticePage = () => {
             />
           ))}
       </ul>
-      {listInfo.length <= 0 && (
+      {listInfoCover && listInfoCover.length <= 0 && (
         <div className="text-xs flex justify-center flex-col items-center">
           <img
             width={50}

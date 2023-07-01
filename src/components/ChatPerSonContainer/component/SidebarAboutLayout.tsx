@@ -26,6 +26,7 @@ interface SidebarAboutLayoutProps {
   handleCloseGroup: () => void;
   setIsOpenShowImage: (isOpen: boolean) => void;
   setIsOpenFromSetting: (item: any) => any;
+  callBackStatus: (idAccount: string, fullname: string) => void;
 }
 const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
   listSidebarcomment,
@@ -33,6 +34,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
   handleCloseGroup,
   setIsOpenShowImage,
   setIsOpenFromSetting,
+  callBackStatus,
 }) => {
   const listGroups = useSelector(
     (state: RootState) => state.sidebarStore.listGroups
@@ -111,6 +113,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
       });
     });
   const [isOpenListMember, setOpenListMember] = useState(false);
+
   return (
     <aside className="border-l-[1px] border-gray-700  h-screen">
       <button
@@ -153,7 +156,9 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
             {person.fullname}
           </p>
         </div>
-        <SidebarGroupSettings setIsOpenFromSetting={setIsOpenFromSetting} />
+        {person.typechat == "group" && (
+          <SidebarGroupSettings setIsOpenFromSetting={setIsOpenFromSetting} />
+        )}
 
         {person.typechat == "group" && (
           <section className=" px-2">
@@ -355,6 +360,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
       </div>
       {person._id && person.typechat == "group" && listGroups[person._id] && (
         <SidebarListMember
+          callBackStatus={callBackStatus}
           setOpenListMember={setOpenListMember}
           listMemberGroup={listGroups[person._id] || {}}
           isOpenListMember={isOpenListMember}

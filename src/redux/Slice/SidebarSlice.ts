@@ -9,6 +9,7 @@ import {
   typeMapItem,
 } from "./slice.type";
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
+import { updateRoomsAccount } from "./AccountSlice";
 
 const initStateSidebar: ISidebarSlice = {
   listFriends: [],
@@ -20,13 +21,9 @@ const SidebarSlice = createSlice({
   initialState: initStateSidebar,
   reducers: {
     updateFristSidebarLogin(state, action) {
-      if (action.payload.listFriends.length > 0) {
-        state.listFriends = action.payload.listFriends;
-      }
-      if (action.payload.listRoomGroups.length > 0) {
-        state.listGroups = action.payload.listGroups;
-        state.listRoomGroups = action.payload.listRoomGroups;
-      }
+      state.listFriends = action.payload.listFriends;
+      state.listGroups = action.payload.listGroups;
+      state.listRoomGroups = action.payload.listRoomGroups;
     },
     updateStatusSidebar(
       state: ISidebarSlice,
@@ -51,8 +48,11 @@ export const getDataListFriend = (idUser: string) => {
       .then((res) => res.data)
       .then((res) => {
         if (res) {
-          // const listfriends = res.listfriends.friends;
+          if (res.accountRoom?.rooms?.length > 0) {
+            dispatch(updateRoomsAccount(res.accountRoom.rooms));
+          }
 
+          // const listfriends = res.listfriends.friends;
           // nếu bạn bè off line thì chuyển sang false luôn
           const listRooms: IListrooms[] = res.listfriends.rooms;
 
