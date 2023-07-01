@@ -210,7 +210,6 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       console.log("client disconect connect", socket.id); // undefined
     });
     socket.on("server-chat", (data: ChatUserPersonItemProps) => {
-      console.log(data);
       data.isUser = false;
       setListUserComments((pre) => [...pre, data]);
       handleScrool();
