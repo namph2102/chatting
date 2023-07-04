@@ -1,11 +1,10 @@
 const settingVideo = {
   isMic: true,
   isVolume: true,
-  isCamera: false,
+  isCamera: true,
   isChatting: false,
   isHandle: false,
   isLeave: false,
-  isShareDisplay: false,
   isZoom: false,
   isShowListUsers: false,
 };

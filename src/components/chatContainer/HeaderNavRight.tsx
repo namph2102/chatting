@@ -3,14 +3,27 @@ import { BiInfoCircle, BiPhoneCall, BiVideo } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
 import {
-  setIsopenCallvideo,
+  updateSettingVideoCall,
   updateOpenGroup,
 } from "../../redux/Slice/AccountSlice";
-const HeaderNavRight = () => {
+import { FC } from "react";
+import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
+interface HeaderNavRightProps {
+  isChatBot: boolean;
+  person: PserSonChating;
+}
+const HeaderNavRight: FC<HeaderNavRightProps> = ({ isChatBot, person }) => {
   const dispatchRedux: AppDispatch = useDispatch();
 
   const handleOpenvideoCall = () => {
-    dispatchRedux(setIsopenCallvideo(true));
+    dispatchRedux(
+      updateSettingVideoCall({
+        roomName: person.fullname,
+        isOpen: true,
+        roomId: person.idRoom,
+        type: person.typechat,
+      })
+    );
   };
 
   return (
@@ -22,9 +35,11 @@ const HeaderNavRight = () => {
         <BiVideo />
       </li>
 
-      <li onClick={() => dispatchRedux(updateOpenGroup("nopayload"))}>
-        <BiInfoCircle />
-      </li>
+      {!isChatBot && (
+        <li onClick={() => dispatchRedux(updateOpenGroup("nopayload"))}>
+          <BiInfoCircle />
+        </li>
+      )}
     </ul>
   );
 };

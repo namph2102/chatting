@@ -35,7 +35,7 @@ const LinkCommentItem: FC<LinkCommentItemProps> = ({
 
           {image && (
             <img
-              className="w-full h-full opacity-60"
+              className="w-full h-full min-h-[140px] opacity-60"
               src={image}
               alt="ảnh lỗi"
             />

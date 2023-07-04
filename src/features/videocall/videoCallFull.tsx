@@ -6,25 +6,61 @@ import "./videocall.scss";
 import { LoaddingOverLay } from "../../components/loading";
 import { AppDispatch, RootState } from "../../redux";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsopenCallvideo } from "../../redux/Slice/AccountSlice";
+import { updateSettingVideoCall } from "../../redux/Slice/AccountSlice";
 import ToltipProvider from "../../components/webmedia/component/ToltipProvider";
+import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
 
 export default function VideoCallFull() {
-  const [displayName, setDisplayName] = useState("");
+  const account = useSelector((state: RootState) => state.userStore.account);
+  const [displayName, setDisplayName] = useState(account.fullname);
   const [roomName, setRoomName] = useState("");
   const [isLoadding, setisLoading] = useState<boolean>(false);
+  const settingVideoCall = useSelector(
+    (state: RootState) => state.userStore.settingVideoCall
+  );
+  console.log(settingVideoCall);
   const dispatchRedux: AppDispatch = useDispatch();
   const handleOpenvideoCall = () => {
-    dispatchRedux(setIsopenCallvideo(false));
+    dispatchRedux(
+      updateSettingVideoCall({
+        roomName: "",
+        isOpen: false,
+        roomId: "",
+        type: "",
+      })
+    );
   };
   const [onCall, setOnCall] = useState(false);
+  useEffect(() => {
+    if (settingVideoCall.join) {
+      setisLoading(true);
+
+      setRoomName(settingVideoCall.roomName);
+      setOnCall(true);
+    }
+    return () => {
+      setisLoading(false);
+      if (settingVideoCall.roomName) {
+        // se code ngay day
+      }
+      dispatchRedux(
+        updateSettingVideoCall({
+          roomName: "",
+          isOpen: false,
+          roomId: "",
+          type: "",
+          join: false,
+        })
+      );
+    };
+  }, []);
   const handleAPILoad = () => {
     setisLoading(false);
     const idIfame: HTMLIFrameElement | null =
       document.querySelector("#react-jitsi-frame");
     if (idIfame) {
       idIfame.style.display = "block";
-
+      ToastNotify("Đang vào phòng chờ xíu nhé").success();
       document.querySelector(".toolbox-content-items");
     }
     // You can perform additional actions with the Jitsi Meet API here
@@ -33,17 +69,33 @@ export default function VideoCallFull() {
     const createRoomname = Math.random()
       .toString(36)
       .substring(2, 6)
-      .replace(/\s/g, "");
+      .replace(/\s/g, "")
+      .toLowerCase();
     setRoomName(createRoomname);
-    ToastNotify(`Mã phòng của bạn là ${createRoomname}`).success();
   };
-  const account = useSelector((state: RootState) => state.userStore.account);
+
   useEffect(() => {
-    if (!account._id) return;
+    if (!account._id || settingVideoCall.join) return;
     setDisplayName(CapitalizeString(account.fullname));
     handleCreateRandom();
-  }, [account, account._id, account.fullname, account.username]);
-
+  }, [
+    account,
+    account._id,
+    account.fullname,
+    account.username,
+    settingVideoCall.join,
+  ]);
+  const handleJoinRoom = () => {
+    setisLoading(true);
+    setOnCall(true);
+    if (settingVideoCall.type == "group") {
+      socket.emit("client-create-group-room-call", {
+        roomId: settingVideoCall.roomId,
+        roomName,
+        idCreated: account._id,
+      });
+    }
+  };
   return onCall ? (
     <>
       {isLoadding && <LoaddingOverLay />}
@@ -65,7 +117,7 @@ export default function VideoCallFull() {
 
         <Jitsi
           roomName={roomName}
-          displayName={displayName}
+          displayName={displayName || CapitalizeString(account.fullname)}
           onIframeLoad={() => setisLoading(true)}
           domain="8x8.vc"
           config={{ startAudioOnly: true }}
@@ -116,12 +168,9 @@ export default function VideoCallFull() {
       </div>
       <button
         className="bg-green-800 rounded-full py-2 sm:py-3  hover:bg-green-600"
-        onClick={() => {
-          setisLoading(true);
-          setOnCall(true);
-        }}
+        onClick={handleJoinRoom}
       >
-        Tham gia ngay
+        {settingVideoCall.join ? "Tham gia ngay" : "Tạo phòng"}
       </button>
     </div>
   );

@@ -25,7 +25,8 @@ const Home = () => {
         <main className="flex w-full min-h-screen">
           <Header />
           <LayoutSidebar />
-          {userStore.isOpencallVideo && <VideoSidebar />}
+          {userStore.settingVideoCall.isOpen &&
+            personStore.person.typechat == "group" && <VideoSidebar />}
           {personStore.person._id == "chatbot" ? (
             <ChattingContainer />
           ) : (

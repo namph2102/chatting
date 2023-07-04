@@ -3,7 +3,6 @@ import { listMenu } from "../header/header.util";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { cn } from "../../servies/utils";
-import Notice from "../Notice";
 
 const LayoutSidebar = () => {
   const { theme } = useSelector((state: RootState) => state.userStore);
@@ -24,7 +23,6 @@ const LayoutSidebar = () => {
             <Route key={menu.title} path={menu.path} element={<Element />} />
           );
         })}
-        <Route path="/thong-bao" element={<Notice />} />
       </Routes>
     </section>
   );

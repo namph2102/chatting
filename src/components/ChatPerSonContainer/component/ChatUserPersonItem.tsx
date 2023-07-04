@@ -49,9 +49,9 @@ interface ChatUserPersonItemPropsMore extends ChatUserPersonItemProps {
     typeChatting: string
   ) => void;
   setIsOpenGhim: (isOpenGhim: boolean) => void;
-
   isAction?: boolean;
   typechat?: string;
+  callbackCallvideo: (item: any) => void;
 }
 const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
   const classname =
@@ -146,6 +146,33 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
           />{" "}
           {CapitalizeString(props.isUser ? "Bạn" : props.author.fullname)}{" "}
           {props.comment}
+        </p>
+      </div>
+    );
+  } else if (props.type == "call") {
+    return (
+      <div className="text-center text-sm flex justify-center items-center my-2">
+        <p className=" bg-follow-darkmode border-[1px] border-gray-600  w-fit   py-1 px-2 rounded-full my-2 flex justify-center items-center text-sm gap-2">
+          <img
+            className="w-10 h-10 rounded-full"
+            src={props.author.avatar}
+            alt=""
+          />
+          {CapitalizeString(props.isUser ? "Bạn" : props.author.fullname)}
+          <span> đang tạo phòng họp mặt </span>|
+          <button
+            className="text-primary-hover"
+            onClick={() =>
+              props.callbackCallvideo({
+                isOpen: true,
+                roomId: props._id,
+                roomName: props.comment,
+                type: props.typechat,
+              })
+            }
+          >
+            tham gia ngay !
+          </button>
         </p>
       </div>
     );

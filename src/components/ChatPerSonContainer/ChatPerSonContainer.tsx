@@ -31,10 +31,14 @@ import LoadingContainer from "../loading/LoadingContainer";
 import SidebarAboutLayout from "./component/SidebarAboutLayout";
 import { TlistGroupsMap } from "../../redux/Slice/slice.type";
 import ShowImage from "./slideShowImage";
-import { updateOpenGroup } from "../../redux/Slice/AccountSlice";
+import {
+  updateOpenGroup,
+  updateSettingVideoCall,
+} from "../../redux/Slice/AccountSlice";
 import SidebarAddMember from "./component/SidebarAddMember";
 import SidebarChangeInfoGroup from "./component/SidebarChangeInfoGroup";
 import { ModalStatus } from "../Ui";
+import { StoreComment } from "../AppInfomation/AppInfomation";
 const domainSever = import.meta.env.VITE_DOMAIN_SEVER;
 export const socket = io(domainSever, { transports: ["websocket"] });
 export interface IFromSetting {
@@ -46,11 +50,16 @@ export interface IFromSetting {
 interface ChatPerSonContainerProps {
   person: PserSonChating;
 }
+const idRoomCurrent: { idRoom: any } = {
+  idRoom: "",
+};
 
 const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const [listUserComments, setListUserComments] = useState<
     ChatUserPersonItemProps[]
-  >([]);
+  >(StoreComment.getFollowRoom(person.idRoom) || []);
+
+  idRoomCurrent.idRoom = person.idRoom || "";
 
   const { theme, account, isOpenChat, isOpenGroup } =
     useSelector((state: RootState) => state.userStore) || {};
@@ -59,10 +68,13 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoadingFullpage(true);
-
     const idRoom = person.idRoom;
+    if (idRoom && !StoreComment.checkCommentInRoom(idRoom)) {
+      setLoadingFullpage(true);
+    }
+
     socket.emit("tao-room", idRoom);
+    let idtimeout: any;
     if (!person._id) return;
     if (person.typechat == "friend") {
       // lắng nghe user chat off hay on
@@ -100,13 +112,27 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
                 }
               }
               return acc;
-            });
+            }) || [];
 
-          if (listNewChatting?.length > 0) {
-            setListUserComments([...listNewChatting]);
-            if (boxChatContentRef.current) {
-              ScroolToBottom(boxChatContentRef.current, 200);
+          if (listNewChatting?.length >= 0) {
+            if (person.idRoom) {
+              // Đang fixed
+              if (!StoreComment.checkCommentInRoom(person.idRoom)) {
+                StoreComment.addListCommentFollowRoom(
+                  person.idRoom,
+                  listNewChatting
+                );
+              }
+              setListUserComments([...listNewChatting]);
             }
+
+            idtimeout = setTimeout(() => {
+              if (boxChatContentRef.current) {
+                boxChatContentRef.current.scrollTop =
+                  boxChatContentRef.current.scrollHeight;
+                clearTimeout(idtimeout);
+              }
+            }, 500);
           }
         }
       })
@@ -115,9 +141,10 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       });
 
     return () => {
-      setListUserComments([]);
       socket.emit("leaver-room-chat-current", idRoom);
       handleCloseGroup();
+      clearTimeout(idtimeout);
+      setListUserComments([]);
     };
   }, [account._id, person.idRoom, person.fullname]);
 
@@ -171,7 +198,8 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
             acc.type = "image";
           }
         }
-
+        person.idRoom &&
+          StoreComment.updateAllComment(person.idRoom, listUserComments);
         return [...listUserComments];
       });
     });
@@ -211,12 +239,16 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     });
     socket.on("server-chat", (data: ChatUserPersonItemProps) => {
       data.isUser = false;
+      console.log("idRoomCurrent.idRoom", idRoomCurrent.idRoom);
+      StoreComment.addComment(idRoomCurrent.idRoom, data);
       setListUserComments((pre) => [...pre, data]);
       handleScrool();
       setIsLoading(false);
     });
     socket.on("user-chat-message", (data) => {
       setListUserComments((prev) => [...prev, data]);
+      console.log("idRoomCurrent.idRoom", idRoomCurrent.idRoom);
+      StoreComment.addComment(idRoomCurrent.idRoom, data);
       handleScrool();
       setIsLoading(false);
       if (data.isSee) {
@@ -372,6 +404,14 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     }));
     setIsOpenFromSetting((prev) => ({ ...prev, leaveRoom: true }));
   };
+  const handleCallvideo = (item: {
+    roomName: string;
+    isOpen: boolean;
+    roomId: string;
+    type: string;
+  }) => {
+    dispatch(updateSettingVideoCall({ ...item, join: true }));
+  };
   return (
     <div
       id={theme.darkmode}
@@ -408,6 +448,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
               typechat={person.typechat}
               handleactiveOptions={handleactiveOptions}
               setIsOpenGhim={setIsOpenGhim}
+              callbackCallvideo={handleCallvideo}
             />
           ))}
       </section>

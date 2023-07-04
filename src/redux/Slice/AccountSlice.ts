@@ -21,8 +21,16 @@ const AccountSlice = createSlice({
     theme,
     accessTokenSpotify: "",
     isOpenChat: false,
-    isOpencallVideo: false,
+    settingVideoCall: {
+      roomName: "",
+      isOpen: false,
+      roomId: "",
+      type: "group",
+      join: false,
+    },
     isOpenGroup: false,
+    idPeerJs: "",
+    idCallPeerJsNow: false,
   },
   reducers: {
     UpdateAccount: (state, action) => {
@@ -31,8 +39,8 @@ const AccountSlice = createSlice({
     setIsOpenDisplayTable: (state, action) => {
       state.isOpenChat = !action.payload;
     },
-    setIsopenCallvideo: (state, action) => {
-      state.isOpencallVideo = action.payload;
+    updateSettingVideoCall: (state, action) => {
+      state.settingVideoCall = { ...state.settingVideoCall, ...action.payload };
     },
     updateAccesTokenSpotify: (state, action) => {
       state.accessTokenSpotify = action.payload;
@@ -57,6 +65,9 @@ const AccountSlice = createSlice({
       if (state.account.rooms?.length != action.payload?.length)
         state.account.rooms = action.payload || [];
     },
+    updatePeerjs(state, action) {
+      state.idPeerJs = action.payload;
+    },
   },
   extraReducers(builder) {
     builder.addCase(firstloginWebsite.fulfilled, (state, action) => {
@@ -72,12 +83,13 @@ export const {
   UpdateAccount,
   updateNotice,
   setIsOpenDisplayTable,
-  setIsopenCallvideo,
+  updateSettingVideoCall,
   updateFieldAccount,
   updateAccesTokenSpotify,
   updateOpenGroup,
   updateTheme,
   updateRoomsAccount,
+  updatePeerjs,
 } = AccountSlice.actions;
 
 type PayloadCreateAccount = Pick<

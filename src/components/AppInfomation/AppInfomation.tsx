@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from "../../redux";
 import {
   firstloginWebsite,
   updateNotice,
+  updatePeerjs,
 } from "../../redux/Slice/AccountSlice";
 import { socket } from "../ChatPerSonContainer/ChatPerSonContainer";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,11 +17,15 @@ import {
   personInit,
   updatePersonStatus,
 } from "../../redux/Slice/ChatPersonSlice";
+import { handleCreateStoreComment } from "../ChatPerSonContainer/util";
+import Video from "../webmedia/Video";
 
 export interface optionsPropsSelect {
   value: string;
   label: string;
 }
+// lưu trữ tất cả dữ liệu khi load vào comment
+export const StoreComment = handleCreateStoreComment();
 const AppInfomation = () => {
   const dispacth: AppDispatch = useDispatch();
   const [infoRoomnotice, setInfoRoom] = useState<{
@@ -28,8 +33,10 @@ const AppInfomation = () => {
     idRoom: string;
   }>({ idNotice: "", idRoom: "" });
 
-  const { theme, account } = useSelector((state: RootState) => state.userStore);
-
+  const { theme, account, settingVideoCall, idPeerJs } = useSelector(
+    (state: RootState) => state.userStore
+  );
+  const person = useSelector((state: RootState) => state.personStore.person);
   useEffect(() => {
     localStorage.getItem("accessToken") &&
       dispacth(firstloginWebsite()).then((acc: any) => {
@@ -131,12 +138,59 @@ const AppInfomation = () => {
     }
     setMessageModalStatus("");
   };
+
   const isOpenFormCreateRoom = useSelector(
     (state: RootState) => state.personStore.isOpenFormCreateRoom
   );
 
+  const [isOpenVideoCall, setIsOpenVideoCall] = useState(false);
+
+  const [messageVideoCall, setMessageVideoCall] = useState("");
+  // call video
+  useEffect(() => {
+    if (
+      settingVideoCall.type == "friend" &&
+      person.typechat == "friend" &&
+      person.fullname &&
+      settingVideoCall.isOpen
+    ) {
+      console.log("open call");
+      setIsOpenVideoCall(true);
+      if (idPeerJs) {
+        socket.emit("user-join-room-call", {
+          idPeerJs,
+          personid: person._id,
+          fullname: account.fullname,
+        });
+      }
+    }
+    return () => {
+      settingVideoCall.isOpen && setIsOpenVideoCall(false);
+    };
+  }, [isOpenVideoCall, settingVideoCall, idPeerJs]);
+  useEffect(() => {
+    socket.on("sever-send-open-status-call", ({ fullname, idPeerJs }) => {
+      setMessageVideoCall(`${CapitalizeString(fullname)} đang gọi cho bạn`);
+      dispacth(updatePeerjs(idPeerJs));
+    });
+  }, []);
+  const handleAcceptCall = (isAccept: boolean) => {
+    if (isAccept) {
+      setIsOpenVideoCall(true);
+    } else {
+      setIsOpenVideoCall(false);
+    }
+    setMessageVideoCall(``);
+  };
   return (
     <div>
+      {isOpenVideoCall && person._id && <Video />}
+      {!isOpenVideoCall && messageVideoCall && (
+        <ModalStatus
+          title={messageVideoCall}
+          callBackStatus={handleAcceptCall}
+        ></ModalStatus>
+      )}
       {messageModalStatus && (
         <ModalStatus
           title={messageModalStatus}

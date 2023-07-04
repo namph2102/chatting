@@ -10,6 +10,7 @@ import {
 
 import { SiderBar } from "../sidebar";
 import NoticePage from "../Notice";
+import CallHistory from "../call";
 
 export const listMenu = [
   {
@@ -41,7 +42,7 @@ export const listMenu = [
   {
     title: "Call",
     Icon: BiPhoneCall,
-    component: SiderBar,
+    component: CallHistory,
     path: "/call",
   },
   {

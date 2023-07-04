@@ -122,7 +122,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
       >
         <BiXCircle />
       </button>
-      <h2 className="py-4 text-center font-semibold text-xl">
+      <h2 className="py-[22px] text-center font-semibold text-xl">
         Thông tin hộp thoại
       </h2>
       <hr className="" />
@@ -173,7 +173,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
                 }
                 className="text-2xl cursor-pointer"
               >
-                {isOpenListMember ? <BiCaretDown /> : <BiCaretRight />}
+                {isShowMore.member ? <BiCaretDown /> : <BiCaretRight />}
               </span>
             </div>
             <div
@@ -227,7 +227,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
               ))
             ) : (
               <p className="text-sm text-center my-2">
-                Chưa có nội dung ảnh được chia sẻ torng hội thoại này?
+                Chưa có nội dung ảnh được chia sẻ trong hội thoại này?
               </p>
             )}
           </div>

@@ -1,5 +1,6 @@
 import instance from "../../../config";
 import { TlistGroupsMap } from "../../../redux/Slice/slice.type";
+import { ChatUserPersonItemProps } from "../component/ChatUserPersonItem";
 // nếu không có phòng thì tạo phòng còn nếu có thì lấy dữ liệu comment  trên phòng
 export const handleRoomChat = (
   roomid: string,
@@ -90,4 +91,32 @@ export const filePath: TlistGroupsMap<string> = {
   txt: "txt",
   zip: "zip",
   rest: "document",
+};
+const store: Record<string, ChatUserPersonItemProps[]> = {};
+export const handleCreateStoreComment = () => {
+  return {
+    checkCommentInRoom(id: string) {
+      return store[id];
+    },
+    addListCommentFollowRoom(
+      id: string,
+      listComment: ChatUserPersonItemProps[]
+    ) {
+      if (!store[id]) {
+        store[id] = listComment;
+      }
+    },
+    getFollowRoom(id: string | any) {
+      if (store[id]) return store[id];
+      return [];
+    },
+    addComment(id: string, comment: ChatUserPersonItemProps) {
+      if (!store[id]) {
+        store[id] = [comment];
+      } else store[id].push(comment);
+    },
+    updateAllComment(id: string, listComment: ChatUserPersonItemProps[]) {
+      store[id] = listComment;
+    },
+  };
 };
