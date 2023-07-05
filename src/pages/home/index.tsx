@@ -26,7 +26,7 @@ const Home = () => {
           <Header />
           <LayoutSidebar />
           {userStore.settingVideoCall.isOpen &&
-            personStore.person.typechat == "group" && <VideoSidebar />}
+            personStore.person.typechat != "friend" && <VideoSidebar />}
           {personStore.person._id == "chatbot" ? (
             <ChattingContainer />
           ) : (

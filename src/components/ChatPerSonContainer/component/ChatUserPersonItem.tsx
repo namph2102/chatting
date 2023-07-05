@@ -176,6 +176,20 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
         </p>
       </div>
     );
+  } else if (props.type == "peerjs") {
+    return (
+      <div className="text-center text-sm flex justify-center items-center my-2">
+        <p className=" bg-follow-darkmode border-[1px] border-gray-600  w-fit   py-1 px-2 rounded-full my-2 flex justify-center items-center text-sm gap-2">
+          <img
+            className="w-10 h-10 rounded-full"
+            src={props.author.avatar}
+            alt=""
+          />
+          {CapitalizeString(props.isUser ? "Bạn" : props.author.fullname)}
+          <span> đã tạo cuộc gọi </span>
+        </p>
+      </div>
+    );
   }
 
   return (

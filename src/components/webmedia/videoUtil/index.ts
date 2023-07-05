@@ -53,3 +53,11 @@ export const playStream = (id: string, stream: MediaStream | null) => {
 
   element.srcObject = stream;
 };
+
+export const cleanupMediaDevices = (mediaStream: MediaStream) => {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach((track) => {
+      track.stop();
+    });
+  }
+};

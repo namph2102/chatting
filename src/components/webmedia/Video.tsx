@@ -1,6 +1,6 @@
-import { createContext, useReducer } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux";
+import { createContext, useReducer, useRef } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux";
 import { BsArrowsAngleContract, BsArrowsMove } from "react-icons/bs";
 
 import VideoItem from "./component/VideoItem";
@@ -15,7 +15,8 @@ import { cn } from "../../servies/utils";
 import { handleChangeSetting } from "./context/VideoContext.handle";
 import VideoSidebarProvider from "./UI/VideoSidebarProvider";
 import ToltipProvider from "./component/ToltipProvider";
-import { updateSettingVideoCall } from "../../redux/Slice/AccountSlice";
+
+import { socket } from "../ChatPerSonContainer/ChatPerSonContainer";
 
 export const VideoContext = createContext(settingVideo);
 
@@ -34,20 +35,23 @@ const settingReducer = (state: typeof settingVideo, action: IactionSetting) => {
   return { ...state };
 };
 const Video = () => {
-  const { theme } = useSelector((state: RootState) => state.userStore) || {};
+  const { theme, account, idPeerJs, settingVideoCall } =
+    useSelector((state: RootState) => state.userStore) || {};
+  const person = useSelector((state: RootState) => state.personStore.person);
   const [setting, dispatchContext] = useReducer(settingReducer, settingVideo);
-  const dispatchRedux: AppDispatch = useDispatch();
+
   const handleCloseVideoCall = () => {
-    dispatchRedux(
-      updateSettingVideoCall({
-        roomName: "",
-        isOpen: false,
-        roomId: "",
-        type: "",
-        join: false,
-      })
-    );
+    socket.emit("user-leave-room-call-now", {
+      idPeerJs: idPeerJs,
+      idAccount: account._id,
+      idPerson: person._id,
+      roomId: settingVideoCall.roomId,
+    });
+    dispatchContext(handleChangeSetting("isMic"));
+    dispatchContext(handleChangeSetting("isCamera"));
   };
+  const timeRef = useRef<HTMLSpanElement>(null);
+
   return (
     <VideoContext.Provider value={settingVideo}>
       <div
@@ -69,8 +73,10 @@ const Video = () => {
 
         <section className="video__setting text-2xl lg-px-12 sm:px-8 flex sm:justify-between justify-center items-center bg-black h-20 absolute left-0 bottom-0 right-0">
           <h2 className="hidden flex-2 text-base sm:flex ">
-            <span className="block border-r-2 border-white pr-2">05:50</span>
-            <span className="block  pl-2">Team Metting</span>
+            <span ref={timeRef} className="block border-r-2 border-white pr-2">
+              00:00
+            </span>
+            <span className="block  pl-2 capitalize">{account.fullname}</span>
           </h2>
           <VideoController
             setting={setting}

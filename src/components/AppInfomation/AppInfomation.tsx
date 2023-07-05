@@ -6,6 +6,7 @@ import {
   firstloginWebsite,
   updateNotice,
   updatePeerjs,
+  updateSettingVideoCall,
 } from "../../redux/Slice/AccountSlice";
 import { socket } from "../ChatPerSonContainer/ChatPerSonContainer";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +16,7 @@ import AddFriend from "../Ui/AddFriend";
 import { getDataListFriend } from "../../redux/Slice/SidebarSlice";
 import {
   personInit,
+  updatePerson,
   updatePersonStatus,
 } from "../../redux/Slice/ChatPersonSlice";
 import { handleCreateStoreComment } from "../ChatPerSonContainer/util";
@@ -146,6 +148,7 @@ const AppInfomation = () => {
   const [isOpenVideoCall, setIsOpenVideoCall] = useState(false);
 
   const [messageVideoCall, setMessageVideoCall] = useState("");
+
   // call video
   useEffect(() => {
     if (
@@ -154,13 +157,15 @@ const AppInfomation = () => {
       person.fullname &&
       settingVideoCall.isOpen
     ) {
-      console.log("open call");
       setIsOpenVideoCall(true);
       if (idPeerJs) {
         socket.emit("user-join-room-call", {
           idPeerJs,
+          idAccount: account._id,
           personid: person._id,
           fullname: account.fullname,
+          roomId: person.idRoom,
+          avatar: account.avatar,
         });
       }
     }
@@ -169,22 +174,44 @@ const AppInfomation = () => {
     };
   }, [isOpenVideoCall, settingVideoCall, idPeerJs]);
   useEffect(() => {
-    socket.on("sever-send-open-status-call", ({ fullname, idPeerJs }) => {
-      setMessageVideoCall(`${CapitalizeString(fullname)} đang gọi cho bạn`);
-      dispacth(updatePeerjs(idPeerJs));
+    socket.on(
+      "sever-send-open-status-call",
+      ({ idPeerJs, idAccount, roomId, fullname, avatar }) => {
+        setMessageVideoCall(`${CapitalizeString(fullname)} đang gọi cho bạn`);
+        dispacth(updatePeerjs(idPeerJs));
+        dispacth(
+          updatePerson({
+            _id: idAccount,
+            idRoom: roomId,
+            avatar,
+            fullname,
+            typechat: "friend",
+            status: true,
+          })
+        );
+      }
+    );
+    socket.on("server-send-leave-room-call", () => {
+      setIsOpenVideoCall((prev) => !prev);
+      dispacth(updateSettingVideoCall({ isOpen: false }));
+      dispacth(updatePeerjs(""));
+      setMessageVideoCall(``);
     });
   }, []);
   const handleAcceptCall = (isAccept: boolean) => {
     if (isAccept) {
       setIsOpenVideoCall(true);
+      dispacth(updateSettingVideoCall({ isOpen: true }));
     } else {
       setIsOpenVideoCall(false);
+      dispacth(updateSettingVideoCall({ isOpen: false }));
     }
     setMessageVideoCall(``);
   };
+
   return (
     <div>
-      {isOpenVideoCall && person._id && <Video />}
+      {isOpenVideoCall && settingVideoCall.isOpen && <Video />}
       {!isOpenVideoCall && messageVideoCall && (
         <ModalStatus
           title={messageVideoCall}

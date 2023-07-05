@@ -35,7 +35,7 @@ const InputElement: FC<InputElementprops> = ({
         name={name}
         required
         className={cn(
-          " w-full border border-gray-400 mt-1 outline-none  py-2 px-3 text-transparent/80 text-sm rounded-lg",
+          " w-full border border-gray-400 bg-white mt-1 outline-none  py-2 px-3 text-transparent/80 text-sm rounded-lg",
           isShowError && error ? "border border-red-500" : ""
         )}
         placeholder={`Nhập ${title}`}

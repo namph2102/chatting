@@ -87,6 +87,13 @@ const NoticeItem: FC<INoticeItemProps> = ({
     message = `${
       isSended ? "Bạn " : ` ${CapitalizeString(userSend.fullname)} `
     } ${message}`;
+  } else if (type == 7) {
+    avatashow = isSended ? userSend.avatar : userAccept.avatar;
+    message = `${isSended ? "Bạn" : CapitalizeString(userAccept.fullname)} ${
+      status
+        ? `đã gọi cho ${CapitalizeString(userAccept.fullname)}`
+        : "đã gọi cho bạn"
+    }`;
   }
 
   return (

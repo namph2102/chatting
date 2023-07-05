@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { TSettings } from "../context/VideoContext.constant";
 
 import {
+  cleanupMediaDevices,
   getUserMediaStream,
   playStream,
   stopAudioOnly,
@@ -53,17 +54,22 @@ const VideoItem: FC<VideoItemProps> = ({ setting }) => {
   }, [idUser, idPeerJsPerson]);
 
   useEffect(() => {
+    let videoStream: MediaStream;
+    let videoPersonStream: MediaStream;
     if (navigator.mediaDevices && idUser) {
       getUserMediaStream(true, setting.isCamera).then((stream) => {
         const call = peer.call(idUser, stream);
         playStream("#accountRef", stream);
+        videoStream = stream;
         call.on(
           "stream",
           function (remoteStream) {
             console.log("Người nghe");
+            videoPersonStream = remoteStream;
             if (setting.isLeave) {
               stopBothVideoAndAudio(remoteStream);
               playStream("#videoRef", null);
+              cleanupMediaDevices(remoteStream);
             } else playStream("#videoRef", remoteStream);
             if (!setting.isMic) {
               stopAudioOnly(remoteStream);
@@ -76,15 +82,19 @@ const VideoItem: FC<VideoItemProps> = ({ setting }) => {
       });
       peer.on("call", function (call) {
         getUserMediaStream(true, setting.isCamera).then((stream) => {
+          videoStream = stream;
+
           playStream("#accountRef", stream);
           call.answer(stream);
           call.on(
             "stream",
             function (remoteStream) {
               console.log("Người gọi");
+              videoPersonStream = remoteStream;
               if (setting.isLeave) {
                 stopBothVideoAndAudio(remoteStream);
                 playStream("#videoRef", null);
+                cleanupMediaDevices(remoteStream);
               } else playStream("#videoRef", remoteStream);
               if (!setting.isMic) {
                 stopAudioOnly(remoteStream);
@@ -98,8 +108,20 @@ const VideoItem: FC<VideoItemProps> = ({ setting }) => {
       });
     }
     return () => {
-      playStream("#videoRef", null);
-      playStream("#accountRef", null);
+      try {
+        playStream("#videoRef", null);
+        playStream("#accountRef", null);
+        if (videoStream) {
+          stopBothVideoAndAudio(videoStream);
+        }
+        if (videoPersonStream) {
+          stopBothVideoAndAudio(videoPersonStream);
+        }
+        cleanupMediaDevices(videoStream);
+        cleanupMediaDevices(videoPersonStream);
+      } catch (err) {
+        console.log(err);
+      }
     };
   }, [
     setting.isCamera,
