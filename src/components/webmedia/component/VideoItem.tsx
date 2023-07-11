@@ -42,7 +42,7 @@ const VideoItem: FC<VideoItemProps> = ({ setting }) => {
   );
   const [idUser] = useState<string>(idPeerJsPerson || idPeerjs);
   const dispatch: AppDispatch = useDispatch();
-  console.log(idUser);
+
   useEffect(() => {
     if (!idUser) return;
 
@@ -64,7 +64,6 @@ const VideoItem: FC<VideoItemProps> = ({ setting }) => {
         call.on(
           "stream",
           function (remoteStream) {
-            console.log("Người nghe");
             videoPersonStream = remoteStream;
             if (setting.isLeave) {
               stopBothVideoAndAudio(remoteStream);
@@ -89,7 +88,6 @@ const VideoItem: FC<VideoItemProps> = ({ setting }) => {
           call.on(
             "stream",
             function (remoteStream) {
-              console.log("Người gọi");
               videoPersonStream = remoteStream;
               if (setting.isLeave) {
                 stopBothVideoAndAudio(remoteStream);

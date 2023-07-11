@@ -78,13 +78,14 @@ class OpenAIStream {
           Authorization: "Bearer " + VITE_OPEN_AI_KEY,
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify(payload),
       });
       const render = res.body?.getReader();
       await streamTextOpenAi(render, callback);
     } catch {
       throw new Error(
-        "Xin lỗi bạn! Có lẽ API Code của tôi đã hết hạn! Bạn có thể bảo <a target='_blank' class='text-primary text-primary-hover' href=`https://www.facebook.com/namhoai2102`>'Hoài Nam'</a> của tôi đi gia hạn không ? Tôi đang rất cần ạ!"
+        "Xin lỗi bạn! Có vẻ mạng của bạn hơi chậm! Bạn có thể load lại 1 lần nữa để sử dụng!"
       );
     }
   }

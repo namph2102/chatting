@@ -18,7 +18,7 @@ export default function VideoCallFull() {
   const settingVideoCall = useSelector(
     (state: RootState) => state.userStore.settingVideoCall
   );
-  console.log(settingVideoCall);
+  
   const dispatchRedux: AppDispatch = useDispatch();
   const handleOpenvideoCall = () => {
     dispatchRedux(

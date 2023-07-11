@@ -98,11 +98,7 @@ const NoticePage = () => {
       </ul>
       {listInfoCover && listInfoCover.length <= 0 && (
         <div className="text-xs flex justify-center flex-col items-center">
-          <img
-            width={50}
-            src="https://cdn-icons-png.flaticon.com/512/3959/3959701.png "
-            alt=""
-          />
+          <img width={50} src="/images/noticecall.png" alt="lỗi" />
           <p className="text-xs mt-2">Hiện tại vẫn chưa có thông báo nào!</p>
         </div>
       )}
