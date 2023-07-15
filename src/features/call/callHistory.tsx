@@ -36,6 +36,7 @@ const CallHistory = () => {
       });
   }, [account._id]);
   const navigation = useNavigate();
+
   return (
     <div>
       <Helmet>

@@ -85,7 +85,7 @@ class OpenAIStream {
       await streamTextOpenAi(render, callback);
     } catch {
       throw new Error(
-        "Xin lỗi bạn! Có vẻ mạng của bạn hơi chậm! Bạn có thể load lại 1 lần nữa để sử dụng!"
+        "Xin lỗi bạn! Có vẻ mạng của bạn hơi chậm! Bạn có thể tải lại trang 1 lần nữa để sử dụng!"
       );
     }
   }

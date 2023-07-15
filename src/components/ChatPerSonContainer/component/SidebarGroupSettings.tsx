@@ -1,14 +1,32 @@
 import { FC } from "react";
-import { BiEditAlt, BiExit, BiUserPlus } from "react-icons/bi";
+import { BiEditAlt, BiExit, BiLink, BiUserPlus } from "react-icons/bi";
+import { ToastNotify } from "../../../servies/utils";
 interface SidebarGroupSettingsPrps {
   setIsOpenFromSetting: (item: any) => any;
+  idRoom: string | undefined;
 }
 const SidebarGroupSettings: FC<SidebarGroupSettingsPrps> = ({
   setIsOpenFromSetting,
+  idRoom,
 }) => {
+  const handleCopyGruop = () => {
+    const copyText = `${location.origin}/g/${idRoom}`;
+    navigator.clipboard.writeText(copyText).then(() => {
+      ToastNotify("Copy Thành công đường dẫn tham gia nhóm").success();
+    });
+  };
   return (
     <>
       <div className="flex justify-center gap-2 mb-3">
+        <div
+          onClick={handleCopyGruop}
+          className="flex justify-center flex-col items-center cursor-pointer"
+        >
+          <span className="text-2xl">
+            <BiLink />
+          </span>
+          <span className="text-[10px]">Link Nhóm</span>
+        </div>
         <div
           onClick={() =>
             setIsOpenFromSetting((prev: any) => ({

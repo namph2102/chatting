@@ -157,7 +157,10 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
           </p>
         </div>
         {person.typechat == "group" && (
-          <SidebarGroupSettings setIsOpenFromSetting={setIsOpenFromSetting} />
+          <SidebarGroupSettings
+            idRoom={person.idRoom}
+            setIsOpenFromSetting={setIsOpenFromSetting}
+          />
         )}
 
         {person.typechat == "group" && (

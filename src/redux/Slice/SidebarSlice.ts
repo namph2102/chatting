@@ -10,7 +10,7 @@ import {
 } from "./slice.type";
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
 import { updateRoomsAccount } from "./AccountSlice";
-
+type IKeyOf = keyof IFriend;
 const initStateSidebar: ISidebarSlice = {
   listFriends: [],
   listGroups: {},
@@ -37,10 +37,23 @@ const SidebarSlice = createSlice({
         itemFindFriends.status = action.payload.status;
       }
     },
+    updateInfoNameFriend(state, action) {
+      const { id, value } = action.payload;
+      const key: IKeyOf = action.payload.key;
+      const indexFriend = state.listFriends.findIndex((f) => f._id == id);
+      if (indexFriend >= 0 && key && value) {
+        if (state.listFriends[indexFriend][key] != value) {
+          if (key == "fullname" || key == "avatar") {
+            state.listFriends[indexFriend][key] = value;
+          }
+        }
+      }
+    },
   },
 });
 export default SidebarSlice.reducer;
-export const { updateStatusSidebar } = SidebarSlice.actions;
+export const { updateStatusSidebar, updateInfoNameFriend } =
+  SidebarSlice.actions;
 export const getDataListFriend = (idUser: string) => {
   return (dispatch: AppDispatch) => {
     instance

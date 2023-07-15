@@ -3,11 +3,17 @@ import { ChatGPTMessage } from "./openai-stream";
 import { MessageArraySchema } from "../validator";
 import { messageType } from "../../components/chatContainer/chat.type";
 let totalchatbotPrompt: string = chatbotPrompt;
+let totalChat = 0;
 export const handleRequestMessage = (messages: messageType[]) => {
   const parsedMessages = MessageArraySchema.parse(messages);
 
   const outboundMessages: ChatGPTMessage[] = parsedMessages.map((message) => {
+    ++totalChat;
     totalchatbotPrompt += message.text;
+    if (totalChat > 2 || totalchatbotPrompt.length > 3000) {
+      totalchatbotPrompt = message.text;
+      totalChat = 0;
+    }
     return {
       role: message.isUserMessage ? "user" : "system",
       content: message.text,

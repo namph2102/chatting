@@ -8,7 +8,9 @@ import { ToastNotify } from "../../servies/utils";
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
 import { getDataListFriend } from "./SidebarSlice";
 const theme = {
-  backgroundthem: "/theme/theme4.png",
+  backgroundthem: `/theme/theme${
+    localStorage.getItem("themebackground") || "4"
+  }.png`,
   darkmode: localStorage.getItem("darkmode") || "dark-mode",
   primaryColor: "#4eac6d",
 };
@@ -58,6 +60,7 @@ const AccountSlice = createSlice({
         state.isOpenGroup = action.payload;
       } else state.isOpenGroup = !state.isOpenGroup;
     },
+
     updateFieldAccount(state, action) {
       state.account = { ...state.account, ...action.payload };
     },
@@ -138,7 +141,6 @@ export const LoginAccount = (
         if (res?.data?.account) {
           const account = res?.data?.account;
           uploadFullAccount(dispatch, account);
-
           return true;
         }
       })

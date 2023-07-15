@@ -11,6 +11,7 @@ import {
 import { SiderBar } from "../sidebar";
 import NoticePage from "../Notice";
 import CallHistory from "../call";
+import SettingsSidebar from "../setting";
 
 export const listMenu = [
   {
@@ -24,7 +25,7 @@ export const listMenu = [
     title: "Profile",
     Icon: BiUserCircle,
     hiddenMoblie: true,
-    component: SiderBar,
+    component: SettingsSidebar,
     path: "/thong-tin",
   },
   {
@@ -54,7 +55,7 @@ export const listMenu = [
   {
     title: "Settings",
     Icon: BiCog,
-    component: SiderBar,
+    component: SettingsSidebar,
     path: "/cai-dat",
   },
 ];

@@ -15,5 +15,8 @@ export const initialAccount: IAccount = {
   permission: "",
   address: "",
   phone: "",
+  pathAvatar: "",
+  pathBackground: "",
   email: "",
+  background: "/images/background.png",
 };

@@ -225,9 +225,9 @@ const ChatInput: FC<ChatInputProps> = ({
               className="py-3 block min-w-[60px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
               placeholder="Lời nhắn..."
               defaultValue={valueDefalutSearch}
-              maxRows={6}
+              maxRows={10}
               minRows={1}
-              maxLength={600}
+              maxLength={2000}
               minLength={2}
             ></TextareaAutosize>
           ) : (

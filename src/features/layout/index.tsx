@@ -19,9 +19,10 @@ const Layout = () => {
         <Route path="trang-khong-ton-tai" element={<PageNotFound />} />
         <Route path="tim-kiem" element={<SearchPage />} />
         <Route path="g/*" element={<PageNotFound />} />
-        <Route path="g/:nameGroup" element={<JoinGroup />} />
+        <Route path="g/:idRoom" element={<JoinGroup />} />
         {/* <Route path="thong-tin/:slug" element={<Profile />} />
         <Route path="thong-tin" element={<Profile />} /> */}
+
         <Route path="tim-kiem/sai-cu-phap" element={<PageNotFound />} />
       </Routes>
     </>

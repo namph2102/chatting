@@ -34,6 +34,7 @@ const InputElement: FC<InputElementprops> = ({
         id={name}
         name={name}
         required
+        autoComplete="off"
         className={cn(
           " w-full border border-gray-400 bg-white mt-1 outline-none  py-2 px-3 text-transparent/80 text-sm rounded-lg",
           isShowError && error ? "border border-red-500" : ""

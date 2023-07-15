@@ -13,7 +13,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { CapitalizeString, ToastNotify } from "../../servies/utils";
 import { ModalStatus } from "../Ui";
 import AddFriend from "../Ui/AddFriend";
-import { getDataListFriend } from "../../redux/Slice/SidebarSlice";
+import {
+  getDataListFriend,
+  updateInfoNameFriend,
+} from "../../redux/Slice/SidebarSlice";
 import {
   personInit,
   updatePerson,
@@ -89,6 +92,11 @@ const AppInfomation = () => {
         autoClose: 3000,
       });
     });
+    // khi có người Bạn thay đổi  tên
+    socket.on("friend-change-fullname-profile", ({ id, key, value }) => {
+      dispacth(updateInfoNameFriend({ id, key, value }));
+    });
+    //
     socket.on("reload-show-friends-whenaccept", () => {
       dispacth(getDataListFriend(account._id));
     });

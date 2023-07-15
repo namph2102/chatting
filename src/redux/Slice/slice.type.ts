@@ -7,6 +7,8 @@ export interface IAccount {
   refreshToken: string;
   follows: string;
   friends: string[];
+  pathAvatar: string;
+  pathBackground: "";
   rooms: string[];
   blocked: boolean;
   permission: string;
@@ -14,6 +16,7 @@ export interface IAccount {
   address: string;
   phone: string;
   email: string;
+  background: string;
 }
 export interface IUserItem {
   status: boolean;

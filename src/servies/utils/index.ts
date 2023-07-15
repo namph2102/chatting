@@ -7,12 +7,12 @@ export function cn(...classnames: ClassValue[]) {
 }
 export function ScroolToBottom(element: HTMLElement, time = 1000) {
   if (time == 0) {
-    element.scrollTo({ top: element.scrollHeight + 4, behavior: "smooth" });
+    element.scrollTo({ top: element.scrollHeight, behavior: "smooth" });
 
     return;
   }
   const idTimeout = setTimeout(() => {
-    element.scrollTo({ top: element.scrollHeight + 4, behavior: "smooth" });
+    element.scrollTo({ top: element.scrollHeight, behavior: "smooth" });
 
     clearTimeout(idTimeout);
   }, time);

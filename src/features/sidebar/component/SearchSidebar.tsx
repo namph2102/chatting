@@ -125,6 +125,7 @@ const SearchSibar: FC<SearchSibarProps> = ({
           <input
             type="text"
             id="inptuSeacr_content"
+            autoComplete="off"
             ref={inputRef}
             disabled={account._id ? false : true}
             onFocus={handleForcusSearchInput}
