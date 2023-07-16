@@ -72,9 +72,7 @@ const ChatHeader: FC<IChatheader> = ({ person }) => {
           </div>
         </div>
 
-        <div>
-          <HeaderNavRight person={person} isChatBot={person._id == "chatbot"} />
-        </div>
+        <HeaderNavRight person={person} isChatBot={person._id == "chatbot"} />
       </div>
     </section>
   );

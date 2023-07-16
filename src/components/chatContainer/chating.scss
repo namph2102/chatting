@@ -189,13 +189,24 @@
 }
 .language__parent {
   .language__children {
-    scale: 0;
-    transition: 0.3s ease-in;
+    display: none;
   }
   &:hover {
     .language__children {
-      scale: 1;
+      display: block;
       box-shadow: 0 0 2px gray;
+    }
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .chat_options-settings {
+    display: none !important;
+    box-shadow: 0 0 2px #333333;
+  }
+  .chat_options-settings_btn:hover {
+    .chat_options-settings {
+      display: flex !important;
     }
   }
 }

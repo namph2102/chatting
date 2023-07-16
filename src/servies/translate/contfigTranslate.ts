@@ -72,7 +72,7 @@ const worksChat = {
     listFriend: "Danh sách bạn bè",
     listGroup: "Danh sách Nhóm",
     listMember: "Danh sách thành viên",
-    online: "Đang hoạt dộng",
+    online: "Đang hoạt động",
     offline: "Hoạt động",
     chatMessage: "Lời nhắn...",
     textcall: "Gọi điện",
