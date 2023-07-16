@@ -22,6 +22,8 @@ import {
   IconAdmin,
   IconUser,
 } from "./loadmap/loadmap.type";
+import "../../../servies/translate/contfigTranslate";
+import { useTranslation } from "react-i18next";
 const LocaltionAdmin = { lat: 10.8508707, lng: 106.6316102 };
 interface LoadMapProps {
   search?: string;
@@ -35,6 +37,8 @@ const LoadMap: React.FC<LoadMapProps> = ({
   localtion,
   hideSerachInput,
 }) => {
+  const { t } = useTranslation();
+
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [locationName, setLocationName] = useState<string | null>(null);
   const [localCenter, setLocalCenter] = useState<Coordinates | any>(null);
@@ -43,6 +47,7 @@ const LoadMap: React.FC<LoadMapProps> = ({
   >([]);
   const [isZoomeWidth, setIsZoomeWidth] = useState<boolean>(true);
   const InfomationRef = useRef<HTMLSpanElement>(null);
+
   useEffect(() => {
     if (localtion) {
       try {
@@ -65,7 +70,7 @@ const LoadMap: React.FC<LoadMapProps> = ({
           return;
         }
       } catch {
-        ToastNotify("Không lấy được tọa độ !").warning();
+        ToastNotify(`${t("get")} ${t("location")} ${t("error")}!`).warning();
       }
     }
     if (navigator.geolocation) {
@@ -97,7 +102,7 @@ const LoadMap: React.FC<LoadMapProps> = ({
         }
       );
     } else {
-      ToastNotify("Tọa độ không hổ trợ trên trình duyệt của bạn").error();
+      ToastNotify(`${t("notSupport")}!`).error();
     }
   }, []);
 
@@ -133,14 +138,16 @@ const LoadMap: React.FC<LoadMapProps> = ({
         localCenter.longitude
       ).then((data: IMarkerLocal[]) => {
         if (data?.length > 0) {
-          ToastNotify(`Tìm kiếm thành công: ${contextSearch}`).success();
+          ToastNotify(
+            `${t("search")} ${t("success")}: ${contextSearch}`
+          ).success();
           setLocalCenter({
             latitude: data[0].lat,
             longitude: data[0].lng,
           });
           setListMarker([...listMarker, ...data]);
         } else {
-          ToastNotify(`Tìm kiếm thất bại: ${contextSearch}`).error();
+          ToastNotify(`${t("search")} ${t("error")}: ${contextSearch}`).error();
 
           if (inputSerachRef.current) {
             inputSerachRef.current.focus();
@@ -159,15 +166,17 @@ const LoadMap: React.FC<LoadMapProps> = ({
       {localCenter && coordinates && locationName ? (
         <div>
           <p className="w-full text-sm">
-            <span className="font-bold ">
-              {" "}
-              Tọa độ của {fullname || "bạn"} hiện tại là :{" "}
+            <span className="font-bold capitalize ">
+              {t("location")}{" "}
+              {fullname?.toLowerCase() == "bạn" ? t("you") : fullname}{" "}
+              {t("current")}:{" "}
             </span>{" "}
-            ( Vĩ độ :{coordinates.latitude} , Kinh độ : {coordinates.longitude}{" "}
-            )<span ref={InfomationRef} className="opacity-0 h-2"></span>
+            ( {t("latitude")} :{coordinates.latitude} , {t("longitude")} :{" "}
+            {coordinates.longitude} )
+            <span ref={InfomationRef} className="opacity-0 h-2"></span>
           </p>
           <p className="mb-1 text-sm mt-2">
-            <span className="font-bold ">Địa chỉ:</span> {locationName}
+            <span className="font-bold ">{t("address")}:</span> {locationName}
           </p>
           <MapContainer
             center={[localCenter.latitude, localCenter.longitude]}
@@ -186,7 +195,7 @@ const LoadMap: React.FC<LoadMapProps> = ({
               position={[coordinates.latitude, coordinates.longitude]}
             >
               <Popup>
-                Vị trí của {fullname || "bạn"}
+                {t("indexof")} {fullname || t("you")}
                 <br />
               </Popup>
             </Marker>
@@ -199,14 +208,14 @@ const LoadMap: React.FC<LoadMapProps> = ({
                 >
                   <Popup>
                     {marker.title} <hr className="h-2 mt-1" />
-                    Cách vị trí hiện tại: {marker.distance} km
+                    {t("separate")}: {marker.distance} km
                     <br />
                   </Popup>
                 </Marker>
               ))}
             <Marker icon={IconAdmin} position={LocaltionAdmin}>
               <Popup>
-                Đại bản doanh của Zecky.online
+                {t("home")} Zecky.online
                 <br />
               </Popup>
             </Marker>
@@ -226,21 +235,21 @@ const LoadMap: React.FC<LoadMapProps> = ({
                   ref={inputSerachRef}
                   type="text"
                   className="py-2 px-2 sm:min-w-[200px] min-w-[250px] text-[12px] bg-menu rounded-full  border-[1px] outline-none"
-                  placeholder="Tên địa điểm muốn tìm?"
+                  placeholder={t("searchPlace")}
                 />
 
                 <button
                   onClick={Debounced(handleSerach, 500)}
-                  className="py-2 px-4 sm:w-[130px] w-1/2 rounded-xl ml-2 mt-2 opacity-90  hover:opacity-80 background-primary text-sm  "
+                  className="py-2 px-4 sm:w-[190px] w-1/2 rounded-xl ml-2 mt-2 opacity-90  hover:opacity-80 background-primary text-sm  "
                 >
-                  Thêm tọa độ
+                  {t("type")} {t("address")}
                 </button>
               </div>
               <button
                 className="py-2 px-4 bg-[#4f4f73] sm:block hidden  text-xs hover:bg-[#1c1c33] rounded-3xl"
                 onClick={handleZoomWith}
               >
-                {!isZoomeWidth ? "Thu nhỏ" : "Phóng to"}
+                {!isZoomeWidth ? t("zoomOut") : t("zoomIn")}
               </button>
             </div>
           )}

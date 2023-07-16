@@ -34,7 +34,7 @@ const CallHistoryItem: FC<{ item: ICallHistory; idAccount: string }> = ({
       <div className="flex gap-2 items-center">
         <img
           src={item.author.avatar}
-          className="w-10 h-10 object-cover"
+          className="w-10 h-10 object-cover rounded-full"
           alt=""
         />
         <div>

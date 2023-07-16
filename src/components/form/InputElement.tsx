@@ -1,7 +1,9 @@
 import { cn } from "../../servies/utils";
 import { Tooltip } from "@mui/material";
 import React, { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
+import "../../servies/translate/contfigTranslate";
 interface InputElementprops {
   title: string;
   error?: string;
@@ -20,6 +22,7 @@ const InputElement: FC<InputElementprops> = ({
 }) => {
   const [isShowEye, setShowEye] = useState<boolean>(false);
   const [isShowError, setShowError] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   return (
     <div className="sm:w-[350px] w-full relative">
@@ -39,7 +42,7 @@ const InputElement: FC<InputElementprops> = ({
           " w-full border border-gray-400 bg-white mt-1 outline-none  py-2 px-3 text-transparent/80 text-sm rounded-lg",
           isShowError && error ? "border border-red-500" : ""
         )}
-        placeholder={`Nhập ${title}`}
+        placeholder={`${t("type")} ${title}`}
         value={value}
         onChange={handleChange}
         onBlur={() => value && setShowError(true)}
@@ -47,7 +50,7 @@ const InputElement: FC<InputElementprops> = ({
       />
       {isPassword && (
         <Tooltip
-          title={isShowEye ? "Hiển thị nội dung" : "Ẩn nội dung"}
+          title={(isShowEye ? t("show") : t("hidden")) + " " + t("content")}
           arrow
           placement="top"
         >

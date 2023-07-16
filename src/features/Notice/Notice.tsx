@@ -7,6 +7,8 @@ import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
+import "../../servies/translate/contfigTranslate";
+import { useTranslation } from "react-i18next";
 export interface INoticeItem {
   _id: string;
   createdAt: string;
@@ -30,6 +32,7 @@ export interface INoticeItem {
   type: number;
 }
 const NoticePage = () => {
+  const { t } = useTranslation();
   const [listInfo, setListInfo] = useState<INoticeItem[]>([]);
   const { account, noticeTotal } = useSelector(
     (state: RootState) => state.userStore
@@ -74,7 +77,7 @@ const NoticePage = () => {
   return (
     <section>
       <Helmet>
-        <title>Thông báo tại Zecky</title>
+        <title>{t("notice")} Zecky</title>
         <link rel="canonical" href="" />
       </Helmet>
       <h2 className="font-bold text-xl mb-4 flex items-center">
@@ -84,9 +87,9 @@ const NoticePage = () => {
         >
           <BiChevronLeft />
         </button>
-        Thông báo
+        {t("notice")}
       </h2>
-      <ul className="max-h-[calc(100vh-80px)] overflow-y-auto">
+      <ul className="max-h-[calc(100vh-90px)] overflow-y-auto">
         {listInfoCover.length > 0 &&
           listInfo.map((acc) => (
             <NoticeItem
@@ -99,7 +102,7 @@ const NoticePage = () => {
       {listInfoCover && listInfoCover.length <= 0 && (
         <div className="text-xs flex justify-center flex-col items-center">
           <img width={50} src="/images/noticecall.png" alt="lỗi" />
-          <p className="text-xs mt-2">Hiện tại vẫn chưa có thông báo nào!</p>
+          <p className="text-xs mt-2">{t("donthavenotice")}!</p>
         </div>
       )}
     </section>

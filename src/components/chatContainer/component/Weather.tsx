@@ -1,6 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { ToastNotify } from "../../../servies/utils";
 import { LoadingDot } from "../../loading";
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 
 const VITE_WEATHER_KEY = import.meta.env.VITE_WEATHER_KEY;
 interface IWheather {
@@ -42,6 +44,7 @@ const WeatherForecast: FC<WeatherForecastProps> = ({ latude, longtude }) => {
       );
     }
   }, []);
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -49,11 +52,20 @@ const WeatherForecast: FC<WeatherForecastProps> = ({ latude, longtude }) => {
         <>
           <ul className="text-sm">
             <li>
-              Nhiệt độ: {weather.app_temp} <sup>0</sup> C
+              {t("temperature")}: {weather.app_temp} <sup>0</sup> C
             </li>
-            <li> Tốc độ gió : {weather.wind_spd}(m/s)</li>
-            <li> Độ ẩm : {weather.rh}%</li>
-            <li> Áp suất : {weather.pres} (mb)</li>
+            <li>
+              {" "}
+              {t("windspeed")}: {weather.wind_spd}(m/s)
+            </li>
+            <li>
+              {" "}
+              {t("humidity")} : {weather.rh}%
+            </li>
+            <li>
+              {" "}
+              {t("pressure")} : {weather.pres} (mb)
+            </li>
           </ul>
         </>
       ) : (

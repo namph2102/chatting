@@ -20,16 +20,21 @@ import {
 import { AppDispatch } from "../../redux";
 import Authentication from "../../config/auth";
 import instance from "../../config";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const aboutController = new AbortController();
   const signal = aboutController.signal;
+  const { t } = useTranslation();
+
   useEffect(() => {
     return () => {
       aboutController.abort();
     };
   }, []);
+
   const responsiveLoggin = useCallback(
     (response: {
       user: {
@@ -60,7 +65,7 @@ const LoginPage = () => {
               }, 2000);
               return;
             } else {
-              ToastNotify("Sever đang bị lỗi!").info();
+              ToastNotify(t("severError")).info();
             }
           })
           .catch((err) => {
@@ -81,11 +86,11 @@ const LoginPage = () => {
     },
     validationSchema: Yup.object().shape({
       password: Yup.string()
-        .required("không được để trống")
-        .max(50, "không vượt vượt quá 50 ký tự"),
+        .required(t("inputRequired"))
+        .max(50, `${t("inputExceed")}  50 ${t("character")}`),
       username: Yup.string()
-        .required("không được để trống")
-        .max(50, "không vượt vượt quá 50 ký tự"),
+        .required(t("inputRequired"))
+        .max(50, `${t("inputExceed")}  50 ${t("character")}`),
     }),
     onSubmit: async (objvalue) => {
       const data = {
@@ -99,7 +104,7 @@ const LoginPage = () => {
         }
       );
       if (isRedis) {
-        ToastNotify("Đăng nhập thành công!").success();
+        ToastNotify(`${t("login")} ${t("success")} !`).success();
         navigate("/");
       }
     },
@@ -108,7 +113,7 @@ const LoginPage = () => {
   return (
     <section id="register" className="overflow-y-auto relative">
       <Helmet>
-        <title>Đăng nhập vào trang chủ của Zecky</title>
+        <title>{t("login") + " " + t("home")} Zecky</title>
         <link rel="canonical" href="" />
       </Helmet>
       <div className="py-6 container mx-auto px-2 flex flex-wrap h-screen ">
@@ -122,7 +127,7 @@ const LoginPage = () => {
           </div>
           <div className="text-base lg:text-left lg:mb-0 mb-8 text-center mt-2 grid place-items-center">
             <div className="typing-demo min-h-[16px]">
-              Chào bạn đã đến với{" "}
+              {t("welcomeToMywebsite")}{" "}
               <b className=" font-semibold ">
                 <Link to="/">Zecky!</Link>
               </b>
@@ -134,12 +139,12 @@ const LoginPage = () => {
           className="lg:basis-3/4 basis-full flex flex-col items-center justify-center rounded-xl py-6 px-2"
         >
           <div className="text-center mb-6">
-            <h2 className="font-bold text-3xl">Đăng nhập</h2>
+            <h2 className="font-bold text-3xl">{t("login")}</h2>
             <p className="text-sm mt-3 text-transparent/60">
-              Cùng trò chuyện với bạn bè nào{" "}
+              {t("letChatWithFriends")}
               <Link to="/">
                 {" "}
-                <span className="text-primary font-bold">Trang chủ</span>
+                <span className="text-primary font-bold">{t("home")}</span>
               </Link>
             </p>
           </div>
@@ -151,7 +156,7 @@ const LoginPage = () => {
                 error={formik.errors.username}
                 value={formik.values.username}
                 handleChange={formik.handleChange}
-                title="tài khoản"
+                title={t("username")}
               />
               <InputElement
                 name="password"
@@ -159,12 +164,12 @@ const LoginPage = () => {
                 value={formik.values.password}
                 handleChange={formik.handleChange}
                 isPassword={true}
-                title="mật khẩu"
+                title={t("password")}
               />
             </div>
 
             <p className="text-sm text-center">
-              Chấp nhận chính sách của tôi{" "}
+              {t("acceptMyTerm")}{" "}
               <Link to="/chinh-sach">
                 <strong className="text-primary">Terms of Use</strong>
               </Link>
@@ -173,9 +178,9 @@ const LoginPage = () => {
               type="submit"
               className="py-2 w-full my-3 text-base text-[#fff] background-primary hover:opacity-95 rounded-lg"
             >
-              Đăng nhập ngay
+              {t("login") + " " + t("now")}
             </button>
-            <p className="text-center mb-2">Có thể sử dụng với</p>
+            <p className="text-center mb-2">{t("cantUse")}</p>
             <div className="grid grid-cols-3 gap-4">
               <button
                 onClick={() => Authentication.signGoogle(responsiveLoggin)}
@@ -202,9 +207,9 @@ const LoginPage = () => {
             </div>
           </form>
           <p className="my-10">
-            Bạn chưa có tài khoản ?
+            {t("dontAccount")} ?
             <Link to="/dang-ky" className="text-primary ml-2">
-              Đăng ký ngay
+              {t("register") + " " + t("now")}
             </Link>
           </p>
           <p className="text-sm text-primay opacity-75 pt-4 px-2">
@@ -212,7 +217,7 @@ const LoginPage = () => {
             <Link to="/">
               <span className="cursor-pointer">Zecky</span>
             </Link>
-            . Được tạo bởi <span className="text-red-600">❤️</span>{" "}
+            .{t("created")} <span className="text-red-600">❤️</span>{" "}
             <a
               href="https://www.facebook.com/namhoai2102"
               target="_blank"

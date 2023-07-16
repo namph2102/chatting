@@ -11,8 +11,10 @@ import { CapitalizeString, cn } from "../../servies/utils";
 import { useState } from "react";
 import { updateFieldAccount } from "../../redux/Slice/AccountSlice";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
-
+import "../../servies/translate/contfigTranslate";
+import { useTranslation } from "react-i18next";
 const PersonInfo = () => {
+  const { t } = useTranslation();
   const { account } = useSelector((state: RootState) => state.userStore);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const dispatch: AppDispatch = useDispatch();
@@ -25,16 +27,19 @@ const PersonInfo = () => {
     },
     validationSchema: Yup.object().shape({
       fullname: Yup.string()
-        .required("không được để trống")
-        .matches(/^[\D \s]+$/, 'chỉ bao gồm "chữ cái"')
-        .min(2, "Ít nhất là 2 ký tự")
-        .max(50, "không vượt quá 50 ký tự"),
+        .required(t("inputRequired"))
+        .matches(
+          /^[\D \s]+$/,
+          `${t("only")} ${t("includes")} "${t("alphabet")}"`
+        )
+        .min(2, `${t("minis")} 2 ${t("character")}`)
+        .max(50, `${t("inputExceed")} 50 ${t("character")}`),
       email: Yup.string()
-        .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "không  đúng định dạng")
-        .max(100, "không vượt quá 100 ký tự"),
+        .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, `${t("not")} ${t("format")}`)
+        .max(100, `${t("inputExceed")} 100 ${t("character")}`),
       phone: Yup.string()
-        .matches(/^(\d{9}|\d{10}|\d{11})$/, "không phải là số điện thoại")
-        .max(100, "không vượt quá 100 ký tự"),
+        .matches(/^(\d{9}|\d{10}|\d{11})$/, `${t("not")} ${t("format")}`)
+        .max(100, `${t("inputExceed")} 100 ${t("character")}`),
     }),
     onSubmit(values) {
       if (!account._id) return;
@@ -58,7 +63,7 @@ const PersonInfo = () => {
           <span>
             <BiUser />
           </span>
-          <span>Hồ sơ</span>
+          <span>{t("profile")}</span>
         </div>
         <button className="text-3xl">
           {!isOpenMore ? <RiArrowDropDownLine /> : <RiArrowDropUpLine />}
@@ -78,25 +83,27 @@ const PersonInfo = () => {
           <BiPencil />
         </button>
         <li>
-          <p className="opacity-80">Tên</p>
+          <p className="opacity-80">{t("fullname")}</p>
           <p className="mt-1 font-semibold capitalize text-xs">
-            {account.fullname || "Chưa cập nhập"}
+            {account.fullname || `${t("not")} ${t("update")}`}
           </p>
         </li>
         <li>
-          <p className="opacity-80">Điện thoại</p>
+          <p className="opacity-80">{t("phone")}</p>
           <p className="mt-1 font-semibold capitalize text-xs">
-            {!account.phone ? "Chưa cập nhập" : `+84${account.phone}`}
+            {!account.phone
+              ? `${t("not")} ${t("update")}`
+              : `0${account.phone}`}
           </p>
         </li>
         <li>
           <p className="opacity-80">Email</p>
           <p className="mt-1 font-semibold text-xs">
-            {account.email || "Chưa cập nhập"}
+            {account.email || `${t("not")} ${t("update")}`}
           </p>
         </li>
         <li>
-          <p className="opacity-80">Địa chỉ</p>
+          <p className="opacity-80">{t("address")}</p>
           <p className="mt-1 font-semibold capitalize text-xs">
             {account.address}
           </p>
@@ -109,7 +116,7 @@ const PersonInfo = () => {
             className="py-4 px-4 rounded-xl sm:w-auto w-full flex flex-col bg-white relative text-black"
           >
             <h6 className="font-bold text-xl text-center my-2">
-              Thay đổi thông tin
+              {t("change")} {t("info")}
             </h6>
             <button
               onClick={() => setIsOpenModal(false)}
@@ -122,14 +129,14 @@ const PersonInfo = () => {
               error={formik.errors.fullname}
               value={formik.values.fullname}
               handleChange={formik.handleChange}
-              title="Họ và Tên"
+              title={t("fullname")}
             />
             <InputElement
               name="phone"
               error={formik.errors.phone}
               value={"0" + formik.values.phone}
               handleChange={formik.handleChange}
-              title="Điện thoại"
+              title={t("phone")}
             />
             <InputElement
               name="email"
@@ -142,13 +149,13 @@ const PersonInfo = () => {
               name="address"
               value={formik.values.address}
               handleChange={formik.handleChange}
-              title="Địa chỉ"
+              title={t("address")}
             />
             <button
               type="submit"
               className="background-primary background-primary-hover opacity-90 hover:opacity-100 py-2 rounded-xl"
             >
-              Cập nhập
+              {t("update")}
             </button>
           </form>
         </ModalProviderOverlay>

@@ -27,13 +27,17 @@ import openaiStream from "../../servies/streamchatbox/openai-stream";
 import { Spotify } from "./component/spotify/spotify.contant";
 import { getLocation } from "./component/loadmap/index.util";
 import { personInit } from "../../redux/Slice/ChatPersonSlice";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 
 const controller = new AbortController();
 
 const ChattingContainer = () => {
+  const { t } = useTranslation();
+  initState.comment = t("commentChatBot");
   const [listUserComments, dispatch] = useReducer(
     CommentReducer,
-    StoreCommentChatBot.length <= 1 ? initState : StoreCommentChatBot
+    StoreCommentChatBot.length <= 1 ? [initState] : StoreCommentChatBot
   );
   const [isLoadding, setIsLoadding] = useState<boolean>(false);
   const [valueDefalutSearch, setValueDefaultSearch] = useState<string>("");
@@ -62,8 +66,7 @@ const ChattingContainer = () => {
           const coverText: string[] = message.text
             .replace(/\*/g, "")
             ?.split(" ");
-          if (coverText.length < 1)
-            throw new Error("Vui lòng cung cấp thêm thông tin ?");
+          if (coverText.length < 1) throw new Error(t("infomationNotEnough"));
 
           message.text =
             coverText.slice(1, coverText.length).join(" ") || message.text;
@@ -155,15 +158,15 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
       } else if (message.text.includes("**youtube**")) {
         const seacrh: string = message.text.replace("**youtube**", "") || "";
         if (!seacrh) {
-          throw new Error("Cú pháp: **youtube**	&lt; Nhập từ khóa &gt; ");
+          throw new Error(
+            `${t("syntax")}: **youtube**	&lt;${t("type")} ${t("keyword")} &gt; `
+          );
         }
         typeChatting = "youtube";
         setValueDefaultSearch("**youtube**");
         reply = await openaiStream.getListYoutube(seacrh, 12);
         if (!reply) {
-          throw new Error(
-            "Hiện tại máy chủ bị lỗi! Bạn vui lòng liên hệ Admin Zecky nha!"
-          );
+          throw new Error(t("severError"));
         }
       } else if (message.text.includes("**weather**")) {
         const search = message.text.replace("**weather**", "").trim();
@@ -172,9 +175,11 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
           const data: { lat: string; lon: string; display_name: string } =
             await responsive.data[0];
 
-          reply = `Thời tiết tại ${data.display_name}*${data.lat}*${data.lon}`;
+          reply = `${t("weather")}  ${data.display_name}*${data.lat}*${
+            data.lon
+          }`;
         } else {
-          reply = "Thời tiết hôm nay của bạn*0*0";
+          reply = `${t("weatherNow")}*0*0`;
         }
         // show thời tiết
         typeChatting = "weather";
@@ -187,7 +192,7 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         // tìm kiếm theo keyword
         const seacrh: string = message.text.replace("**mp3**", "") || "";
         if (!seacrh) {
-          ToastNotify("Bạn vui lòng nhập từ khóa").info();
+          ToastNotify(`${t("type")} ${t("keyword")}`).info();
         }
         typeChatting = "mp3";
 
@@ -209,15 +214,15 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
         if (proms.includes("**")) {
           language = proms.split("**")[0].trim() || "en";
         }
-        if (!fileUpload) throw new Error("Có lẽ chưa tải file dúng yêu cầu?");
-        ToastNotify("Vui lòng chờ đợi trong ít giây bạn nhé!").success({
+        if (!fileUpload) throw new Error(`File ${t("not")} ${t("format")}`);
+        ToastNotify(t("plsWating")).success({
           autoClose: 5000,
         });
-        reply = `File Audio của bạn Có nội dung là:<br/>
+        reply = `File Audio ${t("have")} ${t("content")}:<br/>
          ${await openaiStream.getTextInAudio(fileUpload, language)} `;
         typeChatting = "translate";
         if (!reply) {
-          throw new Error("Xin lỗi hệ thống đang quá tải!");
+          throw new Error(t("severError"));
         }
 
         setValueDefaultSearch("");
@@ -322,8 +327,4 @@ Ví dụ: **img** 1024** Ảnh mèo con dễ thương hoặc là **img** con mè
 export default ChattingContainer;
 function getTime(): string {
   return new Date().toISOString();
-
-  // datenew.getHours().toString().padStart(2, "0") +
-  // ":" +
-  // datenew.getMinutes().toString().padStart(2, "0");
 }

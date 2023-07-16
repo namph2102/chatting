@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import AudioComment from "./AudioComment";
 import LoadMap from "../../chatContainer/component/LoadMap";
 import DocumentComment from "./DocumentComment";
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 interface GhimItem extends ChatUserPersonItemProps {
   handleactiveOptions: (
     idComment: string | undefined,
@@ -20,6 +22,7 @@ interface GhimItem extends ChatUserPersonItemProps {
   ) => void;
 }
 const GhimItem: FC<GhimItem> = (props) => {
+  const { t } = useTranslation();
   const [isOpenGhim, setIsOpenGhim] = useState<boolean>(false);
   const handleActionClick = (id: string | undefined, type: string) => {
     if (type == "ghim") {
@@ -131,13 +134,13 @@ const GhimItem: FC<GhimItem> = (props) => {
                 onClick={() => handleActionClick(props._id, "ghim")}
                 className="hover:bg-gray-500  p-1"
               >
-                Bỏ Ghim
+                {t("removeGhim")}
               </li>
               <li
                 onClick={() => handleActionClick(props._id, "viewitem")}
                 className="hover:bg-gray-500  p-1 "
               >
-                Xem trong đoạn chat
+                {t("seeInMessage")}
               </li>
             </ul>
           )}

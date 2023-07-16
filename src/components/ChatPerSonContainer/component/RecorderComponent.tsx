@@ -5,7 +5,8 @@ import { ToastNotify, cn } from "../../../servies/utils";
 import { Tooltip } from "@mui/material";
 import { componentsProps } from "../../../styles/componentsProps";
 import { convertToBase64 } from "../util";
-
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 let mediaRecorder: MediaRecorder | null = null;
 let audioChunks: BlobPart[] | any[] = [];
 
@@ -17,6 +18,7 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
   handleSendMessage,
   setIsOpenSpeakVoice,
 }) => {
+  const { t } = useTranslation();
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const [audioURL, setAudioURL] = useState("");
 
@@ -79,7 +81,7 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
       const kilobytes = byteLength / 1024;
       console.log(kilobytes);
       if (kilobytes > 2100) {
-        ToastNotify("Bạn không để kéo dài quá 6 phút").error();
+        ToastNotify(t("recordMessage")).error();
         handleDeleteSoundOld();
       } else {
         handleSendMessage(base64, "audio");
@@ -111,7 +113,7 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
           <BiMicrophone />
         </button>
         <p className="mx-2 text-sm">
-          {!isClickButton ? "Nhấn vào để nói !" : "Nhấn vào ra để dừng"}
+          {!isClickButton ? t("keypressToSpeak") : t("keyDownToSpeak")}
         </p>
       </div>
 
@@ -124,7 +126,7 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
             <div className="flex gap-1">
               <Tooltip
                 onClick={handleDeleteSoundOld}
-                title="Xóa"
+                title={t("delete")}
                 arrow
                 componentsProps={componentsProps}
               >
@@ -136,7 +138,7 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
                 onClick={() => {
                   handleDeleteSoundOld(), handleClickme(false);
                 }}
-                title="Ghi âm lại"
+                title={t("record")}
                 arrow
                 componentsProps={componentsProps}
               >
@@ -150,7 +152,7 @@ const RecorderComponent: FC<RecorderComponentProps> = ({
               onClick={handleSendAudio}
               className="flex items-center justify-center gap-1 background-primary background-primary-hover   py-1 px-3 rounded-xl"
             >
-              <span className="text-base"> Gửi </span>
+              <span className="text-base"> {t("send")} </span>
               <span className="text-base">
                 <BiSend />
               </span>

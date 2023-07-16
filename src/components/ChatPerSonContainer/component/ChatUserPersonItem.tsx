@@ -21,6 +21,8 @@ import LinkCommentItem from "./LinkCommentItem";
 import AudioComment from "./AudioComment";
 import LoadMap from "../../chatContainer/component/LoadMap";
 import DocumentComment from "./DocumentComment";
+import "../../../servies/translate/contfigTranslate";
+import { useTranslation } from "react-i18next";
 
 export interface ChatUserPersonItemProps {
   idAccount: string;
@@ -54,18 +56,22 @@ interface ChatUserPersonItemPropsMore extends ChatUserPersonItemProps {
   callbackCallvideo: (item: any) => void;
 }
 const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
+  const { t } = useTranslation();
+
   const classname =
     "w-[fit-content]  relative  box_chat-content   flex-start  flex-col sm:flex-row  rounded-lg font-medium pb-2 px-2 shadow-inner mt-3 ";
   let message = props.comment;
   if (props.action.kind == "delete") {
     if (props.isAction) {
       message = `<span class="text-sm  italic text-red-400">${
-        (props.isUser ? "Bạn" : CapitalizeString(props.author.fullname)) +
-        " đã xóa nội dung này!"
+        (props.isUser ? t("you") : CapitalizeString(props.author.fullname)) +
+        ` ${t("deleteMessage")}!`
       }</span>`;
     } else {
       message = !props.isUser
-        ? `<span class="text-sm  italic text-red-400">Bạn đã xóa nội dung này!</span>`
+        ? `<span class="text-sm  italic text-red-400">${t("you")} ${t(
+            "deleteMessage"
+          )}!</span>`
         : message;
     }
   }
@@ -78,10 +84,10 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
     ) {
       if (props.isAction && !props.isUser) {
         ToastNotify(
-          CapitalizeString(props.author.fullname) + " đã xóa nội dung này!"
+          CapitalizeString(props.author.fullname) + ` ${t("deleteMessage")}`
         ).warning();
       } else {
-        ToastNotify("Bạn đã xóa nội dung này").warning();
+        ToastNotify(`${t("you")} ${t("deleteMessage")}`).warning();
       }
       return;
     } else if (type == "edit") {
@@ -144,7 +150,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
             src={props.author.avatar}
             alt=""
           />{" "}
-          {CapitalizeString(props.isUser ? "Bạn" : props.author.fullname)}{" "}
+          {CapitalizeString(props.isUser ? t("you") : props.author.fullname)}{" "}
           {props.comment}
         </p>
       </div>
@@ -158,8 +164,8 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
             src={props.author.avatar}
             alt=""
           />
-          {CapitalizeString(props.isUser ? "Bạn" : props.author.fullname)}
-          <span> đang tạo phòng họp mặt </span>|
+          {CapitalizeString(props.isUser ? t("you") : props.author.fullname)}
+          <span> {t("createRoomCall")} </span>|
           <button
             className="text-primary-hover"
             onClick={() =>
@@ -171,7 +177,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               })
             }
           >
-            tham gia ngay !
+            {t("joinNow")}
           </button>
         </p>
       </div>
@@ -185,8 +191,8 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
             src={props.author.avatar}
             alt=""
           />
-          {CapitalizeString(props.isUser ? "Bạn" : props.author.fullname)}
-          <span> đã tạo cuộc gọi </span>
+          {CapitalizeString(props.isUser ? t("you") : props.author.fullname)}
+          <span> {t("createCall")} </span>
         </p>
       </div>
     );
@@ -221,7 +227,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
         >
           {props.typechat == "group" && (
             <p className="capitalize text-sm font-extralight opacity-80 drop-shadow-2xl mb-2">
-              {props.isUser ? "Bạn" : props.author.fullname}
+              {props.isUser ? t("you") : props.author.fullname}
             </p>
           )}
           {props.action.kind && props.action.kind == "ghim" && (
@@ -281,7 +287,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                       className="px-2 py-2  background-primary-hover  rounded-full opacity-80"
                       onClick={() => handleActionClick(props._id, "delete")}
                     >
-                      Xóa
+                      {t("delete")}
                     </li>
                   )}
                   {props.type == "text" &&
@@ -291,7 +297,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                         className=" py-2   background-primary-hover px-2 rounded-full opacity-80"
                         onClick={() => handleActionClick(props._id, "edit")}
                       >
-                        Chỉnh sửa
+                        {t("edit")}
                       </li>
                     )}
                   {props.action.kind != "ghim" && (
@@ -307,7 +313,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                       className="py-2  background-primary-hover px-2 rounded-full opacity-80"
                       onClick={() => handleActionClick(props._id, "ghim")}
                     >
-                      Hủy Ghim
+                      {t("cancel")} Ghim
                     </li>
                   )}
                 </ul>
@@ -327,7 +333,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
             ref={buttonEditRef}
             className="absolute hover:opacity-70  py-1 hidden px-2  background-primary -top-6 rounded-full right-0 text-sm font-light "
           >
-            Chấp nhận
+            {t("accept")}
           </button>
           {props.type == "image" && props.file && (
             <div className="flex flex-wrap gap-y-8 ">
@@ -341,7 +347,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                       className="w-full  object-cover h-full cursor-pointer "
                       loading="lazy"
                       src={file.url}
-                      alt="Ảnh bị lỗi rồi!"
+                      alt={`${t("image")} ${t("error")}!`}
                     />
                     <div className="absolute bg-black/60 py-2 bottom-0  left-0 w-full right-0 h-12 flex items-center text-left">
                       <img src="images/iconimage.png" className="lg:w-10 w-8" />
@@ -360,7 +366,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                     </div>
                   </div>
                 ) : (
-                  "Ảnh đang bị lỗi"
+                  `${t("image")} ${t("error")}`
                 )
               )}
             </div>
@@ -369,7 +375,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
             <LoadMap
               localtion={props.comment}
               fullname={CapitalizeString(
-                props.isUser ? "Bạn" : props.author.fullname
+                props.isUser ? t("you") : props.author.fullname
               )}
             />
           )}
@@ -403,8 +409,8 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                     className="cursor-pointer"
                     title={
                       (props.isUser
-                        ? "Bạn"
-                        : capitalize(props.author.fullname)) + " đã chinh sửa"
+                        ? t("you")
+                        : capitalize(props.author.fullname)) + `${t("edited")}`
                     }
                   >
                     <b className="">

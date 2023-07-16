@@ -18,6 +18,8 @@ import {
 } from "../../../redux/Slice/ChatPersonSlice";
 import { useNavigate } from "react-router-dom";
 import { setIsOpenDisplayTable } from "../../../redux/Slice/AccountSlice";
+import "../../../servies/translate/contfigTranslate";
+import { useTranslation } from "react-i18next";
 
 interface SearchSibarProps {
   title: string;
@@ -36,6 +38,7 @@ const SearchSibar: FC<SearchSibarProps> = ({
   listSearch,
   setListSearch,
 }) => {
+  const { t } = useTranslation();
   const [isShowSearchBox, setIsShowSearchBox] = useState<boolean>(false);
 
   const SubSearch = useRef<HTMLSpanElement>(null);
@@ -47,7 +50,9 @@ const SearchSibar: FC<SearchSibarProps> = ({
   const getListUserSearch = () => {
     setIsShowSearchBox(true);
     if (inputRef?.current?.value) {
-      mutateFC(inputRef.current?.value.trim().toLowerCase());
+      let search = inputRef?.current?.value;
+      if (search[0] == "0") search = search.slice(1);
+      search && mutateFC(search.trim().toLowerCase());
     }
   };
   const handleChangeinputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,12 +117,19 @@ const SearchSibar: FC<SearchSibarProps> = ({
       <section className="mb-2 ">
         <div className="flex justify-between">
           <h2 className="text-xl font-semibold">{title}</h2>
-          <button
-            onClick={handleOpenFormCreateRoom}
-            className="w-8 h-8 hover:bg-[var(--primary-color)]  border-[1px] border-gray-500 hover:opacity-100 bg-[var(--primary-color)]  opacity-50 hover:text-[#fff] rounded-sm"
+          <Tooltip
+            arrow
+            placement="bottom"
+            title={t("createRoom")}
+            componentsProps={componentsProps}
           >
-            +
-          </button>
+            <button
+              onClick={handleOpenFormCreateRoom}
+              className="w-8 h-8 hover:bg-[var(--primary-color)]  border-[1px] border-gray-500 hover:opacity-100 bg-[var(--primary-color)]  opacity-50 hover:text-[#fff] rounded-sm"
+            >
+              +
+            </button>
+          </Tooltip>
         </div>
       </section>
       <section className="mb-6 relative z-10 mt-2">
@@ -132,12 +144,12 @@ const SearchSibar: FC<SearchSibarProps> = ({
             onChange={handleChangeinputSearch}
             onInput={Debounced(getListUserSearch, 1000)}
             className="w-full  h-full block   bg-transparent  text-sm  outline-none border-none  "
-            placeholder="Tìm kiếm tại đây ..."
+            placeholder={t("searchFriends")}
           />
           <Tooltip
-            title={!isShowSearchBox ? "Tìm kiếm ngay" : "Đóng thẻ"}
+            title={!isShowSearchBox ? t("search") : t("close")}
             arrow
-            placement="top"
+            placement="right"
             componentsProps={componentsProps}
           >
             <label htmlFor={isShowSearchBox ? "inptuSeacr_content" : "nothave"}>
@@ -162,13 +174,13 @@ const SearchSibar: FC<SearchSibarProps> = ({
               className="absolute top-full left-0 right-0  shadow-2xl drop-shadow-xl"
             >
               <div className="flex items-center justify-between py-2 px-1">
-                <h2 className="font-bold text-base ">Gần đây</h2>
+                <h2 className="font-bold text-base ">{t("recently")}</h2>
                 <p>
                   <button
                     onClick={handleShowAllHistorySearch}
                     className="text-sm text-primary-hover text-blue-600"
                   >
-                    Xem tất cả
+                    {t("seeAll")}
                   </button>
                 </p>
               </div>
@@ -193,7 +205,7 @@ const SearchSibar: FC<SearchSibarProps> = ({
                     <BiSearch className="text-[#cfcdcd]" />
                   </button>
                   <p className="text-main text-xs font-bold">
-                    Tìm kiếm: <span ref={SubSearch}></span>
+                    {t("search")}: <span ref={SubSearch}></span>
                   </p>
                 </div>
               </article>

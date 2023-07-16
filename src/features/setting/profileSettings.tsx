@@ -14,8 +14,10 @@ import { ToastNotify } from "../../servies/utils";
 import { Tooltip } from "@mui/material";
 import { componentsProps } from "../../styles/componentsProps";
 import { LoaddingOverLay } from "../../components/loading";
-
+import "../../servies/translate/contfigTranslate";
+import { useTranslation } from "react-i18next";
 const ProfileSettings: FC<{ account: IAccount }> = ({ account }) => {
+  const { t } = useTranslation();
   const dispatch: AppDispatch = useDispatch();
   const handleChangeAvata = async (e: any) => {
     if (!e) return;
@@ -35,12 +37,12 @@ const ProfileSettings: FC<{ account: IAccount }> = ({ account }) => {
           listFriend: account.friends,
         });
 
-        ToastNotify("Thay đổi ảnh đại diện thành công").success();
+        ToastNotify(`${t("change")} ${t("avatar")} ${t("success")}`).success();
         e.target.value = null;
         dispatch(updateNotice(1));
       }
     } catch (error) {
-      ToastNotify("Thay đổi ảnh đại diện thất bại").error();
+      ToastNotify(`${t("change")} ${t("avatar")} ${t("error")}`).error();
     }
     setIsLoading(false);
   };
@@ -58,10 +60,10 @@ const ProfileSettings: FC<{ account: IAccount }> = ({ account }) => {
         dispatch(updateFieldAccount(data));
         socket.emit("user-update-background-profile", data);
       }
-      ToastNotify("Thay đổi thành công?").success();
+      ToastNotify(`${t("change")} ${t("success")}`).success();
       dispatch(updateNotice(1));
     } catch (error) {
-      ToastNotify("Thay đổi thất bại?").error();
+      ToastNotify(`${t("change")} ${t("error")}`).error();
     }
     setIsLoading(false);
   };
@@ -77,7 +79,7 @@ const ProfileSettings: FC<{ account: IAccount }> = ({ account }) => {
     >
       {isLoading && <LoaddingOverLay />}
       <Tooltip
-        title="Thay đổi ảnh bìa"
+        title={`${t("change")} ${t("backgroundAvatar")}`}
         arrow
         placement="bottom"
         componentsProps={componentsProps}
@@ -104,7 +106,7 @@ const ProfileSettings: FC<{ account: IAccount }> = ({ account }) => {
         />
         <label
           htmlFor="user-profile-upload"
-          title="Thay đổi hình ảnh đại diện"
+          title={`${t("change")} ${t("avatar")}`}
           className="absolute cursor-pointer bottom-[1px] -right-1 background-primary  w-6 h-6 rounded-full flex items-center justify-center"
         >
           <BiCamera />

@@ -1,12 +1,13 @@
 import { FC } from "react";
 import { BiBell, BiCog, BiLock, BiLogOutCircle } from "react-icons/bi";
 import { ToastNotify, cn } from "../../servies/utils";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Badge } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
 import { updateNotice } from "../../redux/Slice/AccountSlice";
-
+import "../../components/chatContainer/component/Youtube";
+import { useTranslation } from "react-i18next";
 interface ProfileProps {
   username: string;
   fullname: string;
@@ -21,17 +22,17 @@ const Profile: FC<ProfileProps> = ({
   noticeTotal,
   setIsOpenProfile,
 }) => {
-  const navigation = useNavigate();
   const dispacth: AppDispatch = useDispatch();
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
-    ToastNotify("Đăng xuất thành công!").success();
-    navigation("/dang-nhap");
+    ToastNotify(`${t("logout")} ${t("success")}!`).success();
+    location.reload();
   };
   const handleRemoveInfo = () => {
     dispacth(updateNotice(0));
   };
+  const { t } = useTranslation();
   return (
     <div
       id="userDropdown"
@@ -41,8 +42,12 @@ const Profile: FC<ProfileProps> = ({
       )}
     >
       <div className="px-4 py-3 text-sm border-b-[1px] border-primary">
-        <div className="capitalize truncate">Tên: {fullname}</div>
-        <div className="font-medium truncate">Tài khoản: {username}</div>
+        <div className="capitalize truncate">
+          {t("name")}: {fullname}
+        </div>
+        <div className="font-medium truncate">
+          {t("username")}: {username}
+        </div>
       </div>
       <ul
         className="py-2 text-sm "
@@ -54,7 +59,7 @@ const Profile: FC<ProfileProps> = ({
             to="/thong-bao"
             className="flex justify-between w-full  px-4 py-2 text-sm hover:bg-aside/30"
           >
-            Thông Báo
+            {t("notice")}
             <Badge badgeContent={noticeTotal} color="primary">
               <span>
                 <BiBell fontSize="1rem" />
@@ -64,18 +69,18 @@ const Profile: FC<ProfileProps> = ({
         </li>
         <li>
           <Link
-            to="/dang-nhap"
+            to="/cai-dat"
             className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30"
           >
-            Cài đặt <BiCog fontSize="1rem" />
+            {t("settings")} <BiCog fontSize="1rem" />
           </Link>
         </li>
         <li>
           <Link
-            to="/dang-ky"
+            to="/doi-mat-khau"
             className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30"
           >
-            Đổi mật khẩu <BiLock fontSize="1rem" />
+            {t("change") + " " + t("password")} <BiLock fontSize="1rem" />
           </Link>
         </li>
       </ul>
@@ -84,7 +89,7 @@ const Profile: FC<ProfileProps> = ({
           onClick={handleLogOut}
           className="flex justify-between  cursor-pointer px-4 py-2 text-sm hover:bg-aside/30"
         >
-          Đăng xuất <BiLogOutCircle fontSize="1rem" />
+          {t("logout")} <BiLogOutCircle fontSize="1rem" />
         </span>
       </div>
     </div>

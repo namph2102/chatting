@@ -11,9 +11,12 @@ import instance from "../../config";
 
 import SearchSibar from "./component/SearchSidebar";
 import UserListContainer from "./user/UserListContainer";
-import { Link } from "react-router-dom";
+
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
 import { updateStatusSidebar } from "../../redux/Slice/SidebarSlice";
+import InfoLoginUI from "./component/infoLoginUI";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 
 const boxID: IUserItem = {
   _id: "chatbot",
@@ -24,8 +27,9 @@ const boxID: IUserItem = {
   typechat: "chatbot",
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 const SiderBar = () => {
+  const { t } = useTranslation();
+
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
   const { account, theme } = useSelector((state: RootState) => state.userStore);
   const listChattingLocal = historyChatting("searchHistory");
@@ -98,42 +102,24 @@ const SiderBar = () => {
       >
         <div className="px-4">
           {!account.username ? (
-            <>
-              <div className="flex justify-center flex-wrap gap-2">
-                <h2 className="w-full text-center">Đăng ký thành viên!</h2>
-                <Link to="/dang-nhap">
-                  <button className="background-primary py-2 px-5  text-white rounded-full text-sm">
-                    Đăng nhập
-                  </button>
-                </Link>
-                <Link to="/dang-ky">
-                  <button className="background-primary-hover py-2 px-5 rounded-full text-sm">
-                    {" "}
-                    Đăng ký
-                  </button>
-                </Link>
-              </div>
-            </>
+            <InfoLoginUI />
           ) : (
             <SearchSibar
               mutateFC={mutation.mutate}
               isLoading={mutation.isLoading}
               listSearch={listSearch}
               setListSearch={setListSearch}
-              title="Tạo phòng"
+              title={t("createRoom")}
             />
           )}
 
-          <UserListContainer title="Người hỗ trợ" listUser={[boxID]} />
+          <UserListContainer title={t("memberSupport")} listUser={[boxID]} />
           {listFriends && listFriends?.length > 0 && account.username && (
-            <UserListContainer
-              title="danh sách bạn bè"
-              listUser={listFriends}
-            />
+            <UserListContainer title={t("listFriend")} listUser={listFriends} />
           )}
           {listRoomGroups && listRoomGroups?.length > 0 && account.username && (
             <UserListContainer
-              title="danh sách nhóm"
+              title={t("listGroup")}
               listUser={listRoomGroups}
             />
           )}

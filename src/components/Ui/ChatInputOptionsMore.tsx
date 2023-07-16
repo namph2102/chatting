@@ -71,6 +71,8 @@ import { componentsProps } from "../../styles/componentsProps";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux";
 import { BsFiletypeMp3, BsYoutube } from "react-icons/bs";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 
 interface ChatInputOptionsMoreProps {
   handleChoseSeeting: (item: TlistSwipper) => void;
@@ -126,12 +128,12 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
   const handleChangefile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
-    console.log(file);
+
     if (file) {
       const pathLastfile: string = file.name.split(".").pop() || "nohave";
 
       if (file.size > 1024 * 1000 * 100) {
-        ToastNotify("Dung lượng file đã > 100Mb!").success();
+        ToastNotify(`${t("size")} file > 100Mb!`).success();
 
         e.target.value = "";
         return;
@@ -147,21 +149,21 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
         e.target.value = "";
         return;
       }
-      console.log("run here");
+
       if (fileCallback) {
-        ToastNotify("Upload File audio thành công").success();
-        console.log(file);
+        ToastNotify(`Upload File ${t("success")}!`).success();
+
         fileCallback(file);
         e.target.value = "";
       }
     }
   };
-
+  const { t } = useTranslation();
   return (
     <>
       <div onClick={handleStopPropagation} className="relative left-0 top-0">
         <Tooltip
-          title="Chức năng"
+          title={t("mandates")}
           componentsProps={componentsProps}
           arrow
           placement="top"
@@ -207,7 +209,7 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
                     </label>
                   </button>
 
-                  <p className="text-sm">{icon.title}</p>
+                  <p className="text-sm capitalize">{t(icon.type)}</p>
                 </div>
               </SwiperSlide>
             );

@@ -13,6 +13,8 @@ import { cn } from "../../../servies/utils";
 import { RiGroupLine } from "react-icons/ri";
 import SidebarListMember from "./SidebarListMember";
 import SidebarGroupSettings from "./SidebarGroupSettings";
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 
 interface TInfoImage {
   url: string;
@@ -36,6 +38,8 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
   setIsOpenFromSetting,
   callBackStatus,
 }) => {
+  const { t } = useTranslation();
+
   const listGroups = useSelector(
     (state: RootState) => state.sidebarStore.listGroups
   );
@@ -123,7 +127,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
         <BiXCircle />
       </button>
       <h2 className="py-[22px] text-center font-semibold text-xl">
-        Thông tin hộp thoại
+        {t("dialogbox")}
       </h2>
       <hr className="" />
       <div className="overflow-y-auto max-h-[85vh]">
@@ -135,7 +139,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
                   key={nanoid()}
                   src={user.avatar}
                   className="w-8 h-8 rounded-full border-2 border-gray-400"
-                  alt="ảnh lỗi rồi"
+                  alt="error image"
                 />
               ))}
 
@@ -149,7 +153,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
             <img
               src={person.avatar}
               className="w-16 h-16 rounded-full border-2 border-gray-400"
-              alt="ảnh lỗi"
+              alt="error image"
             />
           )}
           <p className="text-style__ellipsis max-w-[280px] capitalize">
@@ -166,7 +170,9 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
         {person.typechat == "group" && (
           <section className=" px-2">
             <div className="flex justify-between">
-              <h2>Thành viên nhóm</h2>
+              <h2 className="capitalize">
+                {t("member")} {t("group")}
+              </h2>
               <span
                 onClick={() =>
                   setIsShowMore((prev) => ({
@@ -193,7 +199,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
                   <RiGroupLine />
                 </span>
                 <span>
-                  {listGroups[person._id]?.listUser?.length || 1} thành viên
+                  {listGroups[person._id]?.listUser?.length || 1} {t("member")}
                 </span>
               </div>
             </div>
@@ -202,7 +208,10 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
 
         <section className=" px-2">
           <div className="flex justify-between">
-            <h2>Ảnh ({listImageCover.length})</h2>{" "}
+            <h2>
+              {" "}
+              {t("img")} ({listImageCover.length})
+            </h2>{" "}
             <span
               onClick={() =>
                 setIsShowMore((prev) => ({ ...prev, image: !isShowMore.image }))
@@ -224,13 +233,13 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
                   onClick={() => handleScroolIntroview(image._id)}
                   key={image.key}
                   src={image.url}
-                  alt="Ảnh lỗi"
+                  alt="error image"
                   className=" w-16 h-16 object-cover border-gray-500 border-2 rounded-lg cursor-pointer hover:scale-105"
                 />
               ))
             ) : (
               <p className="text-sm text-center my-2">
-                Chưa có nội dung ảnh được chia sẻ trong hội thoại này?
+                {t("noHaveShareImage")}
               </p>
             )}
           </div>
@@ -240,13 +249,13 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
             onClick={() => setIsOpenShowImage(true)}
             className="text-center w-full bg-follow-darkmode  drop_menu-hover py-2 my-4 px-2 rounded-full cursor-pointer"
           >
-            Xem tất cả
+            {t("seeAll")}
           </button>
         )}
         <section className=" px-2 mt-4">
           <div className="flex justify-between">
             <h2>
-              Tài liệu (
+              {t("document")} (
               {listSidebarcomment["document"]
                 ? listSidebarcomment["document"].length
                 : 0}
@@ -300,7 +309,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
               )
             ) : (
               <p className="text-sm text-center my-2">
-                Chưa có nội dung tài liệu được chia sẻ torng hội thoại này?
+                {t("noHaveShareDocument")}
               </p>
             )}
           </div>
@@ -354,9 +363,7 @@ const SidebarAboutLayout: React.FC<SidebarAboutLayoutProps> = ({
                   )
               )
             ) : (
-              <p className="text-sm text-center my-2">
-                Chưa có link nào được gắn trong hội thoại này?
-              </p>
+              <p className="text-sm text-center my-2">{t("noHaveShareLink")}</p>
             )}
           </div>
         </section>

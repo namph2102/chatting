@@ -11,6 +11,8 @@ import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer
 import { ModalStatus } from "../../components/Ui";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 interface IinfoRoom {
   name: string;
   _id: string;
@@ -21,7 +23,7 @@ interface IinfoRoom {
 const JoinGroup = () => {
   const { idRoom } = useParams();
   const account = useSelector((state: RootState) => state.userStore.account);
-  console.log(account.rooms);
+  const { t } = useTranslation();
   const navigate = useNavigate();
   if (!idRoom) {
     navigate("trang-khong-ton-tai");
@@ -54,10 +56,15 @@ const JoinGroup = () => {
   return (
     <>
       <Helmet>
-        <title>Tham gia phòng {(inforoom && inforoom.name) || "zecky"}</title>
+        <title>
+          Tham gia phòng {(inforoom && inforoom.name) || "zecky"} Zecky
+        </title>
         <meta
           name="description"
-          content={(inforoom && inforoom.des) || "Hiện tại chưa có mô tả"}
+          content={
+            (inforoom && inforoom.des) ||
+            "Zecky Ứng dụng tạo nhóm tuyệt vời con mặt trời, hãy tham gia sử dụng ngay"
+          }
         />
       </Helmet>
       <div className="bg-white">
@@ -94,7 +101,7 @@ const JoinGroup = () => {
                     (inforoom && inforoom.name) || "Zecky Group"
                   )}
                 </h2>
-                <p className="my-2">Nhóm</p>
+                <p className="my-2 capitalize">{t("group")}</p>
                 {!isLoading ? (
                   <button
                     disabled={isJoined}
@@ -112,10 +119,10 @@ const JoinGroup = () => {
                   >
                     <RiMessage2Line />{" "}
                     {isJoined
-                      ? "Đã tham gia"
+                      ? t("isJoined")
                       : account._id
-                      ? "Tham gia Nhóm"
-                      : "Đăng nhập để tham gia"}
+                      ? `${t("join")} ${t("group")}`
+                      : `${t("login")} ${t("to")} ${t("join")} ${t("group")}`}
                   </button>
                 ) : (
                   <Skeleton
@@ -125,7 +132,9 @@ const JoinGroup = () => {
                   />
                 )}
                 <div className="mt-2">
-                  <h4 className="font-semibold text-base">Mô tả nhóm</h4>
+                  <h4 className="font-semibold text-base">
+                    {t("des")} {t("group")}
+                  </h4>
                   <p className="text-sm py-2">
                     {isLoading ? (
                       <Skeleton
@@ -134,7 +143,8 @@ const JoinGroup = () => {
                         height={60}
                       />
                     ) : (
-                      (inforoom && inforoom.des) || "Hiện tại chưa có mô tả"
+                      (inforoom && inforoom.des) ||
+                      `${t("not")} ${t("des")} ${t("group")}`
                     )}
                   </p>
                 </div>
@@ -148,13 +158,13 @@ const JoinGroup = () => {
                 />
               </div>
               <p className="text-center mt-2 font-medium text-sm">
-                Quét mã Qr tham gia nhóm
+                {t("codeScan")} {t("join")} {t("to")} {t("group")}
               </p>
               <button
                 onClick={() => navigate("/")}
                 className="py-2 w-full px-4 text-primary-hover"
               >
-                Trang chủ
+                {t("home")}
               </button>
             </section>
           </div>

@@ -12,48 +12,49 @@ import { SiderBar } from "../sidebar";
 import NoticePage from "../Notice";
 import CallHistory from "../call";
 import SettingsSidebar from "../setting";
+import ContactSidebar from "../contact";
 
 export const listMenu = [
   {
-    title: "ChatBox",
+    title: "chatbox",
     Icon: BsRobot,
     hiddenMoblie: true,
     component: SiderBar,
     path: "/",
   },
   {
-    title: "Profile",
+    title: "profile",
     Icon: BiUserCircle,
     hiddenMoblie: true,
     component: SettingsSidebar,
     path: "/thong-tin",
   },
   {
-    title: "Chat",
+    title: "chats",
     Icon: BiChat,
     component: SiderBar,
     path: "/nhan-tin",
   },
   {
-    title: "Contact",
+    title: "contact",
     Icon: BiBookHeart,
-    component: SiderBar,
+    component: ContactSidebar,
     path: "/ho-tro",
   },
   {
-    title: "Call",
+    title: "call",
     Icon: BiPhoneCall,
     component: CallHistory,
     path: "/call",
   },
   {
-    title: "Thông báo",
+    title: "notice",
     Icon: BiBell,
     component: NoticePage,
     path: "/thong-bao",
   },
   {
-    title: "Settings",
+    title: "settings",
     Icon: BiCog,
     component: SettingsSidebar,
     path: "/cai-dat",

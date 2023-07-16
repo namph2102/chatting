@@ -9,6 +9,8 @@ import { cn } from "../../servies/utils";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
 import { updateTheme } from "../../redux/Slice/AccountSlice";
+import "../../servies/translate/contfigTranslate";
+import { useTranslation } from "react-i18next";
 export const themeColor = [
   "78 172 109",
   "80 165 241",
@@ -20,7 +22,7 @@ export const themeColor = [
 const themeBg = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const ThemeSettings = () => {
   const dispatch: AppDispatch = useDispatch();
-
+  const { t } = useTranslation();
   const [isOpenMore, setIsOpenMore] = useState(false);
   const [currentIndexColor, setCurrentIndexColor] = useState<any>(
     localStorage.getItem("primary-color") || 0
@@ -53,7 +55,7 @@ const ThemeSettings = () => {
           <span>
             <RiBubbleChartFill />
           </span>
-          <span>Chủ đề</span>
+          <span>{t("themes")}</span>
         </div>
         <button className="text-3xl">
           {!isOpenMore ? <RiArrowDropDownLine /> : <RiArrowDropUpLine />}
@@ -65,7 +67,9 @@ const ThemeSettings = () => {
           isOpenMore ? "h-auto" : "h-0 overflow-hidden"
         )}
       >
-        <h3 className="opacity-80">Chọn chủ đề :</h3>
+        <h3 className="opacity-80">
+          {t("chose")} {t("theme")}:
+        </h3>
         <div className="flex gap-1">
           {themeColor.map((theme, index) => {
             if (index == currentIndexColor) {
@@ -90,7 +94,10 @@ const ThemeSettings = () => {
             );
           })}
         </div>
-        <h3 className="opacity-80">Chọn chủ đề hình ảnh :</h3>
+        <h3 className="opacity-80">
+          {" "}
+          {t("chose")} {t("theme")} {t("image")} :
+        </h3>
         <div className="flex sm:gap-1 gap-2 flex-wrap">
           {themeBg &&
             themeBg.map((theme) => {

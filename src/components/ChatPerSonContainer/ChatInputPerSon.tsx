@@ -29,6 +29,8 @@ import MyDropzone from "./component/MyDropzone";
 import ModalProviderOverlay from "../Ui/ModalProviderOverlay";
 import RecorderComponent from "./component/RecorderComponent";
 import { domainserver } from "../../config";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 
 interface ChatInputPerSonProps {
   loading: boolean;
@@ -46,6 +48,8 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
   handleSendMessage,
   setIsOpenGhim,
 }) => {
+  const { t } = useTranslation();
+
   const [isOpenEmoji, setIsOpenEmoji] = useState<boolean>(false);
   const [isOpenEVoices, setIsOpenVoices] = useState<boolean>(false);
   const btnMoreRef = useRef<HTMLDivElement>(null);
@@ -139,7 +143,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
         );
       });
     } else {
-      ToastNotify("Lấy tọa độ không thành công!").error();
+      ToastNotify(`${t("send")} ${t("location")} ${t("error")} `).error();
     }
   };
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -164,7 +168,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
         })
         .catch((error: any) => {
           console.log(error.message);
-          ToastNotify("File không hợp lệ!").error();
+          ToastNotify(`${t("send")} File ${t("error")}}!`).error();
         })
         .finally(() => {
           setIsLoading(false);
@@ -189,7 +193,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
       )}
       <section
         className={cn(
-          " bg-follow-darkmode  absolute bottom-0 left-0 w-full  sm:p-4 py-4 px-3",
+          " bg-follow-darkmode  absolute sm:bottom-3 bottom-0 left-0 w-full  sm:p-4 py-4 px-3",
 
           className
         )}
@@ -198,7 +202,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
         <div className="flex justify-between w-full overflow-x-hidden  sm:gap-4 gap-2 items-center h-full">
           <div
             ref={btnMoreOpenRef}
-            title="Mở rộng"
+            title={t("openMore")}
             onTouchStart={() => {
               handleForcusChatting(false),
                 window.innerWidth < 640 &&
@@ -213,7 +217,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
             className=" sm:text-2xl text-xl min-w-[auto]  ease-linear duration-300  sm:gap-3 gap-2 flex justify-between items-center"
           >
             <Tooltip
-              title={!isOpenMoreChat ? "Mở rộng" : "Thu hẹp"}
+              title={!isOpenMoreChat ? t("openMore") : t("closeopenMore")}
               componentsProps={componentsProps}
               arrow
               placement="top"
@@ -228,7 +232,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
               </span>
             </Tooltip>
             <Tooltip
-              title="Ảnh"
+              title={t("img")}
               componentsProps={componentsProps}
               arrow
               placement="top"
@@ -258,7 +262,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
 
             <Tooltip
               key="micmobile"
-              title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
+              title={`${isOpenEVoices ? t("turnoff") : t("open")} Voices`}
               componentsProps={componentsProps}
               arrow
               placement="top"
@@ -278,7 +282,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
                 onTouchStart={() => handleForcusChatting(true)}
                 onBlur={() => handleForcusChatting(false)}
                 className="py-3 block min-w-[30px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
-                placeholder="Nhắn tin ..."
+                placeholder={t("chatMessage")}
                 maxRows={6}
                 minRows={1}
                 maxLength={600}
@@ -291,7 +295,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
 
           <div className=" sm:min-w-[100px]  justify-around items-center flex">
             <Tooltip
-              title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
+              title={`${isOpenEVoices ? t("turnoff") : t("open")} Voices`}
               componentsProps={componentsProps}
               arrow
               placement="top"
@@ -309,7 +313,6 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
             <span
               onClick={() => {
                 if (loading) {
-                  ToastNotify("Vui lòng chời trong ít lát ...").error();
                   return;
                 }
                 if (chattingRef.current) {
@@ -361,7 +364,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
             className="flex items-center cursor-pointer justify-center flex-col "
           >
             <img width={40} src="/images/locationghim.png" alt="" />
-            <p className="mt-1">Vị trí</p>
+            <p className="mt-1 capitalize">{t("location")}</p>
           </div>
           <label
             htmlFor="uploaddoccument"
@@ -374,7 +377,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
               id="uploaddoccument"
               className="hidden"
             />
-            <p className="mt-1">Tài liệu</p>
+            <p className="mt-1">{t("document")}</p>
           </label>
 
           <div
@@ -382,7 +385,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
             className="flex items-center cursor-pointer justify-center flex-col"
           >
             <img width={40} src="/images/microphone.png" alt="" />
-            <p className="mt-1">Ghi Âm</p>
+            <p className="mt-1">{t("record")}</p>
           </div>
         </div>
         {/* isOpenSpeakVoice Openvoice upload file */}

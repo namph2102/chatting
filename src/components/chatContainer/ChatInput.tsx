@@ -24,6 +24,8 @@ import ChatInputOptionsMore, { TlistSwipper } from "../Ui/ChatInputOptionsMore";
 import { componentsProps } from "../../styles/componentsProps";
 import SelectionOptions from "./component/SelectionOptions";
 import { optionsImage, optionsTranscriptions } from "./chat.utils";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 
 interface ChatInputProps {
   mutationQuery: (message: messageType) => void;
@@ -40,6 +42,8 @@ const ChatInput: FC<ChatInputProps> = ({
   fileCallback,
   className,
 }) => {
+  const { t } = useTranslation();
+
   const [isOpenEVoices, setIsOpenVoices] = useState<boolean>(false);
   const btnMoreRef = useRef<HTMLDivElement>(null);
   const btnMoreOpenRef = useRef<HTMLDivElement>(null);
@@ -109,10 +113,10 @@ const ChatInput: FC<ChatInputProps> = ({
     if (chattingRef.current) {
       if (settings.type == "img") {
         setListOptions(optionsImage);
-        setTitleSubOptions("Kich thước ảnh ?");
+        setTitleSubOptions(`${t("size")} ${t("image")}`);
         setIsOpenSubOptions(true);
       } else if (settings.type == "translate") {
-        setTitleSubOptions("Dịch sang ngôn ngữ ?");
+        setTitleSubOptions(`${t("translateLng")} ?`);
         setListOptions(optionsTranscriptions);
         setIsOpenSubOptions(true);
       } else {
@@ -123,7 +127,7 @@ const ChatInput: FC<ChatInputProps> = ({
         chattingRef.current.focus();
       } else {
         chattingRef.current.value = `**${settings.type}** `;
-        ToastNotify("Nhập địa điểm muốn tìm hoặc bấm nút enter?").info({
+        ToastNotify(`${t("typeLocation")} ?`).info({
           autoClose: 4000,
         });
       }
@@ -180,7 +184,7 @@ const ChatInput: FC<ChatInputProps> = ({
       <div className="flex  justify-between w-full overflow-x-hidden  sm:gap-4 gap-2 items-center h-full">
         <div
           ref={btnMoreOpenRef}
-          title="Mở rộng"
+          title={t("openMore")}
           onTouchStart={() => {
             handleForcusChatting(false);
           }}
@@ -203,7 +207,7 @@ const ChatInput: FC<ChatInputProps> = ({
 
           <Tooltip
             key="micmobile"
-            title={isOpenEVoices ? "Tắt Vocies" : "Mở Voices"}
+            title={`${isOpenEVoices ? t("turnoff") : t("open")} Vocies`}
             componentsProps={componentsProps}
             arrow
             placement="top"
@@ -223,7 +227,7 @@ const ChatInput: FC<ChatInputProps> = ({
               onTouchStart={() => handleForcusChatting(true)}
               onBlur={() => handleForcusChatting(false)}
               className="py-3 block min-w-[60px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
-              placeholder="Lời nhắn..."
+              placeholder={t("chatMessage")}
               defaultValue={valueDefalutSearch}
               maxRows={10}
               minRows={1}
@@ -239,7 +243,6 @@ const ChatInput: FC<ChatInputProps> = ({
           <button
             onClick={() => {
               if (loading) {
-                ToastNotify("Vui lòng chời trong ít lát ...").error();
                 return;
               }
               handleSubmitMessage();

@@ -15,6 +15,8 @@ import UserSearchPageItem, {
 import "./serachpage.scss";
 import { BiChevronLeft } from "react-icons/bi";
 import { handleAddFriendSocket } from "../../servies/sockets";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 
 export interface ISearchPage {
   address: string;
@@ -96,6 +98,8 @@ const SearchPage: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async (search: string) => {
+      if (search[0] == "0") search = search.slice(1);
+
       const response = await instance.post("/user/search", {
         search,
 
@@ -150,6 +154,7 @@ const SearchPage: React.FC = () => {
     // add follow socket
     handleAddFriendSocket(data);
   };
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -170,13 +175,17 @@ const SearchPage: React.FC = () => {
               isLoading={mutation.isLoading}
               listSearch={listSearch}
               setListSearch={setListSearch}
-              title="Kết quả tìm kiếm"
+              title={t("resultSearch")}
             />
-            <p className="mt-1">Lưu ý:</p>
+            <p className="mt-1">{t("attention")}:</p>
             <ul className="mt-2 text-xs font-medium">
-              <li>* Tìm kiếm theo họ và tên</li>
-              <li>* Tìm kiếm theo Email</li>
-              <li>* Tìm kiếm theo số điện thoại</li>
+              <li>
+                * {t("search")} {t("fullname")}
+              </li>
+              <li>* {t("search")} Email</li>
+              <li>
+                * {t("search")} {t("phone")}
+              </li>
             </ul>
           </section>
 
@@ -189,7 +198,10 @@ const SearchPage: React.FC = () => {
               isOpenChat ? "open_toggle-mobile " : "hidden_toggle-mobile"
             )}
           >
-            <h6 className="text-xl flex gap-2 font-medium mb-4 mt-2">
+            <h6
+              id={theme.darkmode}
+              className="text-xl flex gap-2 font-medium mt-2 sticky top-0 right-0 py-4"
+            >
               <span
                 className="cursor-pointer"
                 onClick={() => setIsOpenChat(false)}
@@ -203,6 +215,7 @@ const SearchPage: React.FC = () => {
                 <UserSearchPageItem
                   key={user._id}
                   {...user}
+                  idAccount={account._id}
                   handleAddFriends={handleAddFriends}
                 />
               ))}

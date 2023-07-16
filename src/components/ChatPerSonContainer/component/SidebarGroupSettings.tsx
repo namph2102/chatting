@@ -1,6 +1,8 @@
 import { FC } from "react";
 import { BiEditAlt, BiExit, BiLink, BiUserPlus } from "react-icons/bi";
 import { ToastNotify } from "../../../servies/utils";
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 interface SidebarGroupSettingsPrps {
   setIsOpenFromSetting: (item: any) => any;
   idRoom: string | undefined;
@@ -9,10 +11,13 @@ const SidebarGroupSettings: FC<SidebarGroupSettingsPrps> = ({
   setIsOpenFromSetting,
   idRoom,
 }) => {
+  const { t } = useTranslation();
   const handleCopyGruop = () => {
     const copyText = `${location.origin}/g/${idRoom}`;
     navigator.clipboard.writeText(copyText).then(() => {
-      ToastNotify("Copy Thành công đường dẫn tham gia nhóm").success();
+      ToastNotify(
+        `${t("copy")} ${t("success")} link ${t("join")} ${t("group")} `
+      ).success();
     });
   };
   return (
@@ -25,7 +30,7 @@ const SidebarGroupSettings: FC<SidebarGroupSettingsPrps> = ({
           <span className="text-2xl">
             <BiLink />
           </span>
-          <span className="text-[10px]">Link Nhóm</span>
+          <span className="text-[10px]">Link {t("group")}</span>
         </div>
         <div
           onClick={() =>
@@ -39,7 +44,9 @@ const SidebarGroupSettings: FC<SidebarGroupSettingsPrps> = ({
           <span className="text-2xl">
             <BiEditAlt />
           </span>
-          <span className="text-[10px]">Thay đổi nhóm</span>
+          <span className="text-[10px] capitalize">
+            {t("edit")} {t("group")}
+          </span>
         </div>
         <div
           onClick={() =>
@@ -50,7 +57,9 @@ const SidebarGroupSettings: FC<SidebarGroupSettingsPrps> = ({
           <span className="text-2xl">
             <BiUserPlus />
           </span>
-          <span className="text-[10px]">Thêm thành viên</span>
+          <span className="text-[10px] capitalize">
+            {t("add")} {t("member")}
+          </span>
         </div>
 
         <div
@@ -62,7 +71,9 @@ const SidebarGroupSettings: FC<SidebarGroupSettingsPrps> = ({
           <span className="text-2xl">
             <BiExit />
           </span>
-          <span className="text-[10px]">Rời Nhóm</span>
+          <span className="text-[10px] capitalize">
+            {t("leave")} {t("group")}
+          </span>
         </div>
       </div>
     </>

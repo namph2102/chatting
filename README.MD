@@ -22,7 +22,8 @@ Demo Online: [link](https://zecky.online)
   * Nhắn tin (readtime)
   * Gửi hình ảnh
   * Ghim tin nhắn
-  *  Gọi video với nhau (1 hoặc nhiều người cùng lúc)
+  * Gọi video với nhau (1 hoặc nhiều người cùng lúc)
+  * Đa ngôn ngữ (Tiếng Việt - Tiếng anh)
  
 ### Một số thư viện - Gói npm
 
@@ -31,6 +32,7 @@ Demo Online: [link](https://zecky.online)
  * Leaflet 
  * FireBase
  * OpenAi
+ * react-i18next
 
 ### Một số hình ảnh liên quan tới website
 

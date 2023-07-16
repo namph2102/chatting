@@ -9,7 +9,8 @@ import { typeMapItem } from "../../../redux/Slice/slice.type";
 import { useQuery } from "react-query";
 import instance from "../../../config";
 import { cn } from "../../../servies/utils";
-
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 interface SidebarListMemberProps {
   listMemberGroup: typeMapItem;
   setOpenListMember: (isOpenlistMember: boolean) => void;
@@ -22,6 +23,7 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
   isOpenListMember,
   callBackStatus,
 }) => {
+  const { t } = useTranslation();
   const { theme, account } = useSelector((state: RootState) => state.userStore);
   const { data } = useQuery({
     queryKey: [
@@ -68,10 +70,12 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
       >
         <BiChevronLeft />
       </button>
-      <h6 className="text-center py-4 text-xl md:text-2xl">Thành viên</h6>
+      <h6 className="text-center py-4 text-xl md:text-2xl capitalize">
+        {t("listMember")}
+      </h6>
 
       <p className="text-sm my-2">
-        Danh sách thành viên ({listMemberGroup?.listUser?.length || 0})
+        {t("listMember")} ({listMemberGroup?.listUser?.length || 0})
       </p>
       <div className="px-2 flex gap-1 form-control items-center">
         <span className="text-2xl">
@@ -103,7 +107,9 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
                     {friend.fullname}
                   </span>
                   {friend._id == listMemberGroup.role._id && (
-                    <span className="text-[10px] font-normal">Trưởng nhóm</span>
+                    <span className="text-[10px] font-normal">
+                      {t("boss")} {t("group")}
+                    </span>
                   )}
                 </p>
               </div>
@@ -121,7 +127,7 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
                     }}
                     className="text-primary-hover border-2 border-gray-700 drop_menu-hover py-2 px-4 rounded-2xl text-xs"
                   >
-                    Kết bạn
+                    {t("makeFriend")}
                   </button>
                 )}
               {listMemberGroup.typechat == "group" &&
@@ -131,7 +137,7 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
                     onClick={() => callBackStatus(friend._id, friend.fullname)}
                     className="text-primary-hover  border-red-500 drop_menu-hover rounded-2xl text-xs"
                   >
-                    Kích
+                    {t("kick")}
                   </button>
                 )}
             </article>

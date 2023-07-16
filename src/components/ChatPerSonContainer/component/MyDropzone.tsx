@@ -4,6 +4,8 @@ import handleImageFirebase from "../util/handleImageFirebase";
 import { handleStopPropagation } from "../../../servies/utils";
 import { BiCloudUpload, BiXCircle } from "react-icons/bi";
 import { nanoid } from "@reduxjs/toolkit";
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 interface MyDropzoneProps {
   handleSendMessage: (listImage: any, type: string) => void;
   setIsOpenFile(isOpenFile: boolean): void;
@@ -19,6 +21,7 @@ const MyDropzone: FC<MyDropzoneProps> = ({
   handleSendMessage,
   setIsOpenFile,
 }) => {
+  const { t } = useTranslation();
   const [listImageUrl, setListImageUrl] = useState<string[]>([]);
   const onDrop = useCallback((acceptedFiles: any) => {
     acceptedFiles.forEach((file: File) => {
@@ -66,7 +69,7 @@ const MyDropzone: FC<MyDropzoneProps> = ({
   return (
     <>
       <button
-        className="text-primary-hover"
+        className="text-red-500"
         onClick={() => {
           setIsOpenFile(false), handleChangeSelect();
         }}
@@ -81,7 +84,9 @@ const MyDropzone: FC<MyDropzoneProps> = ({
         <input {...getInputProps()} />
         <p className="py-2 flex flex-col justify-center items-center cursor-pointer">
           <BiCloudUpload className="text-6xl text-primary" />
-          <span>Kéo hoặc thả ảnh vào đây</span>
+          <span>
+            {t("drop")} {t("or")} {t("drag")} {t("img")} {t("here")}
+          </span>
         </p>
         {listImageUrl.length >= 2 && (
           <div className="absolute inset-0 bottom-10 w-full h-40 grid grid-cols-2 gap-2">
@@ -109,13 +114,13 @@ const MyDropzone: FC<MyDropzoneProps> = ({
             }}
             className="background-primary-hover py-2 px-4 bg-green-700 rounded-full"
           >
-            Chấp nhận
+            {t("accept")}
           </button>
           <button
             onClick={handleChangeSelect}
             className="hover:opacity-75 py-2 px-4 bg-red-700 rounded-full "
           >
-            Thay đổi
+            {t("change")}
           </button>
         </div>
       </div>

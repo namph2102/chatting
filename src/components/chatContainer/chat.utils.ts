@@ -30,35 +30,24 @@ export const handleCoverComment = (str: string) => {
 };
 export const HandleCoverStringEntries = (str: string) => {
   str = str.trim();
-  if (str.includes("<")) {
-    str = str.replace(/</, "&lt;");
-  }
-  if (str.includes(">")) {
-    str = str.replace(/>/, "&gt;");
-  }
-  if (str.includes("  ")) {
-    str = str.replace(/\s{2}/g, " ");
-  }
-  if (str.includes("```")) {
-    str = str.replace(/```/, " ");
-  }
+  str = str.replace(/</g, "&lt;");
+  str = str.replace(/>/g, "&gt;");
+  str = str.replace(/\s{2}|```/g, " ");
 
   return str;
 };
 
-export const initState: ChatContentProps[] = [
-  {
-    id: "chatbot",
-    comment:
-      "Chào mừng bạn đã đến với Zecky! Hiện tại Website vẫn đang trong giai đoạn phát triển. Rất vui và hãy sử dụng một số tiện ích có sẵn được xây dựng bởi ChatGPT phiên bản Plus hoàn toàn miễn phí tại chúng tôi. </br> Cảm ơn bạn đã sử dụng!",
-    isUser: false,
-    avatar: "/images/icon.ico",
-    time: new Date().toISOString(),
-    type: "text",
-    isSee: true,
-  },
-];
-export const StoreCommentChatBot: ChatContentProps[] = [...initState];
+export const initState: ChatContentProps = {
+  id: "chatbot",
+  comment:
+    "Chào mừng bạn đã đến với Zecky! Hiện tại Website vẫn đang trong giai đoạn phát triển. Rất vui và hãy sử dụng một số tiện ích có sẵn được xây dựng bởi ChatGPT phiên bản Plus hoàn toàn miễn phí tại chúng tôi. </br> Cảm ơn bạn đã sử dụng!",
+  isUser: false,
+  avatar: "/images/icon.ico",
+  time: new Date().toISOString(),
+  type: "text",
+  isSee: true,
+};
+export const StoreCommentChatBot: ChatContentProps[] = [initState];
 // action
 const ADD_COMENT = "ADD_COMENT";
 // const DETELE_COMENT = "DETELE_COMENT";

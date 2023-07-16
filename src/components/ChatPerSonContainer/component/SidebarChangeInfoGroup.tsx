@@ -9,11 +9,11 @@ import handleImageFirebase from "../util/handleImageFirebase";
 import { IImageFireBase } from "./MyDropzone";
 import { LoaddingOverLay } from "../../loading";
 import { HandleCoverStringEntries } from "../../chatContainer/chat.utils";
-
 import instance from "../../../config";
 import { socket } from "../ChatPerSonContainer";
 import { PserSonChating } from "../../../redux/Slice/ChatPersonSlice";
-
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 interface SidebarChangeInfoGroupProps {
   theme: {
     backgroundthem: string;
@@ -31,6 +31,7 @@ const SidebarChangeInfoGroup: FC<SidebarChangeInfoGroupProps> = ({
   person,
   idAccount,
 }) => {
+  const { t } = useTranslation();
   const handleClose = () => {
     setIsOpenFromSetting((prev: any) => ({ ...prev, formChangename: false }));
   };
@@ -41,7 +42,10 @@ const SidebarChangeInfoGroup: FC<SidebarChangeInfoGroupProps> = ({
       des: "",
     },
     validationSchema: yup.object().shape({
-      name: yup.string().required().max(100, "Tên không vượt quá 100 ký tự"),
+      name: yup
+        .string()
+        .required()
+        .max(100, `${t("name")} ${t("inputExceed")} 100 ${t("character")}`),
       des: yup.string(),
     }),
     onSubmit: async (data) => {
@@ -128,7 +132,10 @@ const SidebarChangeInfoGroup: FC<SidebarChangeInfoGroupProps> = ({
       >
         <section className="flex justify-between px-2 relative items-center pt-1 pb-4">
           <h5 className="text-xl my-2 text-center w-full">
-            Thay đổi nhóm "{person.fullname}"
+            <span className="capitalize">
+              {t("edit")} {t("group")}
+            </span>{" "}
+            "{person.fullname}"
           </h5>
           <button
             onClick={handleClose}
@@ -144,13 +151,13 @@ const SidebarChangeInfoGroup: FC<SidebarChangeInfoGroupProps> = ({
                 className="block uppercase tracking-wide text-xs font-bold mb-2"
                 htmlFor="group-name"
               >
-                Đổi Tên
+                {t("edit")} {t("name")}
               </label>
               <input
                 type="text"
                 name="name"
                 className="flex-1 border-none outline-0 form-control text-sm w-full py-2 px-4 rounded-xl"
-                placeholder="Nhập tên nhóm..."
+                placeholder={`${t("type")} ${t("name")} ${t("group")}...`}
                 required
                 value={formik.values.name}
                 onChange={formik.handleChange}
@@ -165,12 +172,12 @@ const SidebarChangeInfoGroup: FC<SidebarChangeInfoGroupProps> = ({
                 className="block uppercase tracking-wide text-xs font-bold mb-2"
                 htmlFor="des-group"
               >
-                Mô tả về nhóm
+                {t("des")} {t("group")}
               </label>
 
               <TextareaAutosize
                 id="des-group"
-                placeholder="Mô tả về nhóm"
+                placeholder={`${t("des")} ${t("group")}`}
                 name="des"
                 className=" appearance-none form-control block w-full text-sm  rounded py-3 px-2 mb-3 leading-tight focus:outline-none"
                 maxRows={5}
@@ -184,14 +191,14 @@ const SidebarChangeInfoGroup: FC<SidebarChangeInfoGroupProps> = ({
           <div className="flex flex-wrap -mx-3 mb-4">
             <div className="w-full px-3">
               <div className="block uppercase tracking-wide text-xs font-bold mb-2">
-                Ảnh Nhóm
+                {t("img")} {t("group")}
               </div>
               <label htmlFor="image-group" className="relative">
                 <div className="w-28 h-28 border-dashed flex flex-col border-primary_style-document  justify-center items-center">
                   <span className="text-2xl">
                     <BiCloudUpload />
                   </span>
-                  <p className="text-sm">Thay đổi</p>
+                  <p className="text-sm capitalize">{t("change")}</p>
                 </div>
                 {ImageUrl && (
                   <img
@@ -216,12 +223,12 @@ const SidebarChangeInfoGroup: FC<SidebarChangeInfoGroupProps> = ({
             <button
               disabled={!!formik.errors?.name}
               className={cn(
-                "py-2 px-5 background-primary-hover  w-[90%] md:w-[200px] background-primary rounded-xl",
+                "py-2 px-5 background-primary-hover  w-[90%] md:w-[200px] capitalize background-primary rounded-xl",
                 formik.errors?.name ? "opacity-50" : "opacity-100"
               )}
               type="submit"
             >
-              Gửi
+              {t("send")}
             </button>
           </div>
         </form>

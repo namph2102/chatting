@@ -5,7 +5,8 @@ import { IFriend } from "../../../redux/Slice/slice.type";
 import { FC, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
-
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 interface ISearchMember extends IFriend {
   isJoined: boolean;
 }
@@ -37,6 +38,7 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
   accountFullname,
   setIsOpenFromSetting,
 }) => {
+  const { t } = useTranslation();
   const handleClose = () => {
     setIsOpenFromSetting((prev: any) => ({ ...prev, formadd: false }));
   };
@@ -112,7 +114,7 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
           };
 
           socket.emit("invite-to-join-group", dataSoccetAccpept);
-          ToastNotify("Gửi lời mời thành thông").success();
+          ToastNotify(`${t("send")} ${t("invited")} ${t("sucess")}`).success();
           handleClose();
         }
       } catch (err) {
@@ -145,7 +147,9 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
         className="sm:w-[600px] w-full min-w-[320px]  p-2 rounded-sm  "
       >
         <section className="flex justify-between px-2 items-center">
-          <h5 className="text-xl my-2">Thêm thành viên</h5>
+          <h5 className="text-xl my-2 capitalize">
+            {t("add")} {t("member")}
+          </h5>
           <button onClick={handleClose} className="text-3xl">
             <BiX />
           </button>
@@ -158,7 +162,7 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
               ref={inputRef}
               onChange={Debounced(handleDebound, 300)}
               className="flex-1 border-none outline-0 bg-transparent text-sm"
-              placeholder="Tìm kiếm trong danh sách bạn bè.."
+              placeholder={t("findSeachinListFriends")}
             />
           </div>
         </section>
@@ -201,7 +205,7 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
                                   </p>
                                   {accocunt.isJoined && (
                                     <p className="font-normal text-xs">
-                                      đã tham gia
+                                      {t("isJoined")}
                                     </p>
                                   )}
                                 </div>
@@ -220,13 +224,13 @@ const SidebarAddMember: FC<SidebarAddMemberProps> = ({
           className="flex justify-end gap-2"
         >
           <button className="py-2 px-5 text-black hover:opacity-100 opacity-80 bg-gray-50 rounded-2xl">
-            Hủy
+            {t("cancel")}
           </button>
           <button
             onClick={() => handleStatusAccept(true)}
             className="py-2 px-5 background-primary-hover background-primary opacity-80 hover:opacity-100 rounded-2xl text-base "
           >
-            Xác nhận
+            {t("accept")}
           </button>
         </section>
       </div>

@@ -25,6 +25,7 @@ export interface ChatContentProps {
 
 const ChatContent: FC<ChatContentProps> = (props) => {
   const codeRef = useRef<HTMLElement>(null);
+
   const classname =
     "w-[fit-content]  box_chat-content   flex-start  flex-col sm:flex-row  rounded-lg font-medium pb-2 px-2 shadow-inner mt-3 ";
   return (

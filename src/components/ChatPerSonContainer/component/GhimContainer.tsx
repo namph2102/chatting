@@ -5,6 +5,8 @@ import { ScroolToBottom, cn } from "../../../servies/utils";
 import { ChatUserPersonItemProps } from "./ChatUserPersonItem";
 import GhimItem from "./GhimItem";
 import { sortArrayFollowKey } from "../util";
+import { useTranslation } from "react-i18next";
+import "../../../servies/translate/contfigTranslate";
 interface GhimContainerProps {
   setIsOpenGhim: (isOpen: boolean) => void;
   isOpenGhim: boolean;
@@ -29,6 +31,7 @@ const GhimContainer: FC<GhimContainerProps> = ({
   }, [isOpenGhim]);
   const newlistCoomentCover =
     sortArrayFollowKey(listCooment, "updatedAt") || [];
+  const { t } = useTranslation();
 
   return (
     <div
@@ -39,9 +42,7 @@ const GhimContainer: FC<GhimContainerProps> = ({
       )}
     >
       <section className="text-center relative">
-        <h6 className="sm:text-2xl text-xl  font-medium py-2">
-          Tin nhắn đã Ghim
-        </h6>
+        <h6 className="sm:text-2xl text-xl  font-medium py-2">{t("ghim")}</h6>
         <button
           onClick={() => setIsOpenGhim(false)}
           className="absolute text-4xl right-1 top-1 hover:text-red-600"
@@ -62,10 +63,8 @@ const GhimContainer: FC<GhimContainerProps> = ({
         {newlistCoomentCover.length <= 0 && (
           <div className="flex items-center flex-col justify-center h-full">
             <img src="/images/bg_ghim.png" className="w-[200px]" alt="" />
-            <h6>Chưa ghim tin nhắn nào</h6>
-            <p className="text-sm text-center px-2 mt-1">
-              Tin nhắn đã ghim trong đoạn chat này sẽ hiển thị ở đây
-            </p>
+            <h6> {t("ghimNot")}</h6>
+            <p className="text-sm text-center px-2 mt-1">{t("ghimNotice")}</p>
           </div>
         )}
       </section>

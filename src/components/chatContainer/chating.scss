@@ -187,3 +187,15 @@
     }
   }
 }
+.language__parent {
+  .language__children {
+    scale: 0;
+    transition: 0.3s ease-in;
+  }
+  &:hover {
+    .language__children {
+      scale: 1;
+      box-shadow: 0 0 2px gray;
+    }
+  }
+}

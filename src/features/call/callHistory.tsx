@@ -7,6 +7,9 @@ import CallHistoryItem from "./CallHistoryItem";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { BiChevronLeft } from "react-icons/bi";
+import InfoLoginUI from "../sidebar/component/infoLoginUI";
+import "../../servies/translate/contfigTranslate";
+import { useTranslation } from "react-i18next";
 export interface ICallHistory {
   _id: string;
   author: {
@@ -24,6 +27,7 @@ export interface ICallHistory {
 const CallHistory = () => {
   const account = useSelector((state: RootState) => state.userStore.account);
   const [listCalls, setListCall] = useState<ICallHistory[]>([]);
+  const { t } = useTranslation();
   useEffect(() => {
     if (!account._id) return;
     instance
@@ -40,7 +44,7 @@ const CallHistory = () => {
   return (
     <div>
       <Helmet>
-        <title>Lịch sử gọi tại Zecky</title>
+        <title>{t("call")} Zecky</title>
         <link rel="canonical" href="" />
       </Helmet>
       <h2 className="font-bold text-xl mb-4 flex items-center">
@@ -50,21 +54,24 @@ const CallHistory = () => {
         >
           <BiChevronLeft />
         </button>
-        Lịch sử gọi
+        {t("call")}
       </h2>
-      <section className="max-h-[calc(100vh-80px)] overflow-y-auto">
-        {account._id &&
+      <section className="max-h-[calc(100vh-90px)] overflow-y-auto">
+        {account._id ? (
           listCalls.map((item) => (
             <CallHistoryItem
               idAccount={account._id}
               item={item}
               key={item._id}
             />
-          ))}
+          ))
+        ) : (
+          <InfoLoginUI />
+        )}
         {account._id && listCalls.length <= 0 && (
           <div className="text-xs flex justify-center flex-col items-center">
             <img width={50} src="/images/noticecall.png" alt="lỗi" />
-            <p className="text-xs mt-2">Hiện tại vẫn chưa có thông báo nào!</p>
+            <p className="text-xs mt-2">{t("donthavenotice")}!</p>
           </div>
         )}
       </section>

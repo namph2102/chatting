@@ -170,8 +170,8 @@ export function HandleTimeDiff(timestamp: any, timeEnd = "") {
   let result: any = !timeEnd
     ? moment(timestamp).fromNow()
     : moment(timestamp).from(timeEnd);
-  if (result.includes("a few seconds ago")) return "vài giây trước";
 
+  if (result.includes("a few seconds ago")) return "vài giây trước";
   if (result[1] === "n") {
     result = result.replace("an", "1");
   } else if (result[0] === "a") {
@@ -186,3 +186,18 @@ export function HandleTimeDiff(timestamp: any, timeEnd = "") {
   }
   return result.join(" ");
 }
+
+export const listLanguage = [
+  {
+    flag: "/images/flagvi.png",
+    country: "Việt Nam",
+    code: "vi",
+    id: "vietnamenumberone",
+  },
+  {
+    flag: "/images/flagen.png",
+    country: "English",
+    code: "en",
+    id: "232323dsasadsadsa",
+  },
+];

@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux";
 import { updateIsOpenFormRoom } from "../../redux/Slice/ChatPersonSlice";
 import { BiXCircle } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 
 interface AddFriendProps {
   idBG: string;
@@ -20,6 +22,8 @@ interface AddFriendProps {
 }
 
 const AddFriend: FC<AddFriendProps> = ({ idBG, handleCallback }) => {
+  const { t } = useTranslation();
+
   const [options, setListOptions] = useState<optionsPropsSelect[]>([]);
   const account = useSelector((state: RootState) => state.userStore.account);
   useEffect(() => {
@@ -59,7 +63,7 @@ const AddFriend: FC<AddFriendProps> = ({ idBG, handleCallback }) => {
   const handleSubmitRoom = () => {
     if (roomRef.current) {
       if (!roomRef.current.value) {
-        ToastNotify("Vui lòng đặt tên phòng").error();
+        ToastNotify(t("createNameRoom")).error();
       }
       handleCallback(roomRef.current.value, selectedOption || []);
       handleTurnOffModalAdd();
@@ -77,7 +81,7 @@ const AddFriend: FC<AddFriendProps> = ({ idBG, handleCallback }) => {
       >
         <section className="p-2 flex justify-between">
           <h6 className=" font-semibold text-2xl text-center flex-1">
-            Tạo phòng
+            {t("createRoom")}
           </h6>
           <button
             onClick={handleTurnOffModalAdd}
@@ -88,7 +92,7 @@ const AddFriend: FC<AddFriendProps> = ({ idBG, handleCallback }) => {
         </section>
 
         <label className="text-base" htmlFor="room_name">
-          Tên Phòng
+          {t("name")} {t("room")}
         </label>
         <section className="flex justify-between mt-2 mb-3 px-3 text-sm text-text   border-[1px] bg-aside  rounded-lg">
           <input
@@ -96,17 +100,19 @@ const AddFriend: FC<AddFriendProps> = ({ idBG, handleCallback }) => {
             type="text"
             id="room_name"
             className="block bg-none outline-none w-full py-2 px-2  bg-transparent text-sm"
-            placeholder="Nhập tên phòng"
+            placeholder={`${t("type")} ${t("name")} ${t("room")}`}
             required
           />
         </section>
 
-        <h5 className="text-base mb-4">Thêm người vào phòng</h5>
+        <h5 className="text-base mb-4">
+          {t("add")} {t("member")} {t("to")} {t("room")}
+        </h5>
         <div className="text-black">
           <Select
             value={selectedOption}
             onChange={handleUploadOption}
-            placeholder="Tìm kiếm..."
+            placeholder={t("search")}
             className="react-select-container"
             classNamePrefix="react-select"
             name="colors"
@@ -120,7 +126,7 @@ const AddFriend: FC<AddFriendProps> = ({ idBG, handleCallback }) => {
             onClick={handleSubmitRoom}
             className="py-2 px-5 background-primary background-primary-hover rounded-xl"
           >
-            Xác nhận
+            {t("createRoom")}
           </button>
         </div>
       </article>

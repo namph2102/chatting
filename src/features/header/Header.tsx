@@ -12,6 +12,8 @@ import { AppDispatch, RootState } from "../../redux";
 
 import { BiSun, BiMoon } from "react-icons/bi";
 import { updateTheme } from "../../redux/Slice/AccountSlice";
+import "../../components/chatContainer/component/Youtube";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false);
@@ -41,6 +43,8 @@ const Header = () => {
       });
     };
   }, []);
+  const { t } = useTranslation();
+
   return (
     <header
       className={cn(
@@ -53,7 +57,7 @@ const Header = () => {
             listMenu.map((menu) => (
               <MenuItem
                 key={menu.title}
-                title={menu.title}
+                title={t(menu.title)}
                 Icon={menu.Icon}
                 path={menu.path}
                 className={menu?.hiddenMoblie ? "lg:block hidden" : ""}
@@ -87,7 +91,7 @@ const Header = () => {
           </li>
           <li className="flex justify-center relative">
             <Tooltip
-              title={isOpenProfile ? "" : "Hồ sơ của bạn"}
+              title={isOpenProfile ? "" : t("yourprofile")}
               placement="top"
               componentsProps={componentsProps}
               arrow

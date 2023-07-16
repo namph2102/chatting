@@ -6,6 +6,9 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux";
 import { setIsOpenDisplayTable } from "../../redux/Slice/AccountSlice";
 import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
+import moment from "moment";
 
 interface IChatheader {
   person: PserSonChating;
@@ -13,7 +16,8 @@ interface IChatheader {
 // eslint-disable-next-line react-refresh/only-export-components
 const ChatHeader: FC<IChatheader> = ({ person }) => {
   const dispatchRedux: AppDispatch = useDispatch();
-
+  const { t } = useTranslation();
+  const language = localStorage.getItem("language") || "vi";
   return (
     <section className=" px-4 py-3 min-h-[60px] flex items-center  border-main/5 border-b-[2px]  shadow relative z-20">
       <div className="backdrop-blur-md  absolute inset-0"></div>
@@ -58,8 +62,12 @@ const ChatHeader: FC<IChatheader> = ({ person }) => {
             </h3>
             <p className="text-[12px]">
               {person.status
-                ? "Đang hoạt động"
-                : `Hoạt động ${HandleTimeDiff(person.updatedAt)}`}
+                ? t("online")
+                : `${t("offline")} ${
+                    language == "vi"
+                      ? HandleTimeDiff(person.updatedAt)
+                      : moment(person.updatedAt).fromNow()
+                  }`}
             </p>
           </div>
         </div>

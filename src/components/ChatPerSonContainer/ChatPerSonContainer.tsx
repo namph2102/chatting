@@ -239,7 +239,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     });
     socket.on("server-chat", (data: ChatUserPersonItemProps) => {
       data.isUser = false;
-      console.log("idRoomCurrent.idRoom", idRoomCurrent.idRoom);
+
       StoreComment.addComment(idRoomCurrent.idRoom, data);
       setListUserComments((pre) => [...pre, data]);
       handleScrool();
@@ -309,7 +309,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
 
     const data: ChatUserPersonItemProps = {
       idAccount: account._id,
-      isSee: true,
+      isSee: person?.status || false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       type,

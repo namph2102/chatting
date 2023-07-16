@@ -16,14 +16,15 @@ import { useDispatch } from "react-redux";
 import { CreateAccount } from "../../redux/Slice/AccountSlice";
 import { AppDispatch } from "../../redux";
 import Authentication from "../../config/auth";
+import { useTranslation } from "react-i18next";
+import "../../servies/translate/contfigTranslate";
 const Register = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const aboutController = new AbortController();
   const signal = aboutController.signal;
+  const { t } = useTranslation();
   useEffect(() => {
-    document.title = "Đăng ký tại Zecky";
-
     return () => {
       aboutController.abort();
     };
@@ -69,22 +70,27 @@ const Register = () => {
     },
     validationSchema: Yup.object().shape({
       fullname: Yup.string()
-        .required("không được để trống")
-        .matches(/^[\D \s]+$/, 'chỉ bao gồm "chữ cái"')
-        .min(2, "Ít nhất là 2 ký tự")
-        .max(50, "không vượt quá 50 ký tự"),
+        .required(t("inputRequired"))
+        .matches(
+          /^[\D \s]+$/,
+          `${t("only")} ${t("includes")} "${t("alphabet")}"`
+        )
+        .min(2, `${t("minis")} 2 ${t("character")}`)
+        .max(50, `${t("inputExceed")}  50 ${t("character")}`),
       password: Yup.string()
-        .required("không được để trống")
-        .min(5, "Ít nhất là 5 ký tự")
-        .max(50, "không vượt vượt quá 50 ký tự"),
+        .required(t("inputRequired"))
+        .min(5, `${t("minis")} 5 ${t("character")}`)
+        .max(50, `${t("inputExceed")}  50 ${t("character")}`),
       username: Yup.string()
         .matches(
           /^[a-zA-Z0-9@.]+$/,
-          'chỉ bao gồm "chữ số" , "chữ cái" và không có "dấu cách"'
+          `${t("includes")} "${t("number")}" , "${t("alphabet")}" ${t(
+            "and"
+          )} ${t("nothave")} "${t("space")}"`
         )
-        .required("không được để trống")
-        .min(3, "Ít nhất là 3 ký tự")
-        .max(50, "không vượt vượt quá 50 ký tự"),
+        .required(t("inputRequired"))
+        .min(3, `${t("minis")} 3 ${t("character")}`)
+        .max(50, `${t("inputExceed")}  50 ${t("character")}`),
     }),
     onSubmit: async (objvalue) => {
       const data = {
@@ -96,13 +102,13 @@ const Register = () => {
       };
       setIsloading(true);
       dispatch(CreateAccount(data, signal))
-        .then((message) => {
-          ToastNotify(message).success();
+        .then(() => {
+          ToastNotify(`${t("register")} ${t("success")} !`).success();
           formik.resetForm();
           navigate("/");
         })
         .catch((err) => {
-          ToastNotify("Tài khoản " + err.message).warning();
+          ToastNotify(t("account") + " " + err.message).warning();
           formik.setFieldError("username", err.message);
         })
         .finally(() => {
@@ -117,8 +123,9 @@ const Register = () => {
   return (
     <section id="register" className="overflow-y-auto relative">
       <Helmet>
-        <title>Đăng ký thành viên tại Zecky</title>
-        <link rel="canonical" href="" />
+        <title>
+          {t("register")} {t("member")} Zecky
+        </title>
       </Helmet>
       <div className="py-6 container mx-auto px-2 flex flex-wrap h-screen ">
         <article className="lg:basis-1/4 basis-full lg:text-left text-center">
@@ -131,9 +138,8 @@ const Register = () => {
           </div>
           <div className="text-base lg:text-left lg:mb-0 mb-8 text-center mt-2 grid place-items-center">
             <div className="typing-demo min-h-[16px]">
-              Chào bạn đã đến với{" "}
+              {t("welcomeToMywebsite")}{" "}
               <b className=" font-semibold ">
-                {" "}
                 <Link to="/">Zecky!</Link>
               </b>
             </div>
@@ -144,9 +150,9 @@ const Register = () => {
           className="lg:basis-3/4 basis-full flex flex-col items-center justify-center rounded-xl py-6 px-2"
         >
           <div className="text-center mb-6">
-            <h2 className="font-bold text-3xl">Đăng Kí Tài Khoản</h2>
+            <h2 className="font-bold text-3xl">{t("register")}</h2>
             <p className="text-sm mt-3 text-transparent/60">
-              Tạo tài khoản miễn phí của bạn ngay đây thôi.
+              {t("registerDes")}
             </p>
           </div>
 
@@ -157,7 +163,7 @@ const Register = () => {
                 error={formik.errors.fullname}
                 value={formik.values.fullname}
                 handleChange={formik.handleChange}
-                title="họ và tên"
+                title={t("fullname")}
               />
 
               <InputElement
@@ -165,7 +171,7 @@ const Register = () => {
                 error={formik.errors.username}
                 value={formik.values.username}
                 handleChange={formik.handleChange}
-                title="tài khoản"
+                title={t("username")}
               />
               <InputElement
                 name="password"
@@ -173,12 +179,12 @@ const Register = () => {
                 value={formik.values.password}
                 handleChange={formik.handleChange}
                 isPassword={true}
-                title="mật khẩu"
+                title={t("password")}
               />
             </div>
 
             <p className="text-sm text-center">
-              Chấp nhận chính sách của tôi{" "}
+              {t("acceptMyTerm")}{" "}
               <Link to="/chinh-sach">
                 <strong className="text-primary">Terms of Use</strong>
               </Link>
@@ -187,9 +193,9 @@ const Register = () => {
               type="submit"
               className="py-2 w-full my-3 text-base text-[#fff] background-primary hover:opacity-95 rounded-lg"
             >
-              Đăng kí ngay
+              {t("register") + " " + t("now")}
             </button>
-            <p className="text-center mb-2">Có thể sử dụng với</p>
+            <p className="text-center mb-2">{t("cantUse")}</p>
             <div className="grid grid-cols-3 gap-4">
               <button
                 onClick={() => Authentication.signGoogle(responsiveLoggin)}
@@ -216,13 +222,14 @@ const Register = () => {
             </div>
           </form>
           <p className="my-10">
-            Bạn đã có tài khoản ?{" "}
+            {t("haveAccount")}?{" "}
             <Link to="/dang-nhap" className="text-primary">
-              Đăng nhập
+              {t("login")}
             </Link>
           </p>
           <p className="text-sm text-primay opacity-75 pt-4 px-2">
-            &copy; Zecky. Được tạo bởi <span className="text-red-600">❤️</span>{" "}
+            &copy; Zecky. {t("created")}{" "}
+            <span className="text-red-600">❤️</span>{" "}
             <a
               href="https://www.facebook.com/namhoai2102"
               target="_blank"
