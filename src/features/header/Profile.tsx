@@ -33,6 +33,7 @@ const Profile: FC<ProfileProps> = ({
     dispacth(updateNotice(0));
   };
   const { t } = useTranslation();
+  if (!username && !fullname) return <></>;
   return (
     <div
       id="userDropdown"
@@ -78,7 +79,7 @@ const Profile: FC<ProfileProps> = ({
         <li>
           <Link
             to="/doi-mat-khau"
-            className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30"
+            className="flex justify-between  px-4 py-2 text-sm hover:bg-aside/30 capitalize"
           >
             {t("change") + " " + t("password")} <BiLock fontSize="1rem" />
           </Link>

@@ -98,7 +98,7 @@ const SiderBar = () => {
     <>
       <section
         id={theme.darkmode}
-        className="overflow-x-hidden lg:max-h-[calc(100vh-150px)] lg:min-h-[95vh] min-h-[80vh] max-h-[calc(100vh-225px)]"
+        className="overflow-x-hidden lg:max-h-[calc(100vh-150px)] lg:min-h-[92vh] min-h-[80vh] max-h-[calc(100vh-225px)]"
       >
         <div className="px-4">
           {!account.username ? (

@@ -6,6 +6,7 @@ import PageNotFound from "../../pages/error/PageNotFound";
 import CrawlWebsite from "../../pages/CrawlWebsite";
 import SearchPage from "../../pages/SearchPage";
 import JoinGroup from "../../pages/JoinGroup";
+import ChangePassword from "../../pages/changePassword";
 // import Profile from "../../pages/profile";
 
 const Layout = () => {
@@ -20,6 +21,7 @@ const Layout = () => {
         <Route path="tim-kiem" element={<SearchPage />} />
         <Route path="g/*" element={<PageNotFound />} />
         <Route path="g/:idRoom" element={<JoinGroup />} />
+        <Route path="/doi-mat-khau" element={<ChangePassword />} />
         {/* <Route path="thong-tin/:slug" element={<Profile />} />
         <Route path="thong-tin" element={<Profile />} /> */}
 

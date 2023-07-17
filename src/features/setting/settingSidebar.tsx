@@ -32,7 +32,7 @@ const SettingsSidebar = () => {
           {t("settings")} {t("info")}
         </span>
       </div>
-      <section className="max-h-[calc(100vh-90px)] overflow-y-auto">
+      <section className="max-h-[calc(100vh-100px)] overflow-y-auto">
         {account._id ? (
           <>
             <ProfileSettings account={account} />

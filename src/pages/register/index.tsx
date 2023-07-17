@@ -185,9 +185,9 @@ const Register = () => {
 
             <p className="text-sm text-center">
               {t("acceptMyTerm")}{" "}
-              <Link to="/chinh-sach">
+              <a target="_blank" href="https://blog.zecky.online/">
                 <strong className="text-primary">Terms of Use</strong>
-              </Link>
+              </a>
             </p>
             <button
               type="submit"

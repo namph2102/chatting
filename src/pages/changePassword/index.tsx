@@ -2,31 +2,20 @@ import InputElement from "../../components/form/InputElement";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Helmet } from "react-helmet";
-import { ToastNotify } from "../../servies/utils";
-import { useCallback, useEffect, useState } from "react";
+import { CapitalizeString, ToastNotify } from "../../servies/utils";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  BsFacebook,
-  BsFillChatSquareTextFill,
-  BsGithub,
-  BsGoogle,
-} from "react-icons/bs";
+import { BsFillChatSquareTextFill } from "react-icons/bs";
 import { LoaddingOverLay } from "../../components/loading";
-import { useDispatch } from "react-redux";
-import {
-  LoginAccount,
-  uploadFullAccount,
-} from "../../redux/Slice/AccountSlice";
-import { AppDispatch } from "../../redux";
-import Authentication from "../../config/auth";
+
 import instance from "../../config";
 import { useTranslation } from "react-i18next";
 import "../../servies/translate/contfigTranslate";
-const LoginPage = () => {
+const ChangePassword = () => {
   const navigate = useNavigate();
-  const dispatch: AppDispatch = useDispatch();
+
   const aboutController = new AbortController();
-  const signal = aboutController.signal;
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -35,57 +24,19 @@ const LoginPage = () => {
     };
   }, []);
 
-  const responsiveLoggin = useCallback(
-    (response: {
-      user: {
-        uid: string;
-        email: string;
-      };
-    }) => {
-      if (!response?.user) return;
-      setIsloading(true);
-      if (response?.user?.uid) {
-        instance
-          .post("user/login/firebase", {
-            data: {
-              uid: response.user.uid,
-              username:
-                response?.user?.email || localStorage.getItem("username"),
-            },
-          })
-          .then((res) => {
-            if (res.data?.account) {
-              uploadFullAccount(dispatch, res.data?.account);
-
-              const idTimeout = setTimeout(() => {
-                setIsloading(false);
-
-                clearTimeout(idTimeout);
-                navigate("/");
-              }, 2000);
-              return;
-            } else {
-              ToastNotify(t("severError")).info();
-            }
-          })
-          .catch((err) => {
-            setIsloading(false);
-            const message =
-              err?.response?.data?.message || "Tài khoản chưa đăng ký";
-            ToastNotify(message).error();
-          });
-      }
-    },
-    []
-  );
   const [isLoading, setIsloading] = useState<boolean>(false);
   const formik: any = useFormik({
     initialValues: {
       password: "",
       username: "",
+      newpassword: "",
     },
     validationSchema: Yup.object().shape({
       password: Yup.string()
+        .required(t("inputRequired"))
+        .max(50, `${t("inputExceed")}  50 ${t("character")}`),
+
+      newpassword: Yup.string()
         .required(t("inputRequired"))
         .max(50, `${t("inputExceed")}  50 ${t("character")}`),
       username: Yup.string()
@@ -93,35 +44,56 @@ const LoginPage = () => {
         .max(50, `${t("inputExceed")}  50 ${t("character")}`),
     }),
     onSubmit: async (objvalue) => {
+      if (objvalue.password == objvalue.newpassword) {
+        ToastNotify("Mật khẩu mới bị trùng!").error();
+        return;
+      }
       const data = {
         username: objvalue.username.trim(),
         password: objvalue.password.trim(),
+        newpassword: objvalue.newpassword.trim(),
       };
       setIsloading(true);
-      const isRedis = await dispatch(LoginAccount({ ...data }, signal)).finally(
-        () => {
+      instance
+        .post("user/changepassword", {
+          data,
+        })
+        .then((res) => res.data)
+        .then(
+          ({
+            statusCode,
+            message,
+          }: {
+            statusCode: number;
+            message: string;
+          }) => {
+            if (statusCode == 201) {
+              ToastNotify(message).success();
+              navigate("/");
+            } else {
+              ToastNotify(message).error();
+            }
+          }
+        )
+        .finally(() => {
           setIsloading(false);
-        }
-      );
-      if (isRedis) {
-        ToastNotify(`${t("login")} ${t("success")} !`).success();
-        navigate("/");
-      }
+        });
     },
   });
 
   return (
     <section id="register" className="overflow-y-auto relative">
       <Helmet>
-        <title>{t("login") + " " + t("home")} Zecky</title>
-        <link rel="canonical" href="" />
+        <title>
+          {CapitalizeString(t("change")) + " " + t("password") + t("home")}{" "}
+          Zecky
+        </title>
       </Helmet>
       <div className="py-6 container mx-auto px-2 flex flex-wrap h-screen ">
         <article className="lg:basis-1/4 basis-full lg:text-left text-center">
           <div className="flex items-end lg:justify-start justify-center gap-3">
             <BsFillChatSquareTextFill fontSize="1.5rem" />
             <h1 className="font-semibold text-2xl ">
-              {" "}
               <Link to="/">Zecky</Link>
             </h1>
           </div>
@@ -139,7 +111,9 @@ const LoginPage = () => {
           className="lg:basis-3/4 basis-full flex flex-col items-center justify-center rounded-xl py-6 px-2"
         >
           <div className="text-center mb-6">
-            <h2 className="font-bold text-3xl">{t("login")}</h2>
+            <h2 className="font-bold text-3xl capitalize">
+              {t("change")} {t("password")}
+            </h2>
             <p className="text-sm mt-3 text-transparent/60">
               {t("letChatWithFriends")}
               <Link to="/">
@@ -164,7 +138,15 @@ const LoginPage = () => {
                 value={formik.values.password}
                 handleChange={formik.handleChange}
                 isPassword={true}
-                title={t("password")}
+                title={`${t("password")} ${t("old")} `}
+              />
+              <InputElement
+                name="newpassword"
+                error={formik.errors.newpassword}
+                value={formik.values.newpassword}
+                handleChange={formik.handleChange}
+                isPassword={true}
+                title={`${t("password")} ${t("new")}`}
               />
             </div>
 
@@ -176,40 +158,15 @@ const LoginPage = () => {
             </p>
             <button
               type="submit"
-              className="py-2 w-full my-3 text-base text-[#fff] background-primary hover:opacity-95 rounded-lg"
+              className="py-2 capitalize w-full my-3 text-base text-[#fff] background-primary hover:opacity-95 rounded-lg"
             >
-              {t("login") + " " + t("now")}
+              {t("change")}
             </button>
-            <p className="text-center mb-2">{t("cantUse")}</p>
-            <div className="grid grid-cols-3 gap-4">
-              <button
-                onClick={() => Authentication.signGoogle(responsiveLoggin)}
-                type="button"
-                className="py-4 rounded-xl bg-slate-200 hover:bg-slate-300 flex justify-center"
-              >
-                <BsGoogle fill="#EF476F" className="sm:text-base text-sm" />
-              </button>
-              <button
-                type="button"
-                onClick={() => Authentication.signFacebook(responsiveLoggin)}
-                className="py-4 rounded-xl bg-slate-200 hover:bg-slate-300 flex justify-center"
-              >
-                <BsFacebook fill="#560BAD" className="sm:text-base text-sm" />
-              </button>
-
-              <button
-                onClick={() => Authentication.signGithub(responsiveLoggin)}
-                type="button"
-                className="py-4 rounded-xl bg-slate-200 hover:bg-slate-300 flex justify-center"
-              >
-                <BsGithub fill="#000" className="sm:text-base text-sm" />
-              </button>
-            </div>
           </form>
           <p className="my-10">
             {t("dontAccount")} ?
-            <Link to="/dang-ky" className="text-primary ml-2">
-              {t("register") + " " + t("now")}
+            <Link to="/dang-nhap" className="text-primary ml-2">
+              {t("login") + " " + t("now")}
             </Link>
           </p>
           <p className="text-sm text-primay opacity-75 pt-4 px-2">
@@ -245,4 +202,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ChangePassword;
