@@ -108,7 +108,7 @@ const Header = () => {
                       width="30"
                       height="30"
                       alt="Avatar"
-                      className="rounded-full object-cover "
+                      className="rounded-full object-cover w-8 h-8"
                       id="avatarButton"
                       data-dropdown-toggle="userDropdown"
                       data-dropdown-placement="bottom-start"

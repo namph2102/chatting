@@ -28,7 +28,7 @@ const UserItem: FC<{ user: IUserItem }> = ({ user }) => {
             alt={user.avatar}
             height={30}
             width={30}
-            className="rounded-full object-cover"
+            className="rounded-full object-cover w-8 h-8"
             loading="lazy"
           />
           <div

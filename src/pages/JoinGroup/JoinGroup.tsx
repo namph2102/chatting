@@ -111,7 +111,7 @@ const JoinGroup = () => {
                         : navigate("/dang-nhap")
                     }
                     className={cn(
-                      "flex gap-1 items-center opacity-90  justify-center background-primary text-white py-2 px-5 rounded-lg md:w-auto w-full",
+                      "flex gap-1  capitalize items-center opacity-90  justify-center background-primary text-white py-2 px-5 rounded-lg md:w-auto w-full",
                       isJoined
                         ? "opacity-60 cursor-not-allowed"
                         : "hover:opacity-100"

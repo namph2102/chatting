@@ -353,7 +353,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
                       <img src="images/iconimage.png" className="lg:w-10 w-8" />
                       <div className="text-sm text-white  font-normal flex flex-col line-clamp-1  text-ellipsis">
                         <span className="line-clamp-1">{file.fileName} </span>
-                        <span>{(file.size / 1000).toFixed(0)} kb</span>
+                        <span>{file.size.toFixed(2)} kb</span>
                       </div>
                       <Link
                         className="absolute right-4 -bottom-6 animate-bounce text-base font-bold text-primary-hover"

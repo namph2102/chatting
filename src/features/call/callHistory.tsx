@@ -47,7 +47,7 @@ const CallHistory = () => {
         <title>{t("call")} Zecky</title>
         <link rel="canonical" href="" />
       </Helmet>
-      <h2 className="font-bold text-xl mb-4 flex items-center">
+      <h2 className="font-bold text-xl mb-4 flex items-center capitalize">
         <button
           onClick={() => navigation("/")}
           className="px-2 text-3xl lg:hidden"

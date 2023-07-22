@@ -35,7 +35,7 @@ const ChatHeader: FC<IChatheader> = ({ person }) => {
               alt="avata"
               height={40}
               width={40}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover w-10 h-10"
             />
             <div
               className={cn(

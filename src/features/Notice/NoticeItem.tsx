@@ -102,9 +102,9 @@ const NoticeItem: FC<INoticeItemProps> = ({
         <img
           width={40}
           height={40}
-          className="object-cover rounded-full"
+          className="object-cover rounded-full w-10 h-10"
           src={avatashow}
-          alt=""
+          alt="lỗi ảnh"
         />
         <div>
           <p

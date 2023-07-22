@@ -10,7 +10,7 @@ import {
   updateNotice,
 } from "../../redux/Slice/AccountSlice";
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
-import { ToastNotify } from "../../servies/utils";
+import { CapitalizeString, ToastNotify } from "../../servies/utils";
 import { Tooltip } from "@mui/material";
 import { componentsProps } from "../../styles/componentsProps";
 import { LoaddingOverLay } from "../../components/loading";
@@ -37,12 +37,16 @@ const ProfileSettings: FC<{ account: IAccount }> = ({ account }) => {
           listFriend: account.friends,
         });
 
-        ToastNotify(`${t("change")} ${t("avatar")} ${t("success")}`).success();
+        ToastNotify(
+          `${CapitalizeString(t("change"))} ${t("avatar")} ${t("success")}`
+        ).success();
         e.target.value = null;
         dispatch(updateNotice(1));
       }
     } catch (error) {
-      ToastNotify(`${t("change")} ${t("avatar")} ${t("error")}`).error();
+      ToastNotify(
+        `${CapitalizeString(t("change"))} ${t("avatar")} ${t("error")}`
+      ).error();
     }
     setIsLoading(false);
   };
@@ -101,7 +105,7 @@ const ProfileSettings: FC<{ account: IAccount }> = ({ account }) => {
       />
       <div className="w-16 h-16  absolute -bottom-0 left-1/2 translate-y-1/2 -translate-x-1/2">
         <img
-          className="object-cover rounded-full border-primary_style-document  border-4 "
+          className="object-cover rounded-full border-primary_style-document  border-4  w-16 h-16"
           src={account.avatar}
         />
         <label
