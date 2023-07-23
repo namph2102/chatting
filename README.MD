@@ -10,6 +10,9 @@ Demo Online: [link](https://zecky.online)
 * Database
  * Mongodb (Mongoose)
 ## Một số tính năng
+ * Xác thực (Authen)
+   * Đăng nhập, Đăng ký
+   *  Gửi Email
  * ChatBot (ChatGPT- turbo 3.5)
    * Hỏi đáp 
    * Tạo ảnh theo mô tả
@@ -34,8 +37,6 @@ Demo Online: [link](https://zecky.online)
  * OpenAi
  * react-i18next
 
-### Một số hình ảnh liên quan tới website
 
-- Sẽ được tải lên khi dự án hoàn thành
 
 
