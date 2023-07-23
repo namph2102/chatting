@@ -132,8 +132,8 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
     if (file) {
       const pathLastfile: string = file.name.split(".").pop() || "nohave";
 
-      if (file.size > 1024 * 1000 * 100) {
-        ToastNotify(`${t("size")} file > 100Mb!`).success();
+      if (file.size > 1024 * 1000 * 200) {
+        ToastNotify(`${t("size")} file > 200Mb!`).success();
 
         e.target.value = "";
         return;
@@ -151,6 +151,7 @@ const ChatInputOptionsMore: FC<ChatInputOptionsMoreProps> = ({
       }
 
       if (fileCallback) {
+        ToastNotify(`Bạn phải chọn đúng ngôn ngữ file đang nói nhé!`).info();
         ToastNotify(`Upload File ${t("success")}!`).success();
 
         fileCallback(file);

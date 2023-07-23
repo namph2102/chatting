@@ -2,6 +2,7 @@ import clsx, { ClassValue } from "clsx";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 import moment from "moment";
+import emailjs from "@emailjs/browser";
 export function cn(...classnames: ClassValue[]) {
   return twMerge(clsx(classnames));
 }
@@ -201,3 +202,32 @@ export const listLanguage = [
     id: "232323dsasadsadsa",
   },
 ];
+
+export const sendEmailRegister = (email: string, fullname: string) => {
+  const date = moment(new Date().toISOString()).format("HH:mm:ss DD/MM/YYYY");
+  const form = document.createElement("form");
+  const html = `
+<input type="text" name="user_name" value="${CapitalizeString(fullname)}" />
+<input type="email" name="user_email" value="${email}" />
+<input
+  type="text"
+  name="user_date"
+  value="${date}"
+/>
+`;
+  form.innerHTML = html;
+  console.log(form);
+  sendEmail(form);
+};
+const sendEmail = (HTML: any) => {
+  emailjs
+    .sendForm("service_pg1y6uf", "template_ms4yryg", HTML, "wWz7ZEhL3E8pH6Uto")
+    .then(
+      (result) => {
+        console.log(result.text);
+      },
+      (error) => {
+        console.log(error.text);
+      }
+    );
+};

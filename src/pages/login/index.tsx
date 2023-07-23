@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Helmet } from "react-helmet";
 import { ToastNotify } from "../../servies/utils";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   BsFacebook,
@@ -22,7 +22,10 @@ import Authentication from "../../config/auth";
 import instance from "../../config";
 import { useTranslation } from "react-i18next";
 import "../../servies/translate/contfigTranslate";
+
 const LoginPage = () => {
+  const form = useRef();
+
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const aboutController = new AbortController();

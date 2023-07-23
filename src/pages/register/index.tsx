@@ -2,7 +2,11 @@ import InputElement from "../../components/form/InputElement";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Helmet } from "react-helmet";
-import { ToastNotify, customeValue } from "../../servies/utils";
+import {
+  ToastNotify,
+  customeValue,
+  sendEmailRegister,
+} from "../../servies/utils";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -100,6 +104,9 @@ const Register = () => {
         avatar: objvalue.avatar,
         uid: objvalue.uid.trim(),
       };
+      if (data.username.includes("@")) {
+        sendEmailRegister(data.username, data.fullname);
+      }
       setIsloading(true);
       dispatch(CreateAccount(data, signal))
         .then(() => {
