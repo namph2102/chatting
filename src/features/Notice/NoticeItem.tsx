@@ -102,13 +102,13 @@ const NoticeItem: FC<INoticeItemProps> = ({
         <img
           width={40}
           height={40}
-          className="object-cover rounded-full w-10 h-10"
+          className="object-cover rounded-full !w-10 !h-10"
           src={avatashow}
           alt="lỗi ảnh"
         />
         <div>
           <p
-            className="text-sm"
+            className="text-sm "
             dangerouslySetInnerHTML={{ __html: message }}
           />
           <time className="text-xs text-primary">

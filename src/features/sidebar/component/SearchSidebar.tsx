@@ -204,7 +204,10 @@ const SearchSibar: FC<SearchSibarProps> = ({
                   >
                     <BiSearch className="text-[#cfcdcd]" />
                   </button>
-                  <p className="text-main text-xs font-bold">
+                  <p
+                    onClick={getListUserSearch}
+                    className="text-main text-xs font-bold"
+                  >
                     {t("search")}: <span ref={SubSearch}></span>
                   </p>
                 </div>

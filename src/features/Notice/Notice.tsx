@@ -89,7 +89,7 @@ const NoticePage = () => {
         </button>
         {t("notice")}
       </h2>
-      <ul className="max-h-[calc(100vh-90px)] overflow-y-auto">
+      <ul className="max-h-[calc(100vh-90px)] lg:max-w-[300px]  overflow-y-auto">
         {listInfoCover.length > 0 &&
           listInfo.map((acc) => (
             <NoticeItem

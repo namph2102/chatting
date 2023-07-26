@@ -127,8 +127,8 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
         {isWating
           ? t("waitingAccept")
           : relationship
-          ? t("addfriend")
-          : t("chat")}
+          ? t("chat")
+          : t("addfriend")}
       </span>
     </article>
   );
