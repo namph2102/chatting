@@ -2,20 +2,25 @@ import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import "../../servies/translate/contfigTranslate";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { cn, listLanguage } from "../../servies/utils";
+import { cn } from "../../servies/utils";
 import { BiFlag } from "react-icons/bi";
 import i18n from "i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux";
+import { updateLanguage } from "../../redux/Slice/LangSlice";
 
 const LanguageSettings = () => {
   const { t } = useTranslation();
   const [isOpenMore, setIsOpenMore] = useState(false);
-  const [language, setLanguage] = useState(
-    localStorage.getItem("language") || "vi"
+
+  const dispatchRedux: AppDispatch = useDispatch();
+  const { listLanguage, languageCode } = useSelector(
+    (state: RootState) => state.languageStore
   );
   const handleSetLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
     localStorage.setItem("language", lng);
-    setLanguage(lng);
+    dispatchRedux(updateLanguage(lng));
   };
 
   return (
@@ -46,7 +51,7 @@ const LanguageSettings = () => {
               onClick={() => handleSetLanguage(lang.code)}
               className={cn(
                 "flex gap-2 items-center cursor-pointer px-2",
-                language == lang.code
+                languageCode == lang.code
                   ? "text-primary"
                   : "background-primary-hover rounded-lg"
               )}

@@ -44,6 +44,7 @@ const SearchPage: React.FC = () => {
     query = decodedKeyword.split("=")[1] || "getall";
   }
   const [listChatting, setListchatting] = useState<IUserSearchPageItem[]>([]);
+  const { t } = useTranslation();
   useEffect(() => {
     if (!account._id || !query) return;
     setIsOpenChat(true);
@@ -154,7 +155,6 @@ const SearchPage: React.FC = () => {
     // add follow socket
     handleAddFriendSocket(data);
   };
-  const { t } = useTranslation();
 
   return (
     <div>
@@ -208,9 +208,9 @@ const SearchPage: React.FC = () => {
               >
                 <BiChevronLeft className="lg:hidden text-3xl font-bold" />
               </span>
-              <span> Mọi người</span>
+              <span className="capitalize"> {t("allPerson")}</span>
             </h6>
-            {listChatting.length > 0 &&
+            {listChatting.length > 0 ? (
               listChatting.map((user) => (
                 <UserSearchPageItem
                   key={user._id}
@@ -218,7 +218,13 @@ const SearchPage: React.FC = () => {
                   idAccount={account._id}
                   handleAddFriends={handleAddFriends}
                 />
-              ))}
+              ))
+            ) : (
+              <p>
+                {" "}
+                {t("notseepersonsearch")} {query}
+              </p>
+            )}
           </section>
         </main>
       </div>

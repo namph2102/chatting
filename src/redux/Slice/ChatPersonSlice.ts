@@ -5,6 +5,7 @@ export interface PserSonChating {
   fullname: string;
   status: boolean;
   updatedAt?: string;
+  timeOff: string;
   typechat: "friend" | "group" | "chatbot";
   idRoom?: string;
 }
@@ -15,6 +16,7 @@ export const personInit: PserSonChating = {
   status: true,
   typechat: "chatbot",
   idRoom: "",
+  timeOff: new Date().toISOString(),
 };
 const initState: {
   person: PserSonChating;

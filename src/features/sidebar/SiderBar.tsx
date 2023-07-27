@@ -17,6 +17,7 @@ import { updateStatusSidebar } from "../../redux/Slice/SidebarSlice";
 import InfoLoginUI from "./component/infoLoginUI";
 import { useTranslation } from "react-i18next";
 import "../../servies/translate/contfigTranslate";
+import { updatePersonStatus } from "../../redux/Slice/ChatPersonSlice";
 
 const boxID: IUserItem = {
   _id: "chatbot",
@@ -42,7 +43,20 @@ const SiderBar = () => {
     if (!account._id) return;
     account.friends.map((idFriend: string) => {
       socket.on(`friend-chattings-${idFriend}`, (status) => {
-        dispatch(updateStatusSidebar({ idFriend, status }));
+        dispatch(
+          updateStatusSidebar({
+            idFriend,
+            status,
+            timeOff: new Date().toISOString(),
+          })
+        );
+        status == false &&
+          dispatch(
+            updatePersonStatus({
+              status,
+              timeOff: new Date().toISOString(),
+            })
+          );
       });
     });
   }, [account._id]);

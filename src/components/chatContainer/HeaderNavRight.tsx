@@ -12,14 +12,15 @@ import {
   updateSettingVideoCall,
   updateOpenGroup,
 } from "../../redux/Slice/AccountSlice";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
 import { useTranslation } from "react-i18next";
 import "../../servies/translate/contfigTranslate";
-import { cn, listLanguage } from "../../servies/utils";
+import { cn } from "../../servies/utils";
 import i18n from "i18next";
 import { Tooltip } from "@mui/material";
 import { componentsProps } from "../../styles/componentsProps";
+import { updateLanguage } from "../../redux/Slice/LangSlice";
 interface HeaderNavRightProps {
   isChatBot: boolean;
   person: PserSonChating;
@@ -39,29 +40,25 @@ const HeaderNavRight: FC<HeaderNavRightProps> = ({ isChatBot, person }) => {
     );
   };
 
-  const [language, setLanguage] = useState(
-    localStorage.getItem("language") || "vi"
+  const { listLanguage, languageCode } = useSelector(
+    (state: RootState) => state.languageStore
   );
   const handleSetLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
     localStorage.setItem("language", lng);
-    setLanguage(lng);
+    dispatchRedux(updateLanguage(lng));
   };
-  const textLng =
-    listLanguage.find((l) => l.code == language)?.country || "Việt Nam";
-
+  const textLang =
+    listLanguage.find((l) => l.code == languageCode)?.country || "Việt Nam";
   return (
     <div className="relative chat_options-settings_btn">
       <span className="sm:hidden block text-2xl cursor-pointer ">
         <BiDotsVerticalRounded />
       </span>
-      <ul
-        id={theme.darkmode}
-        className="chat_options-settings sm:static sm:w-auto min-w-[150px] sm:pr-0 sm:py-0 py-2  pr-2 sm:border-none border-[#333333]  absolute flex sm:flex-row items-end flex-col right-0 top-10 gap-3 text-2xl  cursor-pointer"
-      >
+      <ul className="chat_options-settings sm:static sm:w-auto min-w-[150px] sm:pr-0 sm:py-0 py-2  pr-2 sm:border-none border-[#333333]  absolute flex sm:flex-row items-end flex-col right-0 top-10 gap-3 text-2xl  cursor-pointer">
         <li className="text-base relative language__parent sm:order-none order-3">
           <div className="flex gap-1 items-center sm:text-base text-sm capitalize ">
-            {textLng} <BiChevronDown />
+            {textLang} <BiChevronDown />
           </div>
 
           <ul
@@ -74,7 +71,7 @@ const HeaderNavRight: FC<HeaderNavRightProps> = ({ isChatBot, person }) => {
                   onClick={() => handleSetLanguage(lang.code)}
                   className={cn(
                     "flex gap-2 items-center cursor-pointer py-1 px-3",
-                    language == lang.code
+                    languageCode == lang.code
                       ? "text-primary"
                       : "background-primary-hover rounded-lg"
                   )}

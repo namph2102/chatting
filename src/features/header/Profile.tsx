@@ -26,7 +26,10 @@ const Profile: FC<ProfileProps> = ({
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
+    localStorage.removeItem("searchHistory");
+
     ToastNotify(`${t("logout")} ${t("success")}!`).success();
+
     location.reload();
   };
   const handleRemoveInfo = () => {

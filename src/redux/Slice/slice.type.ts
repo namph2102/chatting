@@ -38,6 +38,7 @@ export interface IFriend extends IUserItem {
   typechat: "friend" | "group" | "chatbot";
   idRoom: string;
   des?: string;
+  timeOff?: string;
 }
 export interface typeMapItem {
   name: string;

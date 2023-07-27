@@ -5,12 +5,18 @@ import AppInfomation from "./components/AppInfomation";
 import { useEffect } from "react";
 import { themeColor } from "./features/setting/themeSetting";
 import i18n from "i18next";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./redux";
+import { updateLanguage } from "./redux/Slice/LangSlice";
 function App() {
+  const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     // setupload theme
+
     const index = localStorage.getItem("primary-color");
     const language = localStorage.getItem("language") || "vi";
     i18n.changeLanguage(language);
+    dispatch(updateLanguage(language));
     if (index && themeColor[Number(index)]) {
       document.documentElement.style.setProperty(
         "--primary-color",

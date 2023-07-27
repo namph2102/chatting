@@ -27,7 +27,9 @@ const SidebarSlice = createSlice({
     },
     updateStatusSidebar(
       state: ISidebarSlice,
-      action: { payload: { idFriend: string; status: boolean } }
+      action: {
+        payload: { idFriend: string; status: boolean; timeOff: string };
+      }
     ) {
       const itemFindFriends = state.listFriends.find(
         (friend) => friend._id == action.payload.idFriend
@@ -35,6 +37,7 @@ const SidebarSlice = createSlice({
 
       if (itemFindFriends) {
         itemFindFriends.status = action.payload.status;
+        itemFindFriends.timeOff = new Date().toISOString();
       }
     },
     updateInfoNameFriend(state, action) {
@@ -97,6 +100,7 @@ export const getDataListFriend = (idUser: string) => {
                 avatar: item?.avatar?.url || "/images/group.png",
                 des: item?.des || "",
                 status: true,
+                timeOff: new Date().toISOString(),
               });
               listChatGroups[item._id] = {
                 name: item.name,

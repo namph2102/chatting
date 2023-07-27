@@ -32,8 +32,12 @@ const personWorkChat = {
     deleteMessage: "đã xóa nội dung này",
     cancel: "Hủy",
     codeScan: "Quét mã QR",
+    allPerson: "Mọi Người",
+    notseepersonsearch: "Không tìm thấy ai theo từ khóa ",
   },
   en: {
+    notseepersonsearch: "Can't find list user following keyword ",
+    allPerson: "List User Search",
     cancel: "Cancel",
     deleteMessage: "deleted this message",
     oldPassword: "Old Password",

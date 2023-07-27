@@ -18,6 +18,7 @@ const ChatHeader: FC<IChatheader> = ({ person }) => {
   const dispatchRedux: AppDispatch = useDispatch();
   const { t } = useTranslation();
   const language = localStorage.getItem("language") || "vi";
+
   return (
     <section className=" px-4 py-3 min-h-[60px] flex items-center  border-main/5 border-b-[2px]  shadow relative z-20">
       <div className="backdrop-blur-md  absolute inset-0"></div>
@@ -65,7 +66,7 @@ const ChatHeader: FC<IChatheader> = ({ person }) => {
                 ? t("online")
                 : `${t("offline")} ${
                     language == "vi"
-                      ? HandleTimeDiff(person.updatedAt)
+                      ? HandleTimeDiff(person.timeOff || person.updatedAt)
                       : moment(person.updatedAt).fromNow()
                   }`}
             </p>

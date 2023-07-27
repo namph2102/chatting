@@ -66,11 +66,11 @@ const SidebarListMember: React.FC<SidebarListMemberProps> = ({
     >
       <button
         onClick={() => setOpenListMember(false)}
-        className="p-2 hover:bg-gray-500 absolute top-2 left-2 text-3xl rounded-full"
+        className="p-2 hover:bg-gray-500 absolute top-1 left-2 text-3xl rounded-full"
       >
         <BiChevronLeft />
       </button>
-      <h6 className="text-center py-4 text-xl md:text-2xl capitalize">
+      <h6 className="text-center py-4 text-base md:text-xl capitalize">
         {t("listMember")}
       </h6>
 

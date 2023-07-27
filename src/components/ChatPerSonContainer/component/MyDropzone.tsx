@@ -16,21 +16,22 @@ export interface IImageFireBase {
   path: string;
   size: number;
 }
-let listImage: IImageFireBase[] = [];
+
 const MyDropzone: FC<MyDropzoneProps> = ({
   handleSendMessage,
   setIsOpenFile,
 }) => {
   const { t } = useTranslation();
   const [listImageUrl, setListImageUrl] = useState<string[]>([]);
+  const [listImage, setListImage] = useState<IImageFireBase[]>([]);
+  console.log(listImage);
   const onDrop = useCallback((acceptedFiles: any) => {
-    acceptedFiles.forEach((file: File) => {
+    acceptedFiles.forEach(async (file: File) => {
       const reader = new FileReader();
-      handleImageFirebase
+      await handleImageFirebase
         .uploadimage("chats", file)
         .then((image: IImageFireBase | any) => {
-          listImage.push(image);
-          console.log(image);
+          image && setListImage((prev) => [...prev, image]);
         });
       reader.onabort = () => console.log("file reading was aborted");
       reader.onerror = () => console.log("file reading has failed");
@@ -51,7 +52,7 @@ const MyDropzone: FC<MyDropzoneProps> = ({
   }, []);
   useEffect(() => {
     return () => {
-      listImage = [];
+      setListImage([]);
       setListImageUrl((prev: string[]) => {
         prev.map((url) => URL.revokeObjectURL(url));
         return [];
@@ -60,10 +61,10 @@ const MyDropzone: FC<MyDropzoneProps> = ({
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const handleChangeSelect = () => {
-    listImage = [];
     listImage.map((fileImage) =>
       handleImageFirebase.deleteImage(fileImage.path)
     );
+    setListImage([]);
     setListImageUrl([]);
   };
   return (
@@ -107,9 +108,9 @@ const MyDropzone: FC<MyDropzoneProps> = ({
         <div className="absolute top-full flex gap-2 text-sm mt-2">
           <button
             onClick={(e) => {
-              e.stopPropagation(),
-                handleSendMessage(listImage, "image"),
-                (listImage = []);
+              e.stopPropagation();
+              handleSendMessage(listImage, "image");
+              setListImage([]);
               setIsOpenFile(false);
             }}
             className="background-primary-hover py-2 px-4 bg-green-700 rounded-full"

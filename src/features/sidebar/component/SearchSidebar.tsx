@@ -111,7 +111,11 @@ const SearchSibar: FC<SearchSibarProps> = ({
   const handleOpenFormCreateRoom = () => {
     dispatch(updateIsOpenFormRoom(true));
   };
-
+  const handleRedirectPagesearch = () => {
+    if (inputRef.current) {
+      navigate("/tim-kiem?q=" + inputRef.current.value);
+    }
+  };
   return (
     <>
       <section className="mb-2 ">
@@ -199,13 +203,13 @@ const SearchSibar: FC<SearchSibarProps> = ({
                 <div className="flex gap-2 items-center">
                   <button
                     type="button"
-                    onClick={getListUserSearch}
+                    onClick={handleRedirectPagesearch}
                     className="py-2 px-2 bg-main hover:bg-main/80 btn_search--bg rounded-full text-center"
                   >
                     <BiSearch className="text-[#cfcdcd]" />
                   </button>
                   <p
-                    onClick={getListUserSearch}
+                    onClick={handleRedirectPagesearch}
                     className="text-main text-xs font-bold"
                   >
                     {t("search")}: <span ref={SubSearch}></span>

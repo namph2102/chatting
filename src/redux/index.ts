@@ -3,6 +3,7 @@ import AccountSlice from "./Slice/AccountSlice";
 import SpotifySlice from "./Slice/SpotifySlice";
 import ChatPersonSlice from "./Slice/ChatPersonSlice";
 import SidebarSlice from "./Slice/SidebarSlice";
+import LangSlice from "./Slice/LangSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     spotifyStore: SpotifySlice,
     personStore: ChatPersonSlice,
     sidebarStore: SidebarSlice,
+    languageStore: LangSlice,
   },
 });
 
