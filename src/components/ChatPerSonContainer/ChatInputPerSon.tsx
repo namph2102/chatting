@@ -198,7 +198,6 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
           className
         )}
       >
-        <input id="uploadfile" type="file" hidden />
         <div className="flex justify-between w-full overflow-x-hidden  sm:gap-4 gap-2 items-center h-full">
           <div
             ref={btnMoreOpenRef}

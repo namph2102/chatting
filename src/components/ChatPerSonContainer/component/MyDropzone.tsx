@@ -24,6 +24,7 @@ const MyDropzone: FC<MyDropzoneProps> = ({
   const { t } = useTranslation();
   const [listImageUrl, setListImageUrl] = useState<string[]>([]);
   const [listImage, setListImage] = useState<IImageFireBase[]>([]);
+
   console.log(listImage);
   const onDrop = useCallback((acceptedFiles: any) => {
     acceptedFiles.forEach(async (file: File) => {
@@ -77,12 +78,13 @@ const MyDropzone: FC<MyDropzoneProps> = ({
       >
         <BiXCircle className="text-3xl absolute -top-6 -right-6" />
       </button>
+
       <div
         onClick={handleStopPropagation}
         className="min-w-[250px] min-h-[250px] sm:min-w-[400px] sm:min-h-[400px] border-2 border-white flex justify-center items-center border-dotted"
         {...getRootProps()}
       >
-        <input {...getInputProps()} />
+        <input id="uploadfile" {...getInputProps()} />
         <p className="py-2 flex flex-col justify-center items-center cursor-pointer">
           <BiCloudUpload className="text-6xl text-primary" />
           <span>
@@ -113,13 +115,13 @@ const MyDropzone: FC<MyDropzoneProps> = ({
               setListImage([]);
               setIsOpenFile(false);
             }}
-            className="background-primary-hover py-2 px-4 bg-green-700 rounded-full"
+            className="background-primary-hover py-2 px-4 bg-green-700 rounded-full capitalize"
           >
             {t("accept")}
           </button>
           <button
             onClick={handleChangeSelect}
-            className="hover:opacity-75 py-2 px-4 bg-red-700 rounded-full "
+            className="hover:opacity-75 py-2 px-4 bg-red-700 rounded-full capitalize "
           >
             {t("change")}
           </button>
