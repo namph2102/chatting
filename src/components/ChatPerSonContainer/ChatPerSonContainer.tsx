@@ -253,10 +253,12 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       setIsLoading(false);
       if (data.isSee) {
         if (person.status) return;
+
         socket.on("person-friend-online", () => {
           dispatch(
             updatePersonStatus({
               status: data.isSee,
+              timeOff: new Date().toISOString(),
             })
           );
         });
@@ -452,7 +454,6 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
             />
           ))}
       </section>
-
       <ChatInputPerSon
         loading={isLoading}
         setIsOpenGhim={setIsOpenGhim}

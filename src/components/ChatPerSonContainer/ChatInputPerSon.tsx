@@ -193,9 +193,10 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
       )}
       <section
         className={cn(
-          " bg-follow-darkmode  absolute sm:bottom-3 bottom-0 left-0 w-full  sm:p-4 py-4 px-3",
+          " bg-follow-darkmode   lg:absolute sm:bottom-3 bottom-0 left-0 w-full  sm:p-4 py-4 px-3",
 
-          className
+          className,
+          isOpenMoreChat ? "absolute" : ""
         )}
       >
         <input id="uploadfile" type="file" hidden />
@@ -349,7 +350,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
           onClick={() => setIsOpenMoreChat(false)}
           className={cn(
             "overflow-hidden grid sm:grid-cols-6 grid-cols-4 text-xs ease-in duration-100",
-            isOpenMoreChat ? "h-20" : "h-0"
+            isOpenMoreChat ? "h-20 " : "h-0 hidden"
           )}
         >
           <div

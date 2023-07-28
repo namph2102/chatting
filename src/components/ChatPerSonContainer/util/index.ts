@@ -90,6 +90,7 @@ export const filePath: TlistGroupsMap<string> = {
   webp: "png",
   txt: "txt",
   zip: "zip",
+  "7z": "zip",
   rest: "document",
 };
 const store: Record<string, ChatUserPersonItemProps[]> = {};
