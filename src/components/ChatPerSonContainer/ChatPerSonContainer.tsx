@@ -439,8 +439,9 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       )}
       <section
         ref={boxChatContentRef}
+        //hatting px-2 pb-4 overflow-y-auto h-[calc(100vh-160px)] overflow-x-hidden w-full
         // absolute top-0 left-0  bottom-24 pt-24
-        className="chatting px-2 pb-4 overflow-y-auto h-[calc(100vh-160px)] overflow-x-hidden w-full "
+        className="chatting px-2 pb-4 overflow-y-auto absolute top-0 left-0  bottom-28 pt-24 overflow-x-hidden w-full "
       >
         {listUserComments.length > 0 &&
           listUserComments.map((comment) => (
