@@ -9,25 +9,30 @@ import { PserSonChating } from "../../redux/Slice/ChatPersonSlice";
 import { useTranslation } from "react-i18next";
 import "../../servies/translate/contfigTranslate";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 interface IChatheader {
   person: PserSonChating;
 }
 // eslint-disable-next-line react-refresh/only-export-components
 const ChatHeader: FC<IChatheader> = ({ person }) => {
+  const navigator = useNavigate();
   const dispatchRedux: AppDispatch = useDispatch();
   const { t } = useTranslation();
   const language = localStorage.getItem("language") || "vi";
 
+  const handlePushPageHome = () => {
+    if (person._id == "chatbot") {
+      navigator("/nhan-tin");
+    }
+    dispatchRedux(setIsOpenDisplayTable(false));
+  };
   return (
     <section className=" px-4 py-3 min-h-[60px] flex items-center  border-main/5 border-b-[2px]  shadow relative z-20">
       <div className="backdrop-blur-md  absolute inset-0"></div>
       <div className="flex absolute top-0 left-0 px-4 py-auto right-0 z-10 justify-between items-center w-full">
         <div className="flex sm:gap-5 py-2 items-center gap-2">
-          <button
-            onClick={() => dispatchRedux(setIsOpenDisplayTable(false))}
-            className="lg:hidden"
-          >
+          <button onClick={handlePushPageHome} className="lg:hidden">
             <BiChevronLeft fontSize="1.5rem" />
           </button>
           <div className="relative ">

@@ -104,7 +104,7 @@ const MyDropzone: FC<MyDropzoneProps> = ({
               key={nanoid()}
               className="absolute inset-0 w-full h-full"
               src={url}
-              alt=""
+              alt="eero iamge"
             />
           ))}
         <div className="absolute top-full flex gap-2 text-sm mt-2">
