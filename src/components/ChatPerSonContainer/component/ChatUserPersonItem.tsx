@@ -336,9 +336,9 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
           >
             {t("accept")}
           </button>
-          {props.type == "image" && props.file && (
+          {props.type == "image" && props?.file && props.file.length > 0 && (
             <div className="flex flex-wrap gap-y-8 ">
-              {props.file.map((file) =>
+              {props?.file?.map((file) =>
                 file?.url ? (
                   <ImageComment file={file} key={nanoid()} />
                 ) : (
@@ -355,7 +355,7 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
               )}
             />
           )}
-          {props.type == "document" && props.file && (
+          {props.type == "document" && props?.file && props.file.length > 0 && (
             <DocumentComment {...props.file[0]} />
           )}
           {props.type == "audio" && (
