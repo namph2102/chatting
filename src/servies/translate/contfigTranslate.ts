@@ -34,8 +34,12 @@ const personWorkChat = {
     codeScan: "Quét mã QR",
     allPerson: "Mọi Người",
     notseepersonsearch: "Không tìm thấy ai theo từ khóa ",
+    clounddy: "Kho lưu trữ",
+    store: "Lưu Trữ dữ liệu",
   },
   en: {
+    clounddy: "Archives",
+    store: "Archives Store ",
     notseepersonsearch: "Can't find list user following keyword ",
     allPerson: "List User Search",
     cancel: "Cancel",

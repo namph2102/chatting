@@ -33,6 +33,15 @@ const SiderBar = () => {
 
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
   const { account, theme } = useSelector((state: RootState) => state.userStore);
+  const [Coundny, setStoreCoundy] = useState<IUserItem>({
+    _id: "chatbot",
+    avatar: "/images/clouds.png",
+    fullname: t("clounddy"),
+    status: true,
+    idRoom: "chatbot",
+    typechat: "chatbot",
+  });
+
   const listChattingLocal = historyChatting("searchHistory");
   const { listFriends, listRoomGroups } = useSelector(
     (state: RootState) => state.sidebarStore
@@ -59,7 +68,13 @@ const SiderBar = () => {
           );
       });
     });
+    setStoreCoundy((prev) => ({
+      ...prev,
+      _id: account._id,
+      idRoom: account._id,
+    }));
   }, [account._id]);
+
   const mutation = useMutation({
     mutationFn: async (search: string) => {
       const response = await instance.post("/user/search", {
@@ -128,6 +143,10 @@ const SiderBar = () => {
           )}
 
           <UserListContainer title={t("memberSupport")} listUser={[boxID]} />
+          {account.fullname && Coundny._id !== "chatbot" && (
+            <UserListContainer title={t("store")} listUser={[Coundny]} />
+          )}
+
           {listFriends && listFriends?.length > 0 && account.username && (
             <UserListContainer title={t("listFriend")} listUser={listFriends} />
           )}

@@ -24,8 +24,6 @@ const MyDropzone: FC<MyDropzoneProps> = ({
   const { t } = useTranslation();
   const [listImageUrl, setListImageUrl] = useState<string[]>([]);
   const [listImage, setListImage] = useState<IImageFireBase[]>([]);
-
-  console.log(listImage);
   const onDrop = useCallback((acceptedFiles: any) => {
     acceptedFiles.forEach(async (file: File) => {
       const reader = new FileReader();

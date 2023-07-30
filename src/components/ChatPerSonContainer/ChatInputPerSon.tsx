@@ -117,7 +117,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
     if (!chattingRef.current) return;
     handleSendMessage(chattingRef.current, "text");
     chattingRef.current.value = "";
-    chattingRef.current.blur();
+    chattingRef.current.focus();
   };
   const [isOpenModuleFile, setIsOpenFile] = useState<boolean>(false);
   const [isOpenMoreChat, setIsOpenMoreChat] = useState<boolean>(false);
@@ -282,6 +282,7 @@ const ChatInputPerSon: FC<ChatInputPerSonProps> = ({
                 onBlur={() => handleForcusChatting(false)}
                 className="py-3 block min-w-[30px] form-control border-[1px] px-3 text-sm  outline-0 border-none   flex-1 rounded-lg"
                 placeholder={t("chatMessage")}
+                autoFocus
                 maxRows={6}
                 minRows={1}
                 maxLength={600}
