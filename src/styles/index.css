@@ -55,3 +55,6 @@ body {
     border-color: transparent;
   }
 }
+[data-rmiz-modal-content] {
+  background-color: black;
+}

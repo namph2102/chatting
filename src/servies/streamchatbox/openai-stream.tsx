@@ -85,7 +85,7 @@ class OpenAIStream {
       await streamTextOpenAi(render, callback);
     } catch {
       throw new Error(
-        "Xin lỗi bạn! Có vẻ mạng của bạn hơi chậm! Bạn có thể tải lại trang 1 lần nữa để sử dụng!"
+        `Xin lỗi bạn! ChatPGT đã hết hạn sử dụng bạn có thể vào  <a class="text-blue-400 hover:text-blue-500" href="http://help.zecky.online/">help.zecky.online</a> để sử dụng nhé!`
       );
     }
   }

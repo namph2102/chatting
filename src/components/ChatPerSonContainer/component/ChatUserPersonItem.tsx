@@ -11,8 +11,6 @@ import moment from "moment";
 import ToltipProvider from "../../webmedia/component/ToltipProvider";
 import { IImageFireBase } from "./MyDropzone";
 
-import { nanoid } from "@reduxjs/toolkit";
-
 import "../style/chatperson.scss";
 import { Tooltip, capitalize } from "@mui/material";
 import { RiPencilFill } from "react-icons/ri";
@@ -337,10 +335,10 @@ const ChatUserPersonItem: FC<ChatUserPersonItemPropsMore> = (props) => {
             {t("accept")}
           </button>
           {props.type == "image" && props?.file && props.file.length > 0 && (
-            <div className="flex flex-wrap gap-y-8 ">
+            <div className="flex flex-wrap gap-x-2 gap-y-8 py-2">
               {props?.file?.map((file) =>
                 file?.url ? (
-                  <ImageComment file={file} key={nanoid()} />
+                  <ImageComment file={file} key={props._id} />
                 ) : (
                   `${t("image")} ${t("error")}`
                 )

@@ -6,6 +6,7 @@ import { BiCloudUpload, BiXCircle } from "react-icons/bi";
 import { nanoid } from "@reduxjs/toolkit";
 import { useTranslation } from "react-i18next";
 import "../../../servies/translate/contfigTranslate";
+
 interface MyDropzoneProps {
   handleSendMessage: (listImage: any, type: string) => void;
   setIsOpenFile(isOpenFile: boolean): void;
@@ -66,6 +67,7 @@ const MyDropzone: FC<MyDropzoneProps> = ({
     setListImage([]);
     setListImageUrl([]);
   };
+
   return (
     <>
       <button
@@ -90,9 +92,14 @@ const MyDropzone: FC<MyDropzoneProps> = ({
           </span>
         </p>
         {listImageUrl.length >= 2 && (
-          <div className="absolute inset-0 bottom-10 w-full h-40 grid grid-cols-2 gap-2">
+          <div className="absolute inset-0  w-full bg-black flex gap-2 flex-wrap ">
             {listImageUrl.map((url) => (
-              <img key={nanoid()} className="object-cover" src={url} alt="" />
+              <img
+                key={nanoid()}
+                className="object-cover max-w-[200px] max-h-[150px]"
+                src={url}
+                alt="error"
+              />
             ))}
           </div>
         )}
@@ -100,9 +107,9 @@ const MyDropzone: FC<MyDropzoneProps> = ({
           listImageUrl.map((url) => (
             <img
               key={nanoid()}
-              className="absolute inset-0 w-full h-full"
+              className="absolute inset-0 w-full  h-full"
               src={url}
-              alt="eero iamge"
+              alt="error iamge"
             />
           ))}
         <div className="absolute top-full flex gap-2 text-sm mt-2">

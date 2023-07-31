@@ -1,7 +1,9 @@
 import { FC } from "react";
-import { BiDownload, BiLinkAlt } from "react-icons/bi";
+import { BiDownload } from "react-icons/bi";
 import { filePath, handleCoverSize } from "../util";
 import ImageComment from "./ImageComment";
+
+import ToltipProvider from "../../webmedia/component/ToltipProvider";
 interface DocumentCommentProps {
   fileName: string;
   path: string;
@@ -21,32 +23,38 @@ const DocumentComment: FC<DocumentCommentProps> = (props) => {
     return <ImageComment file={props} />;
   }
   const pathfile: any = props.fileName.split(".").pop();
-  const namePath = filePath[pathfile];
+  const namePath = filePath[pathfile] || "document";
 
   return (
     <div className="flex p-4 m-2 gap-2 items-center border-primary_style-document  rounded-lg">
-      {namePath ? (
-        <img
-          alt="err"
-          className="w-10 h-10 object-cover"
-          src={`./images/${namePath}.png`}
-        />
-      ) : (
+      <ToltipProvider title="Xem trực tiếp">
         <a
-          href={props.url}
-          rel="noopener noreferrer"
-          download={props.fileName}
-          className="text-2xl background-primary p-2 rounded-full opacity-70"
+          href={"https://drive.google.com/uc?id=" + props.path}
+          target="_blank"
+          className="cursor-pointer block"
+          title="Xem online"
         >
-          <BiLinkAlt />
+          <img
+            alt="err"
+            className="w-10 h-10 object-cover"
+            src={`./images/${namePath}.png`}
+          />
         </a>
-      )}
-      <div className="text-sm">
-        <p className="text-sm  text-style__ellipsis sm:max-w-[300px]  md:max-w-[230px] max-w-[120px]">
-          {props.fileName}
-        </p>
-        <p className="text-xs font-light">{handleCoverSize(props.size)}</p>
-      </div>
+      </ToltipProvider>
+
+      <ToltipProvider title="Xem trực tiếp">
+        <a
+          href={"https://drive.google.com/uc?id=" + props.path}
+          target="_blank"
+          className="text-sm cursor-pointer"
+          title="Xem online"
+        >
+          <p className="text-sm  text-style__ellipsis sm:max-w-[300px]  md:max-w-[230px] max-w-[120px]">
+            {props.fileName}
+          </p>
+          <p className="text-xs font-light">{handleCoverSize(props.size)}</p>
+        </a>
+      </ToltipProvider>
       <a
         href={props.url}
         download={props.fileName}

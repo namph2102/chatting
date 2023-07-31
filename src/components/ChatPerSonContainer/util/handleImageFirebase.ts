@@ -56,7 +56,6 @@ import instance, { domainserver } from "../../../config";
 
 class HandleImageFireBase {
   uploadimage(name = "chats", file: File) {
-    console.log(name);
     const formdata = new FormData();
     formdata.append("file", file);
 
@@ -70,6 +69,7 @@ class HandleImageFireBase {
         return fileData;
       })
       .catch(() => {
+        name;
         return "Thất bại";
       });
   }
@@ -88,7 +88,7 @@ class HandleImageFireBase {
   getImage(path: string) {
     const forestRef = ref(storageFirebase, path);
     return getMetadata(forestRef).then((metadata) => {
-      console.log(metadata.generation);
+      metadata;
     });
   }
   getUlrDownload(path: string) {
