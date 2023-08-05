@@ -12,11 +12,21 @@ function App() {
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     // setupload theme
-
-    const index = localStorage.getItem("primary-color");
+    const pathName=location.pathname ||"";
     const language = localStorage.getItem("language") || "vi";
-    i18n.changeLanguage(language);
-    dispatch(updateLanguage(language));
+    if(pathName.includes("en-US")){
+      i18n.changeLanguage('en');
+      dispatch(updateLanguage('en'));
+    }else if(pathName.includes("vi-VN")){
+      i18n.changeLanguage('vi');
+      dispatch(updateLanguage('vi'));
+    }else{
+      i18n.changeLanguage(language);
+      dispatch(updateLanguage(language));
+    }
+    const index = localStorage.getItem("primary-color");
+  
+  
     if (index && themeColor[Number(index)]) {
       document.documentElement.style.setProperty(
         "--primary-color",

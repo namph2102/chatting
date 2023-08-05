@@ -21,13 +21,13 @@ import { ToastNotify } from "../../servies/utils";
 //   measurementId: "G-CHZ3G6DPT3",
 // };
 const firebaseConfig = {
-  apiKey: "AIzaSyAcwVF4GyIPIPc1FOvK6NvColZ6HsqcCeo",
-  authDomain: "deloyweb-390006.firebaseapp.com",
-  projectId: "deloyweb-390006",
-  storageBucket: "deloyweb-390006.appspot.com",
-  messagingSenderId: "626121753176",
-  appId: "1:626121753176:web:15ce8b2dc850344a30402d",
-  measurementId: "G-VT2WJZ8VC8",
+  apiKey: "AIzaSyCUuogh8hEj9O4OraQsYE3eanaMUxs3TDA",
+  authDomain: "test-c887e.firebaseapp.com",
+  projectId: "test-c887e",
+  storageBucket: "test-c887e.appspot.com",
+  messagingSenderId: "128310947725",
+  appId: "1:128310947725:web:0c61fde9baf1011b65d7c4",
+  measurementId: "G-G05WT46T62"
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();

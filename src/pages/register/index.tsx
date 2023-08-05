@@ -7,7 +7,7 @@ import {
   customeValue,
   sendEmailRegister,
 } from "../../servies/utils";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   BsFacebook,
@@ -23,6 +23,7 @@ import Authentication from "../../config/auth";
 import { useTranslation } from "react-i18next";
 import "../../servies/translate/contfigTranslate";
 const Register = () => {
+
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const aboutController = new AbortController();
@@ -33,38 +34,9 @@ const Register = () => {
       aboutController.abort();
     };
   }, []);
-  const responsiveLoggin = useCallback(
-    (response: {
-      user: {
-        displayName: string;
-        phoneNumber: number;
-        photoURL: string;
-        email: string;
-        uid: string;
-      };
-    }) => {
-      if (!response?.user) return;
-
-      if (response.user.email) {
-        formik.setFieldValue("username", response.user.email);
-      }
-      if (response.user.photoURL) {
-        formik.setFieldValue("avatar", response.user.photoURL);
-      }
-      if (response.user.uid) {
-        formik.setFieldValue("uid", response.user.uid);
-      }
-      if (response.user.displayName) {
-        formik.setFieldValue("fullname", response.user.displayName);
-      }
-
-      formik.setFieldError("password", "Đặt mật khẩu cho ứng dụng");
-      ToastNotify("Bạn đặt mật khẩu cho ứng dụng nhé!").info();
-    },
-    []
-  );
+    const buttonRef=useRef<HTMLButtonElement>(null)
   const [isLoading, setIsloading] = useState<boolean>(false);
-  const formik: any = useFormik({
+  const formik = useFormik({
     initialValues: {
       avatar: "/images/defaultlavata.png",
       fullname: "",
@@ -126,7 +98,39 @@ const Register = () => {
         });
     },
   });
-
+  const responsiveLoggin = useCallback(
+    (response: {
+      user: {
+        displayName: string;
+        phoneNumber: number;
+        photoURL: string;
+        email: string;
+        uid: string;
+      };
+    }) => {
+    
+      if (!response?.user || !response.user.uid) return;
+     
+    const userID=response.user.uid.slice(1,6);
+     formik.setFieldValue("username", response.user.email || userID);
+     
+      if (response.user.photoURL) {
+        formik.setFieldValue("avatar", response.user.photoURL);
+      }
+      if (response.user.uid) {
+        formik.setFieldValue("uid", response.user.uid);
+      }
+      if (response.user.displayName) {
+        formik.setFieldValue("fullname", response.user.displayName || "Người lạ mặt");
+      }
+      formik.setFieldValue("password", userID);
+      if(formik.values.uid && userID && buttonRef.current){
+        buttonRef.current.click();
+      
+      }
+    },
+    []
+  );
   return (
     <section id="register" className="overflow-y-auto relative">
       <Helmet>
@@ -198,6 +202,7 @@ const Register = () => {
             </p>
             <button
               type="submit"
+              ref={buttonRef}
               className="py-2 w-full my-3 text-base text-[#fff] background-primary hover:opacity-95 rounded-lg"
             >
               {t("register") + " " + t("now")}

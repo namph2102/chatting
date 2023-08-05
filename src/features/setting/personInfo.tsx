@@ -7,12 +7,20 @@ import InputElement from "../../components/form/InputElement";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { socket } from "../../components/ChatPerSonContainer/ChatPerSonContainer";
-import { CapitalizeString, cn } from "../../servies/utils";
+import { CapitalizeString, ToastNotify, cn } from "../../servies/utils";
 import { useState } from "react";
 import { updateFieldAccount } from "../../redux/Slice/AccountSlice";
 import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import "../../servies/translate/contfigTranslate";
 import { useTranslation } from "react-i18next";
+const regexPhoneNumber=(phone:string) => {
+
+  const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+
+  return phone.match(regexPhoneNumber) ? true : false;
+
+}
+
 const PersonInfo = () => {
   const { t } = useTranslation();
   const { account } = useSelector((state: RootState) => state.userStore);
@@ -37,11 +45,15 @@ const PersonInfo = () => {
       email: Yup.string()
         .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, `${t("not")} ${t("format")}`)
         .max(100, `${t("inputExceed")} 100 ${t("character")}`),
-      phone: Yup.string()
-        .matches(/^(\d{9}|\d{10}|\d{11})$/, `${t("not")} ${t("format")}`)
-        .max(100, `${t("inputExceed")} 100 ${t("character")}`),
+      phone: Yup.string().max(12, `${t("inputExceed")} 11 ${t("character")}`),
     }),
     onSubmit(values) {
+      if(values.phone){
+          if(!regexPhoneNumber(values.phone)){
+            ToastNotify(`${t("phone")} ${t("notfaild")}   ${t("format")}`).error();        
+                return;
+          }
+      }
       if (!account._id) return;
       socket.emit("user-change-info-profile", {
         ...values,
@@ -93,7 +105,7 @@ const PersonInfo = () => {
           <p className="mt-1 font-semibold capitalize text-xs">
             {!account.phone
               ? `${t("not")} ${t("update")}`
-              : `0${account.phone}`}
+              : `${account.phone}`}
           </p>
         </li>
         <li>
@@ -134,7 +146,7 @@ const PersonInfo = () => {
             <InputElement
               name="phone"
               error={formik.errors.phone}
-              value={"0" + formik.values.phone}
+              value={formik.values.phone}
               handleChange={formik.handleChange}
               title={t("phone")}
             />

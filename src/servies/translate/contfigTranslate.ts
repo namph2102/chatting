@@ -135,8 +135,10 @@ const worksChat = {
     agree: "Đồng ý",
     refuse: "Từ chối",
     findSeachinListFriends: "Tìm kiếm trong danh sách bạn bè..",
+    notfaild:"không đúng"
   },
   en: {
+    notfaild:"not is",
     findSeachinListFriends: "Search in the list of friends",
     isJoined: "Joined",
     join: "join",
@@ -315,7 +317,7 @@ const resources = {
       error: "thất bại",
       not: "không",
       formatIs: "định dạng là",
-      format: "định dang",
+      format: "định dạng",
       address: "Địa chỉ",
       add: "Thêm",
       kick: "Kích",

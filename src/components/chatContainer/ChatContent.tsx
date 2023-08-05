@@ -56,7 +56,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           )}
         >
           {props.type == "text" && (
-            <p className="whitespace-pre-wrap pl-2">
+            <p className="whitespace-pre-wrap pl-2"  style={{wordBreak:"break-word"}}>
               <code
                 className="javascript whitespace-pre-wrap w-[fit-content]  font_inter-chatting indent-4"
                 dangerouslySetInnerHTML={{ __html: props.comment }}

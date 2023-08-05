@@ -50,6 +50,7 @@ const AppInfomation = () => {
           dispacth(getDataListFriend(userid));
         }
       });
+      
   }, []);
 
   useEffect(() => {

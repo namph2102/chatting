@@ -20,8 +20,9 @@ export const listMenu = [
     Icon: BsRobot,
     hiddenMoblie: true,
     component: SiderBar,
-    path: "/",
+    path: "/*",
   },
+
   {
     title: "profile",
     Icon: BiUserCircle,

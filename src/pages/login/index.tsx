@@ -57,10 +57,8 @@ const LoginPage = () => {
           .then((res) => {
             if (res.data?.account) {
               uploadFullAccount(dispatch, res.data?.account);
-
               const idTimeout = setTimeout(() => {
                 setIsloading(false);
-
                 clearTimeout(idTimeout);
                 navigate("/");
               }, 2000);
