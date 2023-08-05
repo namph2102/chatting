@@ -42,9 +42,7 @@ class Authentication {
       .then((account) => {
         responsiveLoggin(account);
       })
-      .catch((err) => {
-        console.log(err.message);
-        ToastNotify("Không thể kết nối bên thứ ba!").info();
+      .catch(() => {    
       });
   }
   signGoogle(responsiveLoggin: (re: any) => void) {
@@ -53,21 +51,17 @@ class Authentication {
       .then((account) => {
         responsiveLoggin(account);
       })
-      .catch((err) => {
-        console.log(err.message);
-        ToastNotify("Không thể kết nối bên thứ ba!").info();
+      .catch(() => {
       });
   }
   signGithub(responsiveLoggin: (re: any) => void) {
     const provider = new GithubAuthProvider();
     signInWithPopup(this.authenticationFirebase, provider)
       .then((account) => {
-        console.log(account);
         responsiveLoggin(account);
       })
-      .catch((err) => {
-        console.log(err.message);
-        ToastNotify("Không thể kết nối bên thứ ba!").info();
+      .catch(() => {
+        ToastNotify("Không thể kết nối bên thứ ba!").info();  
       });
   }
   handleLogout() {

@@ -69,33 +69,7 @@ const Register = () => {
         .max(50, `${t("inputExceed")}  50 ${t("character")}`),
     }),
     onSubmit: async (objvalue) => {
-      const data = {
-        username: objvalue.username.trim(),
-        fullname: customeValue(objvalue.fullname),
-        password: objvalue.password.trim(),
-        avatar: objvalue.avatar,
-        uid: objvalue.uid.trim(),
-      };
-      if (data.username.includes("@")) {
-        sendEmailRegister(data.username, data.fullname);
-      }
-      setIsloading(true);
-      dispatch(CreateAccount(data, signal))
-        .then(() => {
-          ToastNotify(`${t("register")} ${t("success")} !`).success();
-          formik.resetForm();
-          navigate("/");
-        })
-        .catch((err) => {
-          ToastNotify(t("account") + " " + err.message).warning();
-          formik.setFieldError("username", err.message);
-        })
-        .finally(() => {
-          const idSettimeout = setTimeout(() => {
-            setIsloading(false);
-            clearTimeout(idSettimeout);
-          }, 2000);
-        });
+      handleSubmitFormData(objvalue);
     },
   });
   const responsiveLoggin = useCallback(
@@ -110,27 +84,49 @@ const Register = () => {
     }) => {
     
       if (!response?.user || !response.user.uid) return;
+      const userID=response.user.uid.slice(1,6);
      
-    const userID=response.user.uid.slice(1,6);
-     formik.setFieldValue("username", response.user.email || userID);
-     
-      if (response.user.photoURL) {
-        formik.setFieldValue("avatar", response.user.photoURL);
-      }
-      if (response.user.uid) {
-        formik.setFieldValue("uid", response.user.uid);
-      }
-      if (response.user.displayName) {
-        formik.setFieldValue("fullname", response.user.displayName || "Người lạ mặt");
-      }
-      formik.setFieldValue("password", userID);
-      if(formik.values.uid && userID && buttonRef.current){
-        buttonRef.current.click();
-      
-      }
+      const DataFirebase={
+        fullname:  response.user.displayName || "Không có tên",
+        password: userID,
+        avatar: response.user.photoURL,
+        username: response.user.email || userID,
+        uid:  response.user.uid,
+      };
+      handleSubmitFormData(DataFirebase);
     },
     []
   );
+  const handleSubmitFormData=async (objvalue:typeof formik.values)=>{
+    console.log(objvalue);
+    const data = {
+      username: objvalue.username.trim(),
+      fullname: customeValue(objvalue.fullname),
+      password: objvalue.password.trim(),
+      avatar: objvalue.avatar,
+      uid: objvalue.uid.trim(),
+    };
+    if (data.username.includes("@")) {
+      sendEmailRegister(data.username, data.fullname);
+    }
+    setIsloading(true);
+    dispatch(CreateAccount(data, signal))
+      .then(() => {
+        ToastNotify(`${t("register")} ${t("success")} !`).success();
+        formik.resetForm();
+        navigate("/");
+      })
+      .catch((err) => {
+        ToastNotify(t("account") + " " + err.message).warning();
+        formik.setFieldError("username", err.message);
+      })
+      .finally(() => {
+        const idSettimeout = setTimeout(() => {
+          setIsloading(false);
+          clearTimeout(idSettimeout);
+        }, 2000);
+      });
+  }
   return (
     <section id="register" className="overflow-y-auto relative">
       <Helmet>
