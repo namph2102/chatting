@@ -1,6 +1,8 @@
-# Project chat Realtime 20/05/2023
-## Link trang chủ của zecky.online (Ứng dụng nhắn tin)
-Demo Online: [link](https://zecky.online)
+# Project chat Realtime 20/05/2023 (MERN) 
+## Link trang chủ của Website nhắn tin (zecky.online ReactJS) + Tin tức (blog.zecky.online NextJS)
+- Mời các anh chị ghé thăm website nhen!.
+Demo Online Website nhắn tin: [link](https://zecky.online)
+Demo Online Website Tin tức: [link](https://blog.zecky.online)
 ## Một số công nghệ sử dụng
 * Front-End
  * HTML5, CSS3 (Taiwincss,Sass) 
@@ -11,8 +13,11 @@ Demo Online: [link](https://zecky.online)
  * Mongodb (Mongoose)
 ## Một số tính năng
  * Xác thực (Authen)
-   * Đăng nhập, Đăng ký
-   *  Gửi Email
+   * Đăng nhập, Đăng ký (FireBase),...
+   * Gửi Email Chúc mừng 
+   * Lưu tài liệu cá nhân
+   * Phân trang , phân quyền, tìm kiếm
+   * Lấy nội dung từ website khác (Trang quản lý)
  * ChatBot (ChatGPT- turbo 3.5)
    * Hỏi đáp 
    * Tạo ảnh theo mô tả
@@ -38,5 +43,16 @@ Demo Online: [link](https://zecky.online)
  * react-i18next
 
 
+### Mộ số Hình ảnh cơ bản
+--- Trang  nhắn tin
+ ![Zecky Home](https://i.imgur.com/EvZMBh2.png)
+![Zecky Home]( https://i.imgur.com/FpX5nQ7.png)
 
-
+--- Trang tin tức
+![Tin tức](https://i.imgur.com/I7mi7jb.png)
+![1](https://i.imgur.com/yAHyfHb.png)
+![2](https://i.imgur.com/bDLYYHq.png)
+![3](https://i.imgur.com/2knpQnJ.png)
+![4](https://i.imgur.com/i1Gd3wM.png)
+![5](https://i.imgur.com/j4UXMQ1.png)
+ ![Tin tức](https://i.imgur.com/i1Gd3wM.png)
