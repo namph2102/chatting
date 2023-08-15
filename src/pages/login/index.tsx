@@ -15,6 +15,7 @@ import { LoaddingOverLay } from "../../components/loading";
 import { useDispatch } from "react-redux";
 import {
   LoginAccount,
+  updateNotice,
   uploadFullAccount,
 } from "../../redux/Slice/AccountSlice";
 import { AppDispatch } from "../../redux";
@@ -57,6 +58,9 @@ const LoginPage = () => {
           .then((res) => {
             if (res.data?.account) {
               uploadFullAccount(dispatch, res.data?.account);
+              if (res.data?.totalInfos) {
+                dispatch(updateNotice(res.data.totalInfos));
+              }
               const idTimeout = setTimeout(() => {
                 setIsloading(false);
                 clearTimeout(idTimeout);

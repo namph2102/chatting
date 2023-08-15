@@ -85,7 +85,7 @@ class OpenAIStream {
       await streamTextOpenAi(render, callback);
     } catch {
       throw new Error(
-        `Xin lỗi bạn! ChatPGT đã hết hạn sử dụng bạn có thể vào  <a class="text-blue-400 hover:text-blue-500" href="http://help.zecky.online/">help.zecky.online</a> để sử dụng nhé!`
+        `Xin lỗi bạn! ChatPGT đã hết hạn hoặc là bạn hỏi quá nhanh nếu lần tiếp theo không được hãy ghé  <a class="text-blue-400 hover:text-blue-500" href="http://help.zecky.online/">help.zecky.online</a> để sử dụng nhé!`
       );
     }
   }

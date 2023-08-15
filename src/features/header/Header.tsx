@@ -124,6 +124,10 @@ const Header = () => {
               username={account.username}
               noticeTotal={noticeTotal}
               fullname={account.fullname}
+              idUser={account._id}
+              isMember={
+                account.permission == "member" || account.permission == ""
+              }
             />
           </li>
         </ul>

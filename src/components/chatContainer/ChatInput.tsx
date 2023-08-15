@@ -1,4 +1,4 @@
-import { FC, useRef, useState, useCallback } from "react";
+import { FC, useRef, useState, useCallback, useEffect } from "react";
 
 import {
   BiGridAlt,
@@ -56,8 +56,9 @@ const ChatInput: FC<ChatInputProps> = ({
   >([]);
 
   const handleSubmitMessage = () => {
-    let messages: messageType | any = {};
     if (chattingRef.current) {
+      if (!chattingRef.current.value) return;
+      let messages: messageType | any = {};
       messages = {
         isUserMessage: true,
         id: nanoid(),
@@ -81,28 +82,23 @@ const ChatInput: FC<ChatInputProps> = ({
       } else {
         chattingRef.current.value = "";
       }
-      chattingRef.current.blur();
     }
   };
-  // useEffect(() => {
-  //   const handleChattingEnter = (e: KeyboardEvent) => {
-  //     if (!chattingRef.current?.value) return;
-  //     if (e.key === "Enter") {
-  //       if (loading) {
-  //         return;
-  //       }
-  //       handleSubmitMessage();
-  //     }
-  //   };
-  //   document.addEventListener("keypress", handleChattingEnter);
-  //   return () => {
-  //     document.removeEventListener("keypress", handleChattingEnter);
+  useEffect(() => {
+    const handleChattingEnter = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleSubmitMessage();
+      }
+    };
+    document.addEventListener("keypress", handleChattingEnter);
+    return () => {
+      document.removeEventListener("keypress", handleChattingEnter);
 
-  //     if (chattingRef.current) {
-  //       chattingRef.current.value = "";
-  //     }
-  //   };
-  // }, []);
+      if (chattingRef.current) {
+        chattingRef.current.value = "";
+      }
+    };
+  }, []);
   const callbackText = useCallback((str: string | boolean | any) => {
     setIsOpenVoices(false);
     if (str && chattingRef.current) {
@@ -139,7 +135,6 @@ const ChatInput: FC<ChatInputProps> = ({
     }
     if (!isOpenEVoices) {
       setIsOpenVoices(true);
-
       HandleCoverSpeaktoText(callbackText);
     }
   };

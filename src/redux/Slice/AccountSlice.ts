@@ -74,9 +74,12 @@ const AccountSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(firstloginWebsite.fulfilled, (state, action) => {
-      if (action.payload?.accessToken) {
-        state.account = action.payload;
-        acctackToken(action.payload.accessToken);
+      const account = action.payload.account;
+      const totolnotice = action.payload?.totalInfos || 0;
+      if (account?.accessToken) {
+        state.account = account;
+        state.noticeTotal = totolnotice;
+        acctackToken(account.accessToken);
       }
     });
   },
@@ -122,6 +125,7 @@ export const CreateAccount = (
         message = data.message || "Tạo tài khoản thành công!";
         uploadFullAccount(dispatch, account);
         dispatch(getDataListFriend(account._id));
+
         return message;
       })
       .catch((error) => {
@@ -141,6 +145,8 @@ export const LoginAccount = (
         if (res?.data?.account) {
           const account = res?.data?.account;
           uploadFullAccount(dispatch, account);
+          res?.data?.totalInfos &&
+            dispatch(updateNotice(res?.data?.totalInfos));
           return true;
         }
       })
@@ -176,13 +182,13 @@ export const firstloginWebsite = createAsyncThunk(
 
       return instance
         .get("/user/firstlogin")
-        .then((res) => {
-          if (res.data.account) {
-            return res.data.account;
+        .then((res) => res.data)
+        .then((data) => {
+          if (data.account) {
+            return data;
           }
         })
         .catch(() => {
-          console.error("Tài khoản chưa đăng ký lần nào");
           return false;
         });
     } catch (err: { message: string } | any) {

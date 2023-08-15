@@ -103,9 +103,7 @@ export const handleCreateStoreComment = () => {
       id: string,
       listComment: ChatUserPersonItemProps[]
     ) {
-      if (!store[id]) {
-        store[id] = listComment;
-      }
+      store[id] = listComment;
     },
     getFollowRoom(id: string | any) {
       if (store[id]) return store[id];

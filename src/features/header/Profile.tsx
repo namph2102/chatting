@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { BiBell, BiCog, BiLock, BiLogOutCircle } from "react-icons/bi";
+import { BiBell, BiCog, BiLock, BiLogOutCircle, BiTone } from "react-icons/bi";
 import { ToastNotify, cn } from "../../servies/utils";
 import { Link } from "react-router-dom";
 import { Badge } from "@mui/material";
@@ -8,17 +8,23 @@ import { AppDispatch } from "../../redux";
 import { updateNotice } from "../../redux/Slice/AccountSlice";
 import "../../components/chatContainer/component/Youtube";
 import { useTranslation } from "react-i18next";
+import instance from "../../config";
+
 interface ProfileProps {
   username: string;
   fullname: string;
+  isMember: boolean;
   isOpen: boolean;
   noticeTotal: number;
+  idUser: string;
   setIsOpenProfile: (isOpen: boolean) => void;
 }
 const Profile: FC<ProfileProps> = ({
   username,
   fullname,
+  isMember,
   isOpen,
+  idUser,
   noticeTotal,
   setIsOpenProfile,
 }) => {
@@ -32,7 +38,12 @@ const Profile: FC<ProfileProps> = ({
 
     location.reload();
   };
-  const handleRemoveInfo = () => {
+  const handleRemoveInfo = async () => {
+    noticeTotal > 0 &&
+      idUser &&
+      (await instance.post("/info/updatestatus", {
+        userAccept: idUser,
+      }));
     dispacth(updateNotice(0));
   };
   const { t } = useTranslation();
@@ -41,8 +52,9 @@ const Profile: FC<ProfileProps> = ({
     <div
       id="userDropdown"
       className={cn(
-        "z-10 absolute   ease-in duration-100  text-white -top-[250px] lg:left-0  -left-[150px] border-gray-700 border-[1px]  bg-menu  rounded-lg shadow w-48 ",
-        isOpen ? "scale-1" : "scale-0"
+        "z-10 absolute   ease-in duration-100  text-white  lg:left-0  -left-[150px] border-gray-700 border-[1px]  bg-menu  rounded-lg shadow w-48 ",
+        isOpen ? "scale-1" : "scale-0",
+        isMember ? "-top-[250px]" : "-top-[290px]"
       )}
     >
       <div className="px-4 py-3 text-sm border-b-[1px] border-primary">
@@ -79,6 +91,7 @@ const Profile: FC<ProfileProps> = ({
             {t("settings")} <BiCog fontSize="1rem" />
           </Link>
         </li>
+
         <li>
           <Link
             to="/doi-mat-khau"
@@ -87,6 +100,17 @@ const Profile: FC<ProfileProps> = ({
             {t("change") + " " + t("password")} <BiLock fontSize="1rem" />
           </Link>
         </li>
+        {!isMember && (
+          <li>
+            <Link
+              to="https://blog.zecky.online/dashboard"
+              target="_blank"
+              className="flex justify-between  px-4 py-2 hover:bg-orange-800 text-sm hover:bg-aside/30 capitalize"
+            >
+              {t("adminPage")} <BiTone fontSize="1rem" />
+            </Link>
+          </li>
+        )}
       </ul>
       <div className="py-1 border-t-[1px] border-primary">
         <span

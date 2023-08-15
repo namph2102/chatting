@@ -116,13 +116,10 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
 
           if (listNewChatting?.length >= 0) {
             if (person.idRoom) {
-              // Đang fixed
-              if (!StoreComment.checkCommentInRoom(person.idRoom)) {
-                StoreComment.addListCommentFollowRoom(
-                  person.idRoom,
-                  listNewChatting
-                );
-              }
+              StoreComment.addListCommentFollowRoom(
+                person.idRoom,
+                listNewChatting
+              );
               setListUserComments([...listNewChatting]);
             }
 
@@ -228,6 +225,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
       ScroolToBottom(boxChatContentRef.current, 200);
     }
   }, []);
+
   useEffect(() => {
     // client-side
     socket.on("connect", () => {
@@ -247,7 +245,7 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
     });
     socket.on("user-chat-message", (data) => {
       setListUserComments((prev) => [...prev, data]);
-      console.log("idRoomCurrent.idRoom", idRoomCurrent.idRoom);
+
       StoreComment.addComment(idRoomCurrent.idRoom, data);
       handleScrool();
       setIsLoading(false);
@@ -444,9 +442,9 @@ const ChatPerSonContainer: FC<ChatPerSonContainerProps> = ({ person }) => {
         className="chatting px-2 pb-4 overflow-y-auto absolute top-0 left-0  bottom-24 pt-24 overflow-x-hidden w-full "
       >
         {listUserComments.length > 0 &&
-          listUserComments.map((comment) => (
+          listUserComments.map((comment, index) => (
             <ChatUserPersonItem
-              key={comment._id}
+              key={"comment" + index}
               {...comment}
               typechat={person.typechat}
               handleactiveOptions={handleactiveOptions}

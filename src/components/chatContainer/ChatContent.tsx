@@ -56,7 +56,10 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           )}
         >
           {props.type == "text" && (
-            <p className="whitespace-pre-wrap pl-2"  style={{wordBreak:"break-word"}}>
+            <p
+              className="whitespace-pre-wrap pl-2"
+              style={{ wordBreak: "break-word" }}
+            >
               <code
                 className="javascript whitespace-pre-wrap w-[fit-content]  font_inter-chatting indent-4"
                 dangerouslySetInnerHTML={{ __html: props.comment }}
@@ -78,12 +81,12 @@ const ChatContent: FC<ChatContentProps> = (props) => {
           )}
 
           {props.type == "image" && (
-            <ImageChatComment listImage={props.comment} />
+            <ImageChatComment key={props.id} listImage={props.comment} />
           )}
 
           {props.type == "location" && <LoadMap search={props.comment} />}
           {props.type == "youtube" && (
-            <YotubeContainer listVideo={props.comment} />
+            <YotubeContainer key={props.id} listVideo={props.comment} />
           )}
           {props.type == "weather" && (
             <>
@@ -92,6 +95,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
                   "Thời tiết hôm nay của bạn"}
               </p>
               <WeatherForecast
+                key={props.id}
                 latude={props.comment.split("*")[1]}
                 longtude={props.comment.split("*")[2]}
               />
@@ -101,7 +105,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
             <>
               {typeof props.comment != "string" &&
               props.comment.song.length > 0 ? (
-                <SpotifyContainer listSportify={props.comment} />
+                <SpotifyContainer key={props.id} listSportify={props.comment} />
               ) : (
                 props.comment
               )}

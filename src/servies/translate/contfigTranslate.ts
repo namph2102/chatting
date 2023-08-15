@@ -107,7 +107,7 @@ const worksChat = {
     group: "nhóm",
     textDocument: "văn bản",
     commentChatBot:
-      "Chào mừng bạn đã đến với Zecky! Hiện tại Website vẫn đang trong giai đoạn phát triển. Rất vui và hãy sử dụng một số tiện ích có sẵn được xây dựng bởi ChatGPT phiên bản Plus hoàn toàn miễn phí tại chúng tôi. </br> Cảm ơn bạn đã sử dụng!",
+      "Chào mừng bạn đã đến với Zecky! Rất vui và hãy sử dụng một số tiện ích có sẵn được xây dựng bởi ChatGPT phiên bản Plus hoàn toàn miễn phí tại chúng tôi. Ngoài ra chúng tôi cung cấp thêm website <a href='https://blog.zecky.online/' class='text-blue-400 underline hover:text-blue-500' target='_blank'>Tin tức</a> và website <a href='https://www.videotv.website' class='text-yellow-400 underline hover:text-yellow-500' target='_blank'>Xem phim</a> cũng miễn phí nốt 😀😀😀!</br> </br>  Cảm ơn bạn đã sử dụng ! <a href='https://www.facebook.com/namhoai2102' class='text-red-400 underline hover:text-red-500' target='_blank'>My FaceBook</a>👈👈",
     infomationNotEnough: "Vui lòng cung cấp thêm thông tin ?",
     severError:
       "Hiện tại máy chủ  quá tải hoặc đang bị lỗi! Bạn vui lòng liên hệ Admin Zecky nha!",
@@ -135,10 +135,10 @@ const worksChat = {
     agree: "Đồng ý",
     refuse: "Từ chối",
     findSeachinListFriends: "Tìm kiếm trong danh sách bạn bè..",
-    notfaild:"không đúng"
+    notfaild: "không đúng",
   },
   en: {
-    notfaild:"not is",
+    notfaild: "not is",
     findSeachinListFriends: "Search in the list of friends",
     isJoined: "Joined",
     join: "join",
@@ -195,7 +195,7 @@ const worksChat = {
     severError:
       "Currently the server is overload or  is down! Please contact Admin Zecky!",
     commentChatBot:
-      "Welcome to Zecky! The website is still in development stage. Have fun and use some of the available utilities built by ChatGPT Plus version completely free at us.Thank you for using!",
+      "Welcome to Zecky! We're delighted to have you here. Feel free to explore and make use of various utilities built by ChatGPT, the Plus version, all of which are completely free of charge. In addition, we also offer: website <a href='https://blog.zecky.online/' class='text-blue-400 underline hover:text-blue-500' target='_blank'>News</a> and website <a href='https://www.videotv.website' class='text-yellow-400 underline hover:text-yellow-500' target='_blank'>Movie</a> free same  😀😀😀!</br> </br>  Thank you for using our services!  <a href='https://www.facebook.com/namhoai2102' class='text-red-400 underline hover:text-red-500' target='_blank'>My FaceBook</a>👈👈",
   },
 };
 const worksSidebar = {
@@ -323,6 +323,7 @@ const resources = {
       kick: "Kích",
       room: "Phòng",
       createNameRoom: "Vui lòng đặt tên phòng!",
+      adminPage: "Trang quản trị",
     },
   },
   en: {
@@ -330,6 +331,7 @@ const resources = {
       ...personWorkChat.en,
       ...worksChat.en,
       ...worksSidebar.en,
+      adminPage: "Admin Dashboard",
       add: "Add",
       searchFriends: "Search your friends here...",
       search: "Search keywords",

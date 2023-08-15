@@ -45,12 +45,11 @@ const AppInfomation = () => {
   useEffect(() => {
     localStorage.getItem("accessToken") &&
       dispacth(firstloginWebsite()).then((acc: any) => {
-        const userid = acc.payload?._id;
+        const userid = acc.payload?.account?._id;
         if (userid) {
           dispacth(getDataListFriend(userid));
         }
       });
-      
   }, []);
 
   useEffect(() => {
