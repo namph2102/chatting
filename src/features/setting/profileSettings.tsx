@@ -63,9 +63,9 @@ const ProfileSettings: FC<{ account: IAccount }> = ({ account }) => {
           (await handleImageFirebase.deleteImage(account.pathBackground));
         dispatch(updateFieldAccount(data));
         socket.emit("user-update-background-profile", data);
+        ToastNotify(`${t("change")} ${t("success")}`).success();
+        dispatch(updateNotice(1));
       }
-      ToastNotify(`${t("change")} ${t("success")}`).success();
-      dispatch(updateNotice(1));
     } catch (error) {
       ToastNotify(`${t("change")} ${t("error")}`).error();
     }

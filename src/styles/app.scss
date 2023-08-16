@@ -41,7 +41,11 @@ html {
 #dark-mode {
   color: #bec2c5;
   background-color: #262626;
-
+  .notice_panation {
+    ul li button {
+      color: #bec2c5 !important;
+    }
+  }
   .bg-follow-darkmode {
     color: #bec2c5;
     background-color: #2e2e2e;
@@ -83,6 +87,11 @@ html {
 #light-mode {
   background-color: #f1f1f1;
   color: #1a1919;
+  .notice_panation {
+    ul li button {
+      color: #1a1919 !important;
+    }
+  }
   .react-select__input-container {
     color: #1a1919 !important;
   }

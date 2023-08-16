@@ -3,12 +3,9 @@ import { BiBell, BiCog, BiLock, BiLogOutCircle, BiTone } from "react-icons/bi";
 import { ToastNotify, cn } from "../../servies/utils";
 import { Link } from "react-router-dom";
 import { Badge } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux";
-import { updateNotice } from "../../redux/Slice/AccountSlice";
+
 import "../../components/chatContainer/component/Youtube";
 import { useTranslation } from "react-i18next";
-import instance from "../../config";
 
 interface ProfileProps {
   username: string;
@@ -16,7 +13,7 @@ interface ProfileProps {
   isMember: boolean;
   isOpen: boolean;
   noticeTotal: number;
-  idUser: string;
+
   setIsOpenProfile: (isOpen: boolean) => void;
 }
 const Profile: FC<ProfileProps> = ({
@@ -24,11 +21,9 @@ const Profile: FC<ProfileProps> = ({
   fullname,
   isMember,
   isOpen,
-  idUser,
   noticeTotal,
   setIsOpenProfile,
 }) => {
-  const dispacth: AppDispatch = useDispatch();
   const handleLogOut = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("username");
@@ -38,14 +33,7 @@ const Profile: FC<ProfileProps> = ({
 
     location.reload();
   };
-  const handleRemoveInfo = async () => {
-    noticeTotal > 0 &&
-      idUser &&
-      (await instance.post("/info/updatestatus", {
-        userAccept: idUser,
-      }));
-    dispacth(updateNotice(0));
-  };
+
   const { t } = useTranslation();
   if (!username && !fullname) return <></>;
   return (
@@ -70,7 +58,7 @@ const Profile: FC<ProfileProps> = ({
         aria-labelledby="avatarButton"
         onClick={() => setIsOpenProfile(false)}
       >
-        <li onClick={handleRemoveInfo}>
+        <li>
           <Link
             to="/thong-bao"
             className="flex justify-between w-full  px-4 py-2 text-sm hover:bg-aside/30"

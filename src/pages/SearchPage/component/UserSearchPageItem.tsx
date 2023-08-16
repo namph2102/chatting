@@ -5,10 +5,11 @@ import { updatePerson } from "../../../redux/Slice/ChatPersonSlice";
 import { useNavigate } from "react-router-dom";
 import { setIsOpenDisplayTable } from "../../../redux/Slice/AccountSlice";
 import { useTranslation } from "react-i18next";
-import { Avatar, AvatarGroup } from "@mui/material";
+import { Avatar, AvatarGroup, Tooltip, capitalize } from "@mui/material";
 import { nanoid } from "@reduxjs/toolkit";
 import ToltipProvider from "../../../components/webmedia/component/ToltipProvider";
 import { CapitalizeString } from "../../../servies/utils";
+import { componentsProps } from "../../../styles/componentsProps";
 
 ("../../../servies/translate/contfigTranslate");
 export interface IUserSearchPageItem {
@@ -68,20 +69,27 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
   let totalRender = 0;
   return (
     <article className="flex justify-between bg-follow-darkmode p-2 rounded-lg items-center">
-      <div className="flex gap-2 items-center">
-        <img
-          src={avatar}
-          width={60}
-          height={60}
-          loading="lazy"
-          className="rounded-full"
-          alt={fullname}
-        />
+      <div className="flex gap-2 items-center ">
+        <div className="md:w-[60px] md:h-[60px] w-[40px] h-[40px] rounded-full overflow-hidden">
+          <Tooltip
+            title={capitalize(fullname)}
+            arrow
+            placement="right"
+            componentsProps={componentsProps}
+          >
+            <img
+              src={avatar}
+              loading="lazy"
+              className="rounded-full w-full max-h-[60px] object-cover cursor-pointer"
+              alt={fullname}
+            />
+          </Tooltip>
+        </div>
         <div>
-          <h3 className="sm:text-base text-sm font-medium capitalize">
+          <h3 className="sm:text-base sm:max-w-[200px] max-w-[100px] text-ellipsis  md:text-sm font-medium capitalize whitespace-nowrap overflow-hidden">
             {fullname}
           </h3>
-          <p className="text-xs font-light">
+          <p className="text-xs font-light sm:text-base md:text-sm">
             {follows} {t("follower")}
           </p>
           <div className="flex gap-2 text-sm items-center mt-1">
@@ -105,6 +113,7 @@ const UserSearchPageItem: FC<IUserSearchPageItem> = ({
                             height: 16,
                             borderColor: "currentcolor",
                           }}
+                          className="w-4 h-4"
                           alt={friend.fullname}
                           src={friend.avatar}
                         />

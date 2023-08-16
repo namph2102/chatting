@@ -17,6 +17,8 @@ import { BiChevronLeft } from "react-icons/bi";
 import { handleAddFriendSocket } from "../../servies/sockets";
 import { useTranslation } from "react-i18next";
 import "../../servies/translate/contfigTranslate";
+import { Pagination } from "@mui/material";
+import InfoLoginUI from "../../features/sidebar/component/infoLoginUI";
 
 export interface ISearchPage {
   address: string;
@@ -45,12 +47,20 @@ const SearchPage: React.FC = () => {
   }
   const [listChatting, setListchatting] = useState<IUserSearchPageItem[]>([]);
   const { t } = useTranslation();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [limit] = useState(Math.floor(window.innerHeight / 120) || 5);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [totalPage]);
   useEffect(() => {
     if (!account._id || !query) return;
     setIsOpenChat(true);
     instance
       .post("/user/page/search", {
         search: query,
+        limit,
+        skip: (currentPage - 1) * limit,
         listUserExtended: [account._id],
         listFriend: account.friends,
       })
@@ -61,6 +71,7 @@ const SearchPage: React.FC = () => {
         );
 
         if (data.listUserSearchs) {
+          setTotalPage(data?.totalUser || 0);
           data.listUserSearchs.forEach((user: any) => {
             if (
               data.listInfoSend.includes(user._id) &&
@@ -92,18 +103,19 @@ const SearchPage: React.FC = () => {
 
         setListchatting(data.listUserSearchs);
       });
-  }, [query, account._id, noticeTotal, account.friends]);
+  }, [query, account._id, noticeTotal, account.friends, currentPage]);
 
   const [listSearch, setListSearch] = useState<IUserSearch[]>([]);
   const listChattingLocal = historyChatting("searchHistory");
 
   const mutation = useMutation({
+    mutationKey: ["currentPage", currentPage],
     mutationFn: async (search: string) => {
       if (search[0] == "0") search = search.slice(1);
-
       const response = await instance.post("/user/search", {
         search,
-
+        limit,
+        skip: (currentPage - 1) * limit,
         listUserExtended: [account._id],
       });
       const data = await response.data;
@@ -113,7 +125,7 @@ const SearchPage: React.FC = () => {
       if (!data) return;
       if (data.listUserSearchs && data.listUserSearchs.length > 0) {
         const listAccount: IUserSearch[] = [];
-
+        setTotalPage(data?.totalUser || 0);
         data.listUserSearchs.map(
           (acc: {
             username: string;
@@ -155,16 +167,16 @@ const SearchPage: React.FC = () => {
     // add follow socket
     handleAddFriendSocket(data);
   };
-
+  const countPage = Math.ceil(totalPage / limit) || 0;
   return (
     <div>
       <div className="container mx-auto relative">
-        <main className="flex w-full min-h-screen">
+        <main className="flex w-full h-screen">
           <Header />
           <section
             id={theme.darkmode}
             className={cn(
-              "lg:min-w-[300px] min-w-full  py-6 px-2 bg-aside",
+              "lg:min-w-[300px] min-w-full  py-6 px-2 bg-aside ",
               theme.darkmode == "light-mode"
                 ? "border-r-[#d5d5d5] border-r-[1px]"
                 : ""
@@ -193,14 +205,14 @@ const SearchPage: React.FC = () => {
             id={theme.darkmode}
             style={{ backgroundImage: `url(${theme.backgroundthem})` }}
             className={cn(
-              "w-full lg:relative px-4 lg:h-screen  h-[calc(100vh-80px)] overflow-y-auto fixed inset-0 z-10 ",
+              "w-full lg:relative px-4 lg:h-[100vh]   bg-follow-darkmode h-[90vh] overflow-y-auto fixed inset-0 z-10 ",
 
               isOpenChat ? "open_toggle-mobile " : "hidden_toggle-mobile"
             )}
           >
             <h6
               id={theme.darkmode}
-              className="text-xl flex gap-2 font-medium mt-2 sticky top-0 right-0 py-4"
+              className="text-xl flex gap-2 font-medium mt-2 sticky top-0 right-0 py-4  bg-follow-darkmode"
             >
               <span
                 className="cursor-pointer"
@@ -219,11 +231,23 @@ const SearchPage: React.FC = () => {
                   handleAddFriends={handleAddFriends}
                 />
               ))
-            ) : (
+            ) : account._id ? (
               <p>
-                {" "}
                 {t("notseepersonsearch")} {query}
               </p>
+            ) : (
+              <InfoLoginUI />
+            )}
+
+            {countPage > 0 && (
+              <div className="flex justify-center items-center text-white notice_panation absolute left-0 right-0 bottom-[4vh]">
+                <Pagination
+                  onChange={(e, number) => setCurrentPage(number)}
+                  count={countPage}
+                  boundaryCount={2}
+                  color="primary"
+                />
+              </div>
             )}
           </section>
         </main>
