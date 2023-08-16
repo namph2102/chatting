@@ -49,7 +49,7 @@ const SearchPage: React.FC = () => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [limit] = useState(Math.floor(window.innerHeight / 120) || 5);
+  const [limit] = useState(5);
   useEffect(() => {
     setCurrentPage(1);
   }, [totalPage]);
@@ -240,7 +240,7 @@ const SearchPage: React.FC = () => {
             )}
 
             {countPage > 0 && (
-              <div className="flex justify-center items-center text-white notice_panation absolute left-0 right-0 bottom-[4vh]">
+              <div className="flex justify-center items-center text-white notice_panation absolute left-0 right-0 md:bottom-[4vh] bottom-[8vh]">
                 <Pagination
                   onChange={(e, number) => e && setCurrentPage(number)}
                   count={countPage}
