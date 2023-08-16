@@ -83,10 +83,23 @@ html {
 .form-control::placeholder {
   font-size: 12px;
 }
+@media screen and (max-width: 640px) {
+  #dark-mode {
+    .chat_options-settings {
+      background-color: #262626;
+    }
+  }
 
+  #light-mode {
+    .chat_options-settings {
+      background-color: #f1f1f1;
+    }
+  }
+}
 #light-mode {
   background-color: #f1f1f1;
   color: #1a1919;
+
   .notice_panation {
     ul li button {
       color: #1a1919 !important;

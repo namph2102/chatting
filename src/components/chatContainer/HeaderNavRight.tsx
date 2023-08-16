@@ -55,7 +55,7 @@ const HeaderNavRight: FC<HeaderNavRightProps> = ({ isChatBot, person }) => {
       <span className="sm:hidden block text-2xl cursor-pointer ">
         <BiDotsVerticalRounded />
       </span>
-      <ul className="chat_options-settings sm:static sm:w-auto min-w-[150px] sm:pr-0 sm:py-0 py-2  pr-2 sm:border-none border-[#333333]  absolute flex sm:flex-row items-end flex-col right-0 top-10 gap-3 text-2xl  cursor-pointer">
+      <ul className="chat_options-settings  sm:static sm:w-auto min-w-[150px] sm:pr-0 sm:py-0 py-2  pr-2 sm:border-none border-[#333333]  absolute flex sm:flex-row items-end flex-col right-0 top-10 gap-3 text-2xl  cursor-pointer">
         <li className="text-base relative language__parent sm:order-none order-3">
           <div className="flex gap-1 items-center sm:text-base text-sm capitalize ">
             {textLang} <BiChevronDown />
@@ -83,6 +83,7 @@ const HeaderNavRight: FC<HeaderNavRightProps> = ({ isChatBot, person }) => {
             ))}
           </ul>
         </li>
+
         <li onClick={handleOpenvideoCall} className="flex">
           <div>
             <p className="sm:hidden text-base flex justify-between items-center w-full">
@@ -129,7 +130,7 @@ const HeaderNavRight: FC<HeaderNavRightProps> = ({ isChatBot, person }) => {
           onClick={() => dispatchRedux(updateOpenGroup("nopayload"))}
         >
           <div>
-            <p className="sm:hidden text-base flex justify-between items-center w-full">
+            <p className="sm:hidden  text-base flex justify-between items-center w-full">
               <span className="pr-2"> {t("see") + " " + t("info")}</span>
               <BiInfoCircle />
             </p>
