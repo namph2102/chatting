@@ -124,7 +124,7 @@ const NoticePage = () => {
       {countPage > 1 && (
         <div className="flex justify-center items-center text-white notice_panation absolute left-0 right-0 bottom-0">
           <Pagination
-            onChange={(e, number) => setCurrentPage(number)}
+            onChange={(e, number) => e && setCurrentPage(number)}
             count={countPage}
             siblingCount={0}
             color="primary"

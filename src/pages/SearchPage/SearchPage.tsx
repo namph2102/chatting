@@ -242,7 +242,7 @@ const SearchPage: React.FC = () => {
             {countPage > 0 && (
               <div className="flex justify-center items-center text-white notice_panation absolute left-0 right-0 bottom-[4vh]">
                 <Pagination
-                  onChange={(e, number) => setCurrentPage(number)}
+                  onChange={(e, number) => e && setCurrentPage(number)}
                   count={countPage}
                   boundaryCount={2}
                   color="primary"
