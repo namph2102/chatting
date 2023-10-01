@@ -14,7 +14,7 @@ Demo Online Website Tin tức: [link](https://blog.zecky.online)
 ## Một số tính năng
  * Xác thực (Authen)
    * Đăng nhập, Đăng ký (FireBase),...
-   * Gửi Email Chúc mừng 
+   * Gửi Email Chúc mừng khi đăng ký tài khoảng
    * Lưu tài liệu cá nhân
    * Phân trang , phân quyền, tìm kiếm
    * Lấy nội dung từ website khác (Trang quản lý)
