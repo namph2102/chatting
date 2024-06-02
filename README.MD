@@ -1,8 +1,8 @@
 # Project chat Realtime 20/05/2023 (MERN) 
 ## Link trang chủ của Website nhắn tin (zecky.online ReactJS) + Tin tức (blog.zecky.online NextJS)
 - Mời các anh chị ghé thăm website nhen!.
-Demo Online Website nhắn tin: [link](https://zecky.online)
-Demo Online Website Tin tức: [link](https://blog.zecky.online)
+Demo Online Website nhắn tin: [link](https://chat.namph2002.online)
+Demo Online Website Tin tức: [link](https://blog.namph2002.online)
 ## Một số công nghệ sử dụng
 * Front-End
  * HTML5, CSS3 (Taiwincss,Sass) 
